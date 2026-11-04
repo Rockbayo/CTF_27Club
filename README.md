@@ -30,7 +30,7 @@ Proyecto Final de Laboratorio para la **Línea de Profundización I: Seguridad d
 
 ### Paso 1: Clonar el Repositorio
 ```bash
-git clone https://github.com/tu-usuario/CTF_27Club.git
+git clone https://github.com/rockbayo/CTF_27Club.git
 cd CTF_27Club
 ```
 
