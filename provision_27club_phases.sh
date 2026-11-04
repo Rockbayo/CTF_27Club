@@ -2,14 +2,49 @@
 # ==============================================================================
 # SCRIPT MAESTRO DE APROVISIONAMIENTO: THE 27 CLUB CTF
 # Universidad de Cundinamarca - Seguridad de Aplicaciones y Hacking Ético
-# Fases 3 (Morrison), 4 (Winehouse) y 5 (Cobain)
 # ==============================================================================
 
 set -e
 
+# Decodificación dinámica de artefactos protegidos del laboratorio (anti-spoiler)
+F_JOPLIN=$(echo "RkxBR3tDcnlfQmFieV9IaWRkZW5fRGF0YX0=" | base64 -d)
+R_JOPLIN=$(echo "UkFCQklUX0hPTEV7U2lndWVfQnVzY2FuZG9fSmFuaXNfU2VfUmllX0RlX1RpfQ==" | base64 -d)
+F_MORRISON=$(echo "RkxBR3tMaWdodF9NeV9GaXJlX1NRTGl9" | base64 -d)
+R_MORRISON=$(echo "UkFCQklUX0hPTEV7VGhlX0VuZF9Jc19Ob3RfSGVyZX0=" | base64 -d)
+F_AMY=$(echo "RkxBR3tCYWNrX1RvX0JsYWNrX1hTU30=" | base64 -d)
+R_AMY=$(echo "UkFCQklUX0hPTEV7UmVoYWJfV2FzX0FfTGllfQ==" | base64 -d)
+F_KURT=$(echo "RkxBR3tTbWVsbHNfTGlrZV9Sb290X1NwaXJpdH0=" | base64 -d)
+
 echo "[*] ========================================================"
 echo "[*] INICIANDO DESPLIEGUE INSTITUCIONAL 'THE 27 CLUB CTF'"
 echo "[*] ========================================================"
+
+# Habilitar cabeceras HTTP temáticas en Apache
+a2enmod headers 2>/dev/null || true
+cat << 'EOF' > /etc/apache2/conf-available/rock-headers.conf
+<IfModule mod_headers.c>
+    Header set X-Rock-Memorial "The 27 Club CTF - Live Fast, Die Young, Leave a Clean Codebase"
+    Header set X-Artist-Tribute "Jimi Hendrix, Janis Joplin, Jim Morrison, Amy Winehouse, Kurt Cobain"
+    Header set X-Security-Auditor "Oscar Robayo - Universidad de Cundinamarca"
+    Header set X-Powered-By "Marshall Amps & Fender Stratocaster"
+</IfModule>
+EOF
+a2enconf rock-headers 2>/dev/null || true
+
+# Configurar error 404 personalizado si existe
+if [ -f /var/www/html/rock_404.html ]; then
+    echo "ErrorDocument 404 /rock_404.html" > /var/www/html/.htaccess
+fi
+
+# ------------------------------------------------------------------------------
+# FASE 2: JANIS JOPLIN (INYECCIÓN DINÁMICA DE ESTEGANOGRAFÍA EOF)
+# ------------------------------------------------------------------------------
+if [ -f /var/www/html/cry_baby/janis.jpg ]; then
+    echo -n "${F_JOPLIN}" >> /var/www/html/cry_baby/janis.jpg
+fi
+if [ -f /var/www/html/admin_trampa/backup_keys.jpg ]; then
+    echo -n "${R_JOPLIN}" >> /var/www/html/admin_trampa/backup_keys.jpg
+fi
 
 # ------------------------------------------------------------------------------
 # FASE 3: JIM MORRISON (CWE-89 SQL INJECTION)
@@ -30,7 +65,7 @@ CREATE TABLE doors_trap (
     secreto VARCHAR(255)
 );
 INSERT INTO doors_trap (cancion, secreto) VALUES
-('The End', 'RABBIT_HOLE{The_End_Is_Not_Here}'),
+('The End', '${R_MORRISON}'),
 ('Strange Days', 'Distraccion: Morrison sigue cantando en otra tabla.');
 
 -- Tabla real con la bandera oficial
@@ -43,27 +78,34 @@ CREATE TABLE doors_vault (
 );
 INSERT INTO doors_vault (cancion, album, secreto) VALUES
 ('Break On Through', 'The Doors (1967)', 'Pista: El fuego se enciende en el siguiente registro.'),
-('Light My Fire', 'The Doors (1967)', 'FLAG{Light_My_Fire_SQLi}'),
+('Light My Fire', 'The Doors (1967)', '${F_MORRISON}'),
 ('Riders on the Storm', 'L.A. Woman (1971)', 'Archivo historico de sesion.'),
 ('Touch Me', 'The Soft Parade (1969)', 'Registro completado.');
+
+GRANT ALL PRIVILEGES ON 27club.* TO 'app'@'localhost' IDENTIFIED BY 'vulnerables';
+GRANT ALL PRIVILEGES ON 27club.* TO 'dvwa'@'localhost';
+FLUSH PRIVILEGES;
 " 2>/dev/null || {
     echo "[!] Advertencia: Creando tablas en base de datos dvwa por compatibilidad..."
     mysql -u dvwa -ppassword -D dvwa -e "
     CREATE TABLE IF NOT EXISTS doors_trap (id INT AUTO_INCREMENT PRIMARY KEY, cancion VARCHAR(100), secreto VARCHAR(255));
-    INSERT INTO doors_trap (cancion, secreto) VALUES ('The End', 'RABBIT_HOLE{The_End_Is_Not_Here}');
+    INSERT INTO doors_trap (cancion, secreto) VALUES ('The End', '${R_MORRISON}');
 
     CREATE TABLE IF NOT EXISTS doors_vault (id INT AUTO_INCREMENT PRIMARY KEY, cancion VARCHAR(100), album VARCHAR(100), secreto VARCHAR(255));
     INSERT INTO doors_vault (cancion, album, secreto) VALUES 
-    ('Light My Fire', 'The Doors', 'FLAG{Light_My_Fire_SQLi}');
+    ('Light My Fire', 'The Doors', '${F_MORRISON}');
     "
 }
 
 # Crear portal vulnerable de Jim Morrison en PHP
 cat << 'EOF' > /var/www/html/doors/index.php
 <?php
-$conn = @new mysqli('127.0.0.1', 'root', 'password', '27club');
+$conn = @new mysqli('127.0.0.1', 'app', 'vulnerables', '27club');
 if ($conn->connect_error) {
-    $conn = new mysqli('127.0.0.1', 'dvwa', 'password', 'dvwa');
+    $conn = @new mysqli('127.0.0.1', 'root', 'password', '27club');
+    if ($conn->connect_error) {
+        $conn = new mysqli('127.0.0.1', 'dvwa', 'password', 'dvwa');
+    }
 }
 $id = isset($_GET['id']) ? $_GET['id'] : '1';
 ?>
@@ -85,7 +127,7 @@ $id = isset($_GET['id']) ? $_GET['id'] : '1';
 </head>
 <body>
     <div class="card">
-        <h1>🚪 The Doors • Jim Morrison Vault</h1>
+        <h1>🎸 The Doors • Jim Morrison Vault</h1>
         <p class="quote">"There are things known and things unknown, and in between are the doors."</p>
         
         <form method="GET" action="">
@@ -97,69 +139,62 @@ $id = isset($_GET['id']) ? $_GET['id'] : '1';
         <div class="box-result">
             <h4>Registros en memoria:</h4>
             <?php
-            // CWE-89: Concatenación directa sin preparación ni sanitización de parámetros
             $query = "SELECT cancion, album, secreto FROM doors_vault WHERE id = " . $id;
             $res = $conn->query($query);
 
             if ($res && $res->num_rows > 0) {
                 while($row = $res->fetch_assoc()) {
-                    echo "<p><strong>Canción:</strong> " . htmlspecialchars($row['cancion']) . "<br>";
-                    echo "<strong>Álbum:</strong> " . htmlspecialchars($row['album']) . "<br>";
-                    echo "<strong>Secreto:</strong> <code>" . htmlspecialchars($row['secreto']) . "</code></p><hr style='border: 0.5px dashed #332d4a;'>";
+                    echo "<p><strong>Canción:</strong> " . htmlspecialchars($row["cancion"]) . "<br>";
+                    echo "<strong>Álbum:</strong> " . htmlspecialchars($row["album"]) . "<br>";
+                    echo "<strong>Secreto / Archivo:</strong> <code>" . htmlspecialchars($row["secreto"]) . "</code></p><hr>";
                 }
             } else {
-                echo "<p style='color: #ff5555;'>No se encontraron registros coincidentes.</p>";
+                echo "<p style='color: #ff3366;'>No se encontraron registros o error de sintaxis en la consulta.</p>";
                 if ($conn->error) {
-                    echo "<pre style='color: #ff3333;'>Error SQL: " . htmlspecialchars($conn->error) . "</pre>";
+                    echo "<p style='color: #ffaa00;'><small>Debug MySQL: " . htmlspecialchars($conn->error) . "</small></p>";
                 }
             }
             ?>
         </div>
-        <div class="hint">Fase 3: Auditoría CWE-89 (SQL Injection) • Universidad de Cundinamarca</div>
+        <p class="hint">Fase 3: Auditoría CWE-89 (SQL Injection) • Universidad de Cundinamarca</p>
     </div>
 </body>
 </html>
 EOF
 
 # ------------------------------------------------------------------------------
-# FASE 4: AMY WINEHOUSE (CWE-79 STORED CROSS-SITE SCRIPTING)
+# FASE 4: AMY WINEHOUSE (CWE-79 STORED XSS & COOKIE EXTRACTION)
 # ------------------------------------------------------------------------------
 echo "[*] Configurando Fase 4 (Amy Winehouse - CWE-79)..."
 mkdir -p /var/www/html/winehouse
 
-# Poblar base de datos para libro de firmas de Amy Winehouse
 mysql -u root -p'password' -e "
 USE 27club;
-DROP TABLE IF EXISTS amy_guestbook;
-CREATE TABLE amy_guestbook (
+CREATE TABLE IF NOT EXISTS amy_guestbook (
     id INT AUTO_INCREMENT PRIMARY KEY,
     autor VARCHAR(100),
     mensaje TEXT,
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-INSERT INTO amy_guestbook (autor, mensaje) VALUES
-('Blake', 'We only said goodbye with words, I died a hundred times...'),
-('Admin', 'Auditoría interna: La sesión contiene el token de administración.');
 " 2>/dev/null || true
 
-cat << 'EOF' > /var/www/html/winehouse/index.php
+cat << EOF > /var/www/html/winehouse/index.php
 <?php
-// Configurar cookie de sesión con bandera real y cookie señuelo
-setcookie("admintoken", "FLAG{Back_To_Black_XSS}", time()+3600, "/");
-setcookie("test_decoy", "RABBIT_HOLE{Rehab_Was_A_Lie}", time()+3600, "/");
+setcookie("admintoken", "${F_AMY}", time() + 3600, "/");
+setcookie("test_decoy", "${R_AMY}", time() + 3600, "/");
 
-$conn = @new mysqli('127.0.0.1', 'root', 'password', '27club');
-if ($conn->connect_error) {
-    $conn = new mysqli('127.0.0.1', 'dvwa', 'password', 'dvwa');
+\$conn = @new mysqli('127.0.0.1', 'app', 'vulnerables', '27club');
+if (\$conn->connect_error) {
+    \$conn = new mysqli('127.0.0.1', 'root', 'password', '27club');
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['mensaje'])) {
-    $autor = !empty($_POST['autor']) ? $_POST['autor'] : 'Anónimo';
-    $mensaje = $_POST['mensaje']; // CWE-79: Inserción directa sin strip_tags ni htmlspecialchars
-    $stmt = $conn->prepare("INSERT INTO amy_guestbook (autor, mensaje) VALUES (?, ?)");
-    if ($stmt) {
-        $stmt->bind_param("ss", $autor, $mensaje);
-        $stmt->execute();
+if (\$_SERVER['REQUEST_METHOD'] === 'POST' && !empty(\$_POST['mensaje'])) {
+    \$autor = !empty(\$_POST['autor']) ? \$_POST['autor'] : 'Anónimo';
+    \$mensaje = \$_POST['mensaje'];
+    \$stmt = \$conn->prepare("INSERT INTO amy_guestbook (autor, mensaje) VALUES (?, ?)");
+    if (\$stmt) {
+        \$stmt->bind_param("ss", \$autor, \$mensaje);
+        \$stmt->execute();
     }
 }
 ?>
@@ -180,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['mensaje'])) {
 </head>
 <body>
     <div class="card">
-        <h1>🎙️ Amy Winehouse • Back to Black Lounge</h1>
+        <h1>🎤 Amy Winehouse • Back to Black Lounge</h1>
         <p class="quote">"Love is a losing game, but XSS steals the crown."</p>
 
         <form method="POST" action="">
@@ -195,13 +230,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['mensaje'])) {
         <h3>Dedicatorias Almacenadas:</h3>
         <div id="posts">
             <?php
-            $res = $conn->query("SELECT autor, mensaje, fecha FROM amy_guestbook ORDER BY id DESC LIMIT 10");
-            if ($res) {
-                while($row = $res->fetch_assoc()) {
-                    // Vulnerabilidad CWE-79: Renderizado directo sin escape HTML
+            \$res = \$conn->query("SELECT autor, mensaje, fecha FROM amy_guestbook ORDER BY id DESC LIMIT 10");
+            if (\$res) {
+                while(\$row = \$res->fetch_assoc()) {
                     echo "<div class='entry'>";
-                    echo "<strong>" . htmlspecialchars($row['autor']) . "</strong> <em>(" . $row['fecha'] . ")</em><br>";
-                    echo "<div class='content'>" . $row['mensaje'] . "</div>";
+                    echo "<strong>" . htmlspecialchars(\$row['autor']) . "</strong> <em>(" . \$row['fecha'] . ")</em><br>";
+                    echo "<div class='content'>" . \$row['mensaje'] . "</div>";
                     echo "</div>";
                 }
             }
@@ -220,11 +254,9 @@ EOF
 # ------------------------------------------------------------------------------
 echo "[*] Configurando Fase 5 (Kurt Cobain - CWE-250 / SUID)..."
 
-# 1. Crear usuario 'kurt' con contraseña débil 'nirvana'
 id -u kurt &>/dev/null || useradd -m -s /bin/bash kurt
 echo "kurt:nirvana" | chpasswd
 
-# 2. Archivos en el home de Kurt
 mkdir -p /home/kurt
 cat << 'EOF' > /home/kurt/nota_cobain.txt
 "Come as you are, as you were, as I want you to be..."
@@ -233,29 +265,21 @@ Audita los permisos especiales (SUID). Hay una herramienta que corre con el pode
 EOF
 chown -R kurt:kurt /home/kurt
 
-# 3. Bandera final en /root/flag.txt
-cat << 'EOF' > /root/flag.txt
+cat << EOF > /root/flag.txt
 ========================================================================
-   👑 THE 27 CLUB CTF - UNIVERSIDAD DE CUNDINAMARCA 👑
+   ⚡ THE 27 CLUB CTF - UNIVERSIDAD DE CUNDINAMARCA ⚡
    COMPROMISO TOTAL DEL SISTEMA (ROOT UID 0 ALCANZADO)
 ========================================================================
-BANDERA FINAL: FLAG{Smells_Like_Root_Spirit}
+BANDERA FINAL: ${F_KURT}
 Felicidades Auditor. Has superado las 5 fases y conquistado el reto.
 EOF
 chmod 600 /root/flag.txt
 
-# 4. Configurar vector de escalada de privilegios (SUID en /usr/bin/find o sudoers)
-# Otorgamos bit SUID al binario find para auditoría forense CWE-250
 chmod u+s /usr/bin/find 2>/dev/null || true
 
-# Configurar permisos web
 chown -R www-data:www-data /var/www/html/doors /var/www/html/winehouse
 chmod -R 755 /var/www/html/doors /var/www/html/winehouse
 
 echo "[*] ========================================================"
-echo "[+] DESPLIEGUE FINALIZADO EXITOSAMENTE:"
-echo "[+] - Fase 3 (Morrison SQLi):   http://192.168.56.1/doors/?id=1"
-echo "[+] - Fase 4 (Winehouse XSS):   http://192.168.56.1/winehouse/"
-echo "[+] - Fase 5 (Cobain SUID):     Usuario: kurt | Clave: nirvana"
+echo "[+] DESPLIEGUE FINALIZADO EXITOSAMENTE"
 echo "[*] ========================================================"
-

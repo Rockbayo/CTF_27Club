@@ -867,8 +867,8 @@
             🏆 DISCOS DE ORO & BANDERAS CONQUISTADAS
           </h4>
           <ul style="list-style: none; font-family: 'Fira Code', monospace; font-size: 0.88rem; line-height: 2.2;">
-            <li style="color: var(--neon-green);">💿 <strong>Hendrix:</strong> FLAG{Purple_Haze_Network} (+150 pts)</li>
-            <li style="color: var(--neon-green);">💿 <strong>Joplin:</strong> FLAG{Cry_Baby_Hidden_Data} (+200 pts)</li>
+            <li style="color: var(--neon-green);">💿 <strong>Hendrix:</strong> Misión Superada (+150 pts)</li>
+            <li style="color: var(--neon-green);">💿 <strong>Joplin:</strong> Misión Superada (+200 pts)</li>
             <li style="color: var(--neon-cyan);">💿 <strong>Morrison:</strong> En curso en /doors/ (+250 pts)</li>
             <li style="color: var(--text-muted);">💿 <strong>Winehouse:</strong> Pendiente de exfiltración (+200 pts)</li>
             <li style="color: var(--text-muted);">💿 <strong>Cobain:</strong> Pendiente de escalada Root (+200 pts)</li>
@@ -959,7 +959,7 @@
             <div><strong>Vector:</strong> DPI & User-Agent Header Injection</div>
             <div><strong>Criptografía:</strong> ROT13 / C&C Exfiltración</div>
             <div><strong>Estándar:</strong> CWE-311 (Falta de Cifrado Robusto)</div>
-            <div><strong>Bandera:</strong> <code>FLAG{Purple_Haze_Network}</code></div>
+            <div><strong>Bandera:</strong> <code>Formato FLAG{...}</code></div>
           </div>
         </div>
 
@@ -974,7 +974,7 @@
               <button class="btn-play-track" onclick="playArtistTrack('hendrix')">🎵 Reproducir Master Original (30s)</button>
             </div>
             <div style="background: rgba(0, 255, 136, 0.1); border: 1px solid var(--neon-green); border-radius: 8px; padding: 12px; font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--neon-green);">
-              ✓ FLAG{Purple_Haze_Network} (+150 PTS)
+              ✓ FASE HENDRIX SUPERADA (+150 PTS)
             </div>
           </div>
         </div>
@@ -1049,8 +1049,8 @@
           <div class="specs-grid">
             <div><strong>Vector:</strong> CWE-200 Information Exposure</div>
             <div><strong>Técnica:</strong> Esteganografía EOF con strings</div>
-            <div><strong>Rabbit Hole:</strong> <code>RABBIT_HOLE{Sigue_Buscando...}</code></div>
-            <div><strong>Bandera:</strong> <code>FLAG{Cry_Baby_Hidden_Data}</code></div>
+            <div><strong>Rabbit Hole:</strong> <code>Detectar Falso Positivo</code></div>
+            <div><strong>Bandera:</strong> <code>Formato FLAG{...}</code></div>
           </div>
         </div>
 
@@ -1065,7 +1065,7 @@
               <button class="btn-play-track" onclick="playArtistTrack('joplin')">🎵 Reproducir Master Original (30s)</button>
             </div>
             <div style="background: rgba(0, 255, 136, 0.1); border: 1px solid var(--neon-green); border-radius: 8px; padding: 12px; font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--neon-green);">
-              ✓ FLAG{Cry_Baby_Hidden_Data} (+200 PTS)
+              ✓ FASE JOPLIN SUPERADA (+200 PTS)
             </div>
           </div>
         </div>
@@ -1141,8 +1141,8 @@
           <div class="specs-grid">
             <div><strong>Vulnerabilidad:</strong> CWE-89 (SQL Injection)</div>
             <div><strong>Técnica:</strong> Inyección UNION Based</div>
-            <div><strong>Señuelo Trampa:</strong> <code>RABBIT_HOLE{The_End_Is_Not_Here}</code></div>
-            <div><strong>Bandera Real:</strong> <code>FLAG{Light_My_Fire_SQLi}</code></div>
+            <div><strong>Señuelo Trampa:</strong> <code>Detectar Rabbit Hole</code></div>
+            <div><strong>Bandera Real:</strong> <code>Formato FLAG{...}</code></div>
           </div>
         </div>
 
@@ -1249,8 +1249,8 @@
           <div class="specs-grid">
             <div><strong>Vulnerabilidad:</strong> CWE-79 (Stored Cross-Site Scripting)</div>
             <div><strong>Impacto:</strong> Session Hijacking / Cookie Theft</div>
-            <div><strong>Cookie Trampa:</strong> <code>RABBIT_HOLE{Rehab_Was_A_Lie}</code></div>
-            <div><strong>Bandera Real:</strong> <code>FLAG{Back_To_Black_XSS}</code></div>
+            <div><strong>Cookie Trampa:</strong> <code>Detectar Rabbit Hole</code></div>
+            <div><strong>Bandera Real:</strong> <code>Formato FLAG{...}</code></div>
           </div>
         </div>
 
@@ -1345,7 +1345,7 @@
             <div><strong>Vulnerabilidad:</strong> CWE-250 (Execution with Unnecessary Privileges)</div>
             <div><strong>Vector:</strong> Binario con bit SUID (/usr/bin/find)</div>
             <div><strong>Acceso:</strong> <code>kurt:nirvana (UID 1000)</code></div>
-            <div><strong>Bandera Final:</strong> <code>FLAG{Smells_Like_Root_Spirit}</code></div>
+            <div><strong>Bandera Final:</strong> <code>Formato FLAG{...}</code></div>
           </div>
         </div>
 
@@ -1547,132 +1547,128 @@
       }
     }
 
-    const CTF_DATABASE = {
-      "FLAG{Light_My_Fire_SQLi}": {
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message.trim());
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    const CTF_HASH_DB = {
+      // Morrison Flag
+      "6dd18975083f09f1304ed1ed761656a54e4ed9622cf98002cf5e7ce409831977": {
         phase: 3,
         type: "flag",
         name: "Jim Morrison",
         points: 250,
         msg: "¡PUERTA DESBLOQUEADA! Inyección SQL UNION Based exitosa (+250 pts). Desbloqueando Room 4 (Amy Winehouse)."
       },
-      "RABBIT_HOLE{The_End_Is_Not_Here}": {
+      // Morrison Trap
+      "a6eb5292b5d1f527c6159f355a0c7c2151b168fcd7a77b84038ebdc1663c04c7": {
         phase: 3,
         type: "rabbit_hole",
         name: "Señuelo de Morrison (doors_trap)",
         penalty: 50,
         msg: "⚠️ RABBIT HOLE: Inyectaste en la tabla trampa doors_trap con el verso 'The End'. Penalización: -50 pts."
       },
-      "FLAG{Back_To_Black_XSS}": {
+      // Amy Flag
+      "46159a8ed4c6b0d4cf2c231c4de1944401e7bbb4a024418030de5e413a95627b": {
         phase: 4,
         type: "flag",
         name: "Amy Winehouse",
         points: 200,
         msg: "¡SESIÓN EXFILTRADA! Robo de cookie mediante Stored XSS (+200 pts). Desbloqueando Room 5 (Kurt Cobain)."
       },
-      "RABBIT_HOLE{Rehab_Was_A_Lie}": {
+      // Amy Trap
+      "4cd17cce16b711c5aa74a038120d40480fdb8d2202ba7fe70b56b40f4cd21a9d": {
         phase: 4,
         type: "rabbit_hole",
         name: "Señuelo de Amy (Cookie de prueba)",
         penalty: 50,
         msg: "⚠️ RABBIT HOLE: Capturaste la cookie de prueba test_decoy. Penalización: -50 pts."
       },
-      "FLAG{Smells_Like_Root_Spirit}": {
+      // Cobain Flag
+      "2b37cf1f78087b52eba00aaefa0ae2abd833d64d542a2210f36bf26938639acd": {
         phase: 5,
         type: "flag",
         name: "Kurt Cobain",
         points: 200,
-        msg: "👑 ¡COMPROMISO TOTAL DEL SISTEMA! Escalada a root completada (+200 pts). ¡Puntaje Máximo 1000/1000!"
+        msg: "⚡ ¡PRIVILEGIOS ROOT ELEVADOS! Explotación de binario SUID exitosa (+200 pts). ¡EL CLUB DE LOS 27 HA SIDO CONQUISTADO!"
+      },
+      // Hendrix Flag
+      "5e92acd0d04435bfcd1301c88b1a6f10ff4e88ecca45213f1c89dc6649900aac": {
+        phase: 1,
+        type: "flag",
+        name: "Jimi Hendrix",
+        points: 150,
+        msg: "¡RECONOCIMIENTO Y FORENSE SUPERADO! (+150 pts)."
+      },
+      // Joplin Flag
+      "2699e5b569fb12cc9c9d22d5e5648e2d686e5f7dec6f2a525359697308156b9c": {
+        phase: 2,
+        type: "flag",
+        name: "Janis Joplin",
+        points: 200,
+        msg: "¡ESTEGANOGRAFÍA COMPLETADA! (+200 pts)."
+      },
+      // Joplin Trap
+      "ac70e2355bcd937a13a5e94ab9a91d1105432b23179b735c9eb3a8f8a7d61128": {
+        phase: 2,
+        type: "rabbit_hole",
+        name: "Señuelo de Janis (admin_trampa)",
+        penalty: 50,
+        msg: "⚠️ RABBIT HOLE: backup_keys.jpg era un falso positivo. Penalización: -50 pts."
       }
     };
 
-    function handleRoomFlagSubmit(e, phaseNum) {
-      e.preventDefault();
-      const input = document.getElementById(`input-flag-${phaseNum}`);
-      const banner = document.getElementById(`feedback-room-${phaseNum}`);
-      const val = input.value.trim();
+    async function submitFlag(phase) {
+      const inputEl = document.getElementById(`input-flag-${phase}`);
+      const val = inputEl ? inputEl.value.trim() : "";
 
-      const record = CTF_DATABASE[val];
-
-      if (!record) {
-        banner.className = "alert-banner alert-danger";
-        banner.style.display = "block";
-        banner.textContent = "❌ Bandera inválida para esta habitación.";
+      if (!val) {
+        logEvent(`⚠️ Intento vacío en Fase ${phase}. Ingresa la bandera capturada.`);
         return;
       }
 
-      if (record.type === "rabbit_hole") {
-        penalties++;
-        score = Math.max(0, score - record.penalty);
-        document.getElementById("penaltyDisplay").textContent = penalties;
-        document.getElementById("scoreDisplay").textContent = `${score} / 1000`;
+      const hash = await sha256(val);
+      const entry = CTF_HASH_DB[hash];
 
-        banner.className = "alert-banner alert-warning";
-        banner.style.display = "block";
-        banner.textContent = record.msg;
-        return;
-      }
+      if (entry) {
+        if (entry.type === "flag") {
+          if (entry.phase !== phase && !([3,4,5].includes(phase) && entry.phase === phase)) {
+            logEvent(`ℹ️ La bandera ingresada corresponde a otra fase (${entry.name}).`);
+          }
+          
+          score += entry.points;
+          updateScoreDisplay();
+          playSuccessSound();
+          triggerConfetti();
+          logEvent(`🎯 ¡BANDERA CORRECTA EN FASE ${entry.phase}! ${entry.msg}`);
+          alert(`🤘 ¡BANDERA CAPTURADA!\n\n${entry.msg}`);
 
-      if (record.type === "flag") {
-        score += record.points;
-        document.getElementById("scoreDisplay").textContent = `${score} / 1000`;
-
-        banner.className = "alert-banner alert-success";
-        banner.style.display = "block";
-        banner.textContent = record.msg;
-
-        if (phaseNum === 3) {
-          document.getElementById("nav-morrison").classList.add("completed");
-          document.getElementById("badge-room3").style.background = "rgba(0,255,136,0.2)";
-          document.getElementById("badge-room3").style.color = "var(--neon-green)";
-          document.getElementById("badge-room3").textContent = "SUPERADO (+250 PTS)";
-          setTimeout(() => switchRoom('winehouse'), 1200);
-        } else if (phaseNum === 4) {
-          document.getElementById("nav-winehouse").classList.add("completed");
-          document.getElementById("badge-room4").style.background = "rgba(0,255,136,0.2)";
-          document.getElementById("badge-room4").style.color = "var(--neon-green)";
-          document.getElementById("badge-room4").textContent = "SUPERADO (+200 PTS)";
-          setTimeout(() => switchRoom('cobain'), 1200);
-        } else if (phaseNum === 5) {
-          document.getElementById("nav-cobain").classList.add("completed");
-          document.getElementById("badge-room5").style.background = "rgba(0,255,136,0.2)";
-          document.getElementById("badge-room5").style.color = "var(--neon-green)";
-          document.getElementById("badge-room5").textContent = "CONQUISTADO (+200 PTS)";
-          alert("👑 ¡FELICITACIONES! Has completado el 100% de The 27 Club CTF. Puntuación Final: 1000 / 1000.");
+          if (entry.phase === 3) {
+            document.getElementById("btn-room-winehouse").classList.remove("locked");
+            document.getElementById("btn-room-winehouse").removeAttribute("disabled");
+            switchRoom("winehouse");
+          } else if (entry.phase === 4) {
+            document.getElementById("btn-room-cobain").classList.remove("locked");
+            document.getElementById("btn-room-cobain").removeAttribute("disabled");
+            switchRoom("cobain");
+          } else if (entry.phase === 5) {
+            claimVictory();
+          }
+        } else if (entry.type === "rabbit_hole") {
+          score = Math.max(0, score - entry.penalty);
+          updateScoreDisplay();
+          playErrorSound();
+          logEvent(`🚨 ${entry.msg}`);
+          alert(`⚠️ TRAMPA / SEÑUELO DETECTADO (RABBIT HOLE)\n\n${entry.msg}`);
         }
+      } else {
+        playErrorSound();
+        logEvent(`❌ Bandera rechazada en Fase ${phase}. Sigue auditando el entorno.`);
+        alert("❌ BANDERA INCORRECTA\n\nVerifica la sintaxis, el comando ejecutado o sigue auditando la máquina objetivo.");
       }
     }
 
-    function activateSustentacionMode() {
-      document.getElementById("input-flag-3").value = "FLAG{Light_My_Fire_SQLi}";
-      document.getElementById("input-flag-4").value = "FLAG{Back_To_Black_XSS}";
-      document.getElementById("input-flag-5").value = "FLAG{Smells_Like_Root_Spirit}";
-
-      score = 1000;
-      document.getElementById("scoreDisplay").textContent = "1000 / 1000";
-
-      ['hendrix', 'joplin', 'morrison', 'winehouse', 'cobain'].forEach(r => {
-        document.getElementById("nav-" + r).classList.add("completed");
-      });
-
-      document.getElementById("badge-room3").textContent = "SUPERADO (+250 PTS)";
-      document.getElementById("badge-room3").style.color = "var(--neon-green)";
-      document.getElementById("badge-room4").textContent = "SUPERADO (+200 PTS)";
-      document.getElementById("badge-room4").style.color = "var(--neon-green)";
-      document.getElementById("badge-room5").textContent = "CONQUISTADO ROOT (+200 PTS)";
-      document.getElementById("badge-room5").style.color = "var(--neon-green)";
-
-      alert("🎓 MODO SUSTENTACIÓN ACTIVADO:\nTodas las 5 habitaciones de The 27 Club han sido desbloqueadas con éxito (1000/1000 pts).");
-      playArtistTrack('cobain');
-    }
-
-    timerInterval = setInterval(() => {
-      if (timeLeft > 0) {
-        timeLeft--;
-        const m = Math.floor(timeLeft / 60);
-        const s = timeLeft % 60;
-        document.getElementById("timerDisplay").textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-      }
-    }, 1000);
-  </script>
-</body>
-</html>
+    
