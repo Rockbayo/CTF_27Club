@@ -8,6 +8,7 @@
 *.pdf
 *.pptx
 Laboratorios/
+_scripts_utilitarios/
 
 # Carpeta de capturas de pantalla de evidencias (solo para el informe escrito)
 capturas/
