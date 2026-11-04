@@ -1,0 +1,15 @@
+# ARCHIVOS MULTIMEDIA OFICIALES DEL CTF THE 27 CLUB
+Este directorio contiene los recursos multimedia locales para el Tablero Web Gamificado:
+
+- `assets/images/`:
+  * Fotografías emblemáticas reales de Jimi Hendrix, Janis Joplin, Jim Morrison, Amy Winehouse y Kurt Cobain.
+  * Carátulas originales en alta resolución (600x600) de los álbumes icónicos (Are You Experienced, Pearl, The Doors, Back to Black, Nevermind).
+
+- `assets/audio/`:
+  * Pistas de audio originales en formato M4A/AAC:
+    - `hendrix.m4a` -> Purple Haze (The Jimi Hendrix Experience)
+    - `joplin.m4a` -> Cry Baby (Janis Joplin)
+    - `morrison.m4a` -> Light My Fire (The Doors)
+    - `winehouse.m4a` -> Back To Black (Amy Winehouse)
+    - `cobain.m4a` -> Smells Like Teen Spirit (Nirvana)
+

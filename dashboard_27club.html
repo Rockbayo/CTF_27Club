@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The 27 Club CTF - Rock Experience & Memorial Inmersivo | Universidad de Cundinamarca</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Permanent+Marker&family=Rajdhani:wght@500;600;700&family=Rock+Salt&family=Special+Elite&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #07070b;
+      --bg-card: #0f1019;
+      --neon-purple: #9d4edd;
+      --neon-magenta: #ff007f;
+      --neon-cyan: #00f0ff;
+      --neon-amber: #ffaa00;
+      --neon-red: #ff3333;
+      --neon-green: #00ff88;
+      --gold: #ffd700;
+      --text-main: #f0f4f8;
+      --text-muted: #8b97ac;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(157, 78, 221, 0.18) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(255, 0, 127, 0.15) 0%, transparent 40%),
+        linear-gradient(rgba(7, 7, 11, 0.96), rgba(7, 7, 11, 0.96)),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.015) 2px, rgba(255, 255, 255, 0.015) 4px);
+      color: var(--text-main);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* TOP BAR / MASTER HUD */
+    header {
+      background: rgba(12, 13, 20, 0.96);
+      border-bottom: 2px solid var(--neon-purple);
+      box-shadow: 0 0 30px rgba(157, 78, 221, 0.45);
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      cursor: pointer;
+    }
+
+    .turntable-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ff007f 10%, #111 12%, #222 25%, #111 40%, #333 55%, #111 70%, #9d4edd 90%);
+      box-shadow: 0 0 15px var(--neon-magenta);
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .turntable-icon.spinning { animation: spin 3.5s linear infinite; }
+    .turntable-icon::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 10px; height: 10px;
+      background: #00f0ff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 8px #00f0ff;
+    }
+
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    .brand-text h1 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.7rem;
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-magenta);
+    }
+    .brand-text span {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--neon-cyan);
+    }
+
+    .hud-controls {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .jukebox-bar {
+      background: rgba(18, 20, 32, 0.9);
+      border: 1px solid var(--neon-magenta);
+      border-radius: 30px;
+      padding: 6px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.25);
+    }
+
+    .jukebox-btn {
+      background: linear-gradient(135deg, var(--neon-purple), var(--neon-magenta));
+      border: none;
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+      transition: transform 0.2s;
+    }
+    .jukebox-btn:hover { transform: scale(1.15); }
+
+    .jukebox-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .jukebox-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .jukebox-artist {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      color: var(--neon-cyan);
+    }
+
+    /* Live Canvas Spectrum Visualizer */
+    #visualizerCanvas {
+      border-radius: 6px;
+      background: #05060b;
+      border: 1px solid rgba(255, 0, 127, 0.3);
+    }
+
+    .hud-stat-badge {
+      background: #0a0b12;
+      border: 1px solid var(--neon-purple);
+      border-radius: 8px;
+      padding: 6px 14px;
+      text-align: center;
+    }
+    .hud-stat-badge .lbl {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .hud-stat-badge .val {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--neon-cyan);
+    }
+
+    /* ROOM NAVIGATION BAR */
+    .rooms-nav {
+      background: #0a0b12;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 12px 20px;
+      position: sticky;
+      top: 67px;
+      z-index: 900;
+      overflow-x: auto;
+    }
+
+    .btn-room {
+      background: #131422;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 30px;
+      padding: 9px 20px;
+      color: #b0bac9;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .btn-room:hover {
+      background: #1c1d30;
+      color: #fff;
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+    }
+
+    .btn-room.active {
+      background: linear-gradient(135deg, rgba(157, 78, 221, 0.4), rgba(255, 0, 127, 0.4));
+      border-color: var(--neon-magenta);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+    }
+
+    .btn-room .avatar-thumb {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #fff;
+    }
+
+    .btn-room .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+    .btn-room.completed .status-dot {
+      background: var(--neon-green);
+      box-shadow: 0 0 8px var(--neon-green);
+    }
+
+    /* VIEWPORT */
+    .viewport {
+      flex: 1;
+      padding: 25px 35px;
+      max-width: 1550px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .room-view {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    .room-view.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ROOM LAYOUT */
+    .room-stage {
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 25px;
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 360px 1fr 340px;
+      gap: 30px;
+      box-shadow: 0 12px 45px rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stage-hendrix {
+      background: linear-gradient(135deg, #1b0a33 0%, #0d061c 60%, #15092a 100%);
+      border-color: var(--neon-purple);
+      box-shadow: 0 0 35px rgba(157, 78, 221, 0.25);
+    }
+    .stage-joplin {
+      background: linear-gradient(135deg, #301705 0%, #170b02 60%, #241103 100%);
+      border-color: var(--neon-amber);
+      box-shadow: 0 0 35px rgba(255, 170, 0, 0.25);
+    }
+    .stage-morrison {
+      background: linear-gradient(135deg, #071f2b 0%, #030d12 60%, #071c26 100%);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.25);
+    }
+    .stage-winehouse {
+      background: linear-gradient(135deg, #2b071d 0%, #14020d 60%, #1f0415 100%);
+      border-color: var(--neon-magenta);
+      box-shadow: 0 0 35px rgba(255, 0, 127, 0.25);
+    }
+    .stage-cobain {
+      background: linear-gradient(135deg, #16240d 0%, #091004 60%, #0f1c07 100%);
+      border-color: var(--neon-green);
+      box-shadow: 0 0 35px rgba(0, 255, 136, 0.25);
+    }
+
+    /* ROCK VINYL & PHOTO SHOWCASE */
+    .media-showcase {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .vinyl-sleeve-combo {
+      position: relative;
+      height: 240px;
+      perspective: 1000px;
+    }
+
+    .album-cover-real {
+      width: 220px;
+      height: 220px;
+      border-radius: 8px;
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      z-index: 2;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      border: 1px solid rgba(255,255,255,0.2);
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .vinyl-sleeve-combo:hover .album-cover-real {
+      transform: translateX(-15px) rotate(-3deg);
+    }
+
+    .vinyl-disc-out {
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #222 15%, #111 25%, #2a2a2a 40%, #111 60%, #2a2a2a 75%, #050505 90%);
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      z-index: 1;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.9);
+      border: 2px solid #333;
+      transition: transform 0.4s ease;
+    }
+    .vinyl-disc-out.spinning { animation: spin 4s linear infinite; }
+    .vinyl-sleeve-combo:hover .vinyl-disc-out {
+      transform: translateX(40px) rotate(45deg);
+    }
+
+    .vinyl-label {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 75px; height: 75px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid #fff;
+      overflow: hidden;
+    }
+    .vinyl-label img { width: 100%; height: 100%; object-fit: cover; }
+
+    .artist-photo-box {
+      background: #090a10;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .artist-photo-box img {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .artist-bio-brief h4 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.15rem;
+      color: #fff;
+    }
+    .artist-bio-brief span {
+      font-family: 'Rock Salt', cursive;
+      font-size: 0.7rem;
+      color: var(--gold);
+    }
+
+    .stage-narrative h2 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 2.3rem;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .room-badge-status {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+    }
+
+    .stage-narrative p {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #d1d9e6;
+      margin-bottom: 20px;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 16px;
+      border-radius: 10px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+    }
+    .specs-grid strong { color: var(--neon-cyan); }
+
+    .stage-challenge-panel {
+      background: rgba(8, 9, 15, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .stage-challenge-panel h3 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.35rem;
+      color: var(--neon-cyan);
+      margin-bottom: 15px;
+    }
+
+    .room-track-player {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .track-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+    }
+    .track-title { color: #fff; font-weight: 700; }
+    .track-artist { color: var(--gold); }
+
+    .btn-play-track {
+      background: linear-gradient(90deg, var(--neon-purple), var(--neon-magenta));
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-play-track:hover {
+      box-shadow: 0 0 15px var(--neon-magenta);
+      transform: translateY(-2px);
+    }
+
+    .room-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .room-input {
+      background: #05060a;
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      border-radius: 6px;
+      padding: 11px 14px;
+      color: #fff;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.88rem;
+      outline: none;
+    }
+    .room-input:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 12px var(--neon-cyan);
+    }
+
+    .btn-submit-flag {
+      background: linear-gradient(90deg, var(--neon-purple), var(--neon-magenta));
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 12px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+    .btn-submit-flag:hover {
+      box-shadow: 0 0 20px var(--neon-magenta);
+      transform: translateY(-2px);
+    }
+
+    .alert-banner {
+      display: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.84rem;
+      margin-top: 14px;
+      line-height: 1.45;
+    }
+    .alert-success {
+      background: rgba(0, 255, 136, 0.16);
+      border: 1px solid var(--neon-green);
+      color: var(--neon-green);
+    }
+    .alert-danger {
+      background: rgba(255, 51, 51, 0.18);
+      border: 1px solid var(--neon-red);
+      color: var(--neon-red);
+      animation: shake 0.4s ease;
+    }
+    .alert-warning {
+      background: rgba(255, 170, 0, 0.18);
+      border: 1px solid var(--neon-amber);
+      color: var(--neon-amber);
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    .interactive-dock {
+      background: #090a10;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 25px;
+    }
+    .interactive-dock h4 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.3rem;
+      color: #fff;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .terminal-console {
+      background: #040508;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 15px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.82rem;
+      height: 200px;
+      overflow-y: auto;
+      line-height: 1.5;
+    }
+
+    /* SECCIÓN DE COLLAGE POLAROID */
+    .rock-collage-section {
+      background: linear-gradient(180deg, rgba(15, 17, 26, 0.95), rgba(7, 7, 12, 0.98));
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 28px;
+      margin-top: 15px;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.6);
+      position: relative;
+    }
+
+    .collage-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 12px;
+    }
+
+    .collage-header h3 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.6rem;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .collage-header span {
+      font-family: 'Rock Salt', cursive;
+      font-size: 0.8rem;
+      color: var(--neon-cyan);
+    }
+
+    .polaroid-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+
+    .polaroid-card {
+      background: #fbfbfb;
+      padding: 12px 12px 20px 12px;
+      border-radius: 4px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+      transition: all 0.35s ease;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .polaroid-card:nth-child(1) { transform: rotate(-2.5deg); }
+    .polaroid-card:nth-child(2) { transform: rotate(1.8deg); }
+    .polaroid-card:nth-child(3) { transform: rotate(-1.5deg); }
+    .polaroid-card:nth-child(4) { transform: rotate(2.2deg); }
+
+    .polaroid-card:hover {
+      transform: scale(1.08) rotate(0deg);
+      z-index: 20;
+      box-shadow: 0 15px 35px rgba(0, 240, 255, 0.4);
+    }
+
+    .polaroid-pin {
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ff007f 20%, #99004d 80%);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.6);
+      z-index: 3;
+    }
+
+    .polaroid-img-wrapper {
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      background: #111;
+      border: 1px solid #ddd;
+    }
+
+    .polaroid-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .polaroid-card:hover .polaroid-img-wrapper img {
+      transform: scale(1.06);
+    }
+
+    .polaroid-caption {
+      margin-top: 12px;
+      font-family: 'Permanent Marker', cursive;
+      font-size: 0.95rem;
+      color: #1a1a1a;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .polaroid-date {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.72rem;
+      color: #666;
+      text-align: center;
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* VIP BACKSTAGE LAMINATE PASS */
+    .vip-backstage-card {
+      background: linear-gradient(145deg, #181926, #0c0d14);
+      border: 2px solid var(--gold);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.25);
+      position: relative;
+    }
+    .vip-header {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.1rem;
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+    .vip-sub {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      color: var(--neon-cyan);
+      margin-bottom: 10px;
+    }
+    .vip-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      object-fit: cover;
+      margin-bottom: 8px;
+    }
+    .vip-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .vip-role {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--neon-green);
+      font-weight: bold;
+    }
+    .vip-barcode {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.1rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      margin-top: 8px;
+    }
+
+    footer {
+      background: #08090e;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 1.2rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <audio id="realAudioPlayer" preload="auto"></audio>
+
+  <!-- MASTER HUD HEADER -->
+  <header>
+    <div class="brand" onclick="switchRoom('central')">
+      <div class="turntable-icon" id="masterTurntable"></div>
+      <div class="brand-text">
+        <h1>THE 27 CLUB CTF</h1>
+        <span>Universidad de Cundinamarca • Hacking Ético Inmersivo</span>
+      </div>
+    </div>
+
+    <div class="hud-controls">
+      <!-- Jukebox con Spectrum Visualizer -->
+      <div class="jukebox-bar">
+        <button class="jukebox-btn" id="btnPlayPause" onclick="togglePlayback()" title="Reproducir / Pausar">▶</button>
+        <div class="jukebox-info">
+          <div class="jukebox-title" id="jukeboxTrack">Purple Haze</div>
+          <div class="jukebox-artist" id="jukeboxArtist">The Jimi Hendrix Experience</div>
+        </div>
+        <canvas id="visualizerCanvas" width="90" height="28"></canvas>
+      </div>
+
+      <!-- Cronómetro -->
+      <div class="hud-stat-badge">
+        <div class="lbl">TIEMPO RESTANTE</div>
+        <div class="val" id="timerDisplay">60:00</div>
+      </div>
+
+      <!-- Puntaje -->
+      <div class="hud-stat-badge">
+        <div class="lbl">PUNTAJE GLOBAL</div>
+        <div class="val" id="scoreDisplay">350 / 1000</div>
+      </div>
+
+      <!-- Rabbit Holes -->
+      <div class="hud-stat-badge" style="border-color: var(--neon-red);">
+        <div class="lbl">TRAMPAS ACTIVADAS</div>
+        <div class="val" style="color: var(--neon-red);" id="penaltyDisplay">0</div>
+      </div>
+
+      <button class="btn-submit-flag" style="padding: 8px 18px; font-size: 0.85rem;" onclick="activateSustentacionMode()">
+        🎓 SUSTENTACIÓN 100%
+      </button>
+    </div>
+  </header>
+
+  <!-- ROOM NAVIGATION BAR -->
+  <nav class="rooms-nav">
+    <button class="btn-room active" id="nav-central" onclick="switchRoom('central')">
+      <span>🏛️ Salón Central (The Memorial)</span>
+    </button>
+    <button class="btn-room completed" id="nav-hendrix" onclick="switchRoom('hendrix')">
+      <img src="assets/images/hendrix_photo.jpg" class="avatar-thumb" alt="Jimi">
+      <span class="status-dot"></span>
+      <span>🎸 1. Jimi Hendrix Studio</span>
+    </button>
+    <button class="btn-room completed" id="nav-joplin" onclick="switchRoom('joplin')">
+      <img src="assets/images/joplin_photo.jpg" class="avatar-thumb" alt="Janis">
+      <span class="status-dot"></span>
+      <span>🌸 2. Janis Joplin Caravan</span>
+    </button>
+    <button class="btn-room active" id="nav-morrison" onclick="switchRoom('morrison')">
+      <img src="assets/images/morrison_photo.jpg" class="avatar-thumb" alt="Jim">
+      <span class="status-dot"></span>
+      <span>🚪 3. Jim Morrison Crypt</span>
+    </button>
+    <button class="btn-room" id="nav-winehouse" onclick="switchRoom('winehouse')">
+      <img src="assets/images/winehouse_photo.jpg" class="avatar-thumb" alt="Amy">
+      <span class="status-dot"></span>
+      <span>🎙️ 4. Amy Winehouse Speakeasy</span>
+    </button>
+    <button class="btn-room" id="nav-cobain" onclick="switchRoom('cobain')">
+      <img src="assets/images/cobain_photo.jpg" class="avatar-thumb" alt="Kurt">
+      <span class="status-dot"></span>
+      <span>⚡ 5. Kurt Cobain Garage</span>
+    </button>
+  </nav>
+
+  <!-- VIEWPORT OF ROOMS -->
+  <main class="viewport">
+
+    <!-- =================================================================== -->
+    <!-- VIEW: SALÓN CENTRAL (THE MEMORIAL) -->
+    <!-- =================================================================== -->
+    <section class="room-view active" id="view-central">
+      <div class="room-stage" style="background: linear-gradient(135deg, #130e29, #080814); grid-template-columns: 1fr 1fr 280px;">
+        <div>
+          <h2 style="font-family: 'Permanent Marker', cursive; font-size: 2.6rem; color: var(--neon-magenta); margin-bottom: 12px;">
+            The 27 Club • Memorial Rockero
+          </h2>
+          <p style="font-size: 1.05rem; line-height: 1.6; color: #d0d7e6; margin-bottom: 25px;">
+            En este memorial digital convergen las cinco grandes leyendas del rock que partieron a sus 27 años: 
+            <strong>Jimi Hendrix, Janis Joplin, Jim Morrison, Amy Winehouse y Kurt Cobain</strong>. 
+            Cada uno custodia una vulnerabilidad crítica y un señuelo de distracción en el servidor <code>192.168.56.1</code>. 
+            ¡Haz clic en las pestañas superiores para ingresar a cada templo temático!
+          </p>
+          <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <button class="btn-submit-flag" onclick="switchRoom('morrison')">🚪 Entrar a la Bóveda de Morrison (Activo)</button>
+            <button class="btn-room" onclick="playArtistTrack('hendrix')">🎸 Reproducir Purple Haze</button>
+          </div>
+        </div>
+
+        <div style="background: #05060b; border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px;">
+          <h4 style="font-family: 'Fira Code', monospace; color: var(--gold); margin-bottom: 15px;">
+            🏆 DISCOS DE ORO & BANDERAS CONQUISTADAS
+          </h4>
+          <ul style="list-style: none; font-family: 'Fira Code', monospace; font-size: 0.88rem; line-height: 2.2;">
+            <li style="color: var(--neon-green);">💿 <strong>Hendrix:</strong> FLAG{Purple_Haze_Network} (+150 pts)</li>
+            <li style="color: var(--neon-green);">💿 <strong>Joplin:</strong> FLAG{Cry_Baby_Hidden_Data} (+200 pts)</li>
+            <li style="color: var(--neon-cyan);">💿 <strong>Morrison:</strong> En curso en /doors/ (+250 pts)</li>
+            <li style="color: var(--text-muted);">💿 <strong>Winehouse:</strong> Pendiente de exfiltración (+200 pts)</li>
+            <li style="color: var(--text-muted);">💿 <strong>Cobain:</strong> Pendiente de escalada Root (+200 pts)</li>
+          </ul>
+        </div>
+
+        <!-- VIP Backstage Pass Óscar Robayo -->
+        <div class="vip-backstage-card">
+          <div class="vip-header">★ VIP BACKSTAGE PASS ★</div>
+          <div class="vip-sub">THE 27 CLUB WORLD TOUR</div>
+          <img src="assets/images/cobain_photo.jpg" class="vip-avatar" alt="Auditor">
+          <div class="vip-name">ÓSCAR ROBAYO</div>
+          <div class="vip-role">LEAD SECURITY AUDITOR</div>
+          <div style="font-size:0.75rem; color:#aaa; margin-top:4px;">UNIVERSIDAD DE CUNDINAMARCA</div>
+          <div style="font-size:0.72rem; color:var(--gold); margin-top:4px;">ACCESS: ALL ACCESS (ROOT UID 0)</div>
+          <div class="vip-barcode">||| | |||| || ||||| ||</div>
+        </div>
+      </div>
+
+      <!-- COLLAGE DEL SALÓN CENTRAL -->
+      <div class="rock-collage-section">
+        <div class="collage-header">
+          <h3>📸 Salón de la Fama • Collage Legendario del Club de los 27</h3>
+          <span>Woodstock • Monterey • Sunset Strip • Camden • Seattle</span>
+        </div>
+        <div class="polaroid-grid">
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/hendrix_woodstock.jpg" alt="Hendrix Woodstock"></div>
+            <div class="polaroid-caption">Jimi Hendrix • Solo en Woodstock</div>
+            <span class="polaroid-date">18 de Agosto, 1969</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/joplin_woodstock.jpg" alt="Janis Joplin Live"></div>
+            <div class="polaroid-caption">Janis Joplin • La Dama del Blues</div>
+            <span class="polaroid-date">Woodstock Festival, 1969</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/morrison_young.jpg" alt="Jim Morrison"></div>
+            <div class="polaroid-caption">Jim Morrison • The Young Lion</div>
+            <span class="polaroid-date">Elektra Records, 1967</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/cobain_live.jpg" alt="Kurt Cobain"></div>
+            <div class="polaroid-caption">Kurt Cobain • Nirvana Grunge</div>
+            <span class="polaroid-date">Seattle MTV Live, 1993</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW: ROOM 1 - JIMI HENDRIX (ELECTRIC CHURCH STUDIOS) -->
+    <!-- =================================================================== -->
+    <section class="room-view" id="view-hendrix">
+      <div class="room-stage stage-hendrix">
+        <div class="media-showcase">
+          <div class="vinyl-sleeve-combo">
+            <img src="assets/images/hendrix_album.jpg" class="album-cover-real" alt="Are You Experienced">
+            <div class="vinyl-disc-out" id="vinyl-hendrix">
+              <div class="vinyl-label"><img src="assets/images/hendrix_photo.jpg" alt="Hendrix"></div>
+            </div>
+          </div>
+          <div class="artist-photo-box">
+            <img src="assets/images/hendrix_photo.jpg" alt="Jimi Hendrix">
+            <div class="artist-bio-brief">
+              <h4>Jimi Hendrix</h4>
+              <span>"Purple Haze • 1967"</span>
+              <p style="font-size:0.75rem; color:#aaa; margin-top:4px;">Stratocaster psicodélica y distorsión Fuzz Face.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-narrative">
+          <h2 style="color: var(--neon-purple);">Room 1: Electric Church Studios</h2>
+          <span class="room-badge-status" style="background: rgba(0, 255, 136, 0.15); color: var(--neon-green); border: 1px solid var(--neon-green);">
+            ESTADO: SUPERADO • PASOS 6 AL 8
+          </span>
+          <p>
+            En este estudio psicodélico de Londres rodeado de amplificadores Marshall valvulares, 
+            Hendrix transmitía señales cifradas en las cabeceras HTTP de su servidor. 
+            La captura forense en <code>jimi_hendrix.pcap</code> expuso un payload ofuscado con el algoritmo clásico ROT13 dentro del campo <code>User-Agent</code>.
+          </p>
+          <div class="specs-grid">
+            <div><strong>Vector:</strong> DPI & User-Agent Header Injection</div>
+            <div><strong>Criptografía:</strong> ROT13 / C&C Exfiltración</div>
+            <div><strong>Estándar:</strong> CWE-311 (Falta de Cifrado Robusto)</div>
+            <div><strong>Bandera:</strong> <code>FLAG{Purple_Haze_Network}</code></div>
+          </div>
+        </div>
+
+        <div class="stage-challenge-panel">
+          <div>
+            <h3>🎸 Bóveda Hendrix</h3>
+            <div class="room-track-player">
+              <div class="track-meta">
+                <span class="track-title">Purple Haze</span>
+                <span class="track-artist">The Jimi Hendrix Experience</span>
+              </div>
+              <button class="btn-play-track" onclick="playArtistTrack('hendrix')">🎵 Reproducir Master Original (30s)</button>
+            </div>
+            <div style="background: rgba(0, 255, 136, 0.1); border: 1px solid var(--neon-green); border-radius: 8px; padding: 12px; font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--neon-green);">
+              ✓ FLAG{Purple_Haze_Network} (+150 PTS)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLLAGE HENDRIX -->
+      <div class="rock-collage-section">
+        <div class="collage-header">
+          <h3 style="color: var(--neon-purple);">📸 Galería & Memorabilia • Jimi Hendrix Experience</h3>
+          <span>Electric Church Studios • Londres & Woodstock</span>
+        </div>
+        <div class="polaroid-grid">
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/hendrix_woodstock.jpg" alt="Woodstock 1969"></div>
+            <div class="polaroid-caption">El Himno en Woodstock</div>
+            <span class="polaroid-date">Fender Stratocaster Olímpica • 1969</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/hendrix_ladyland.jpg" alt="Electric Ladyland"></div>
+            <div class="polaroid-caption">Sesión Electric Ladyland</div>
+            <span class="polaroid-date">Estudios de Grabación • Nueva York 1968</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/hendrix_album.jpg" alt="Are You Experienced"></div>
+            <div class="polaroid-caption">Are You Experienced (Vinilo)</div>
+            <span class="polaroid-date">Track Master: Purple Haze • 1967</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/hendrix_photo.jpg" alt="Jimi Portrait"></div>
+            <div class="polaroid-caption">Retrato Oficial de Londres</div>
+            <span class="polaroid-date">El Dios de la Guitarra Eléctrica</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW: ROOM 2 - JANIS JOPLIN (THE WOODSTOCK CARAVAN) -->
+    <!-- =================================================================== -->
+    <section class="room-view" id="view-joplin">
+      <div class="room-stage stage-joplin">
+        <div class="media-showcase">
+          <div class="vinyl-sleeve-combo">
+            <img src="assets/images/joplin_album.jpg" class="album-cover-real" alt="Pearl">
+            <div class="vinyl-disc-out" id="vinyl-joplin">
+              <div class="vinyl-label"><img src="assets/images/joplin_photo.jpg" alt="Janis"></div>
+            </div>
+          </div>
+          <div class="artist-photo-box">
+            <img src="assets/images/joplin_photo.jpg" alt="Janis Joplin">
+            <div class="artist-bio-brief">
+              <h4>Janis Joplin</h4>
+              <span>"Cry Baby • 1970"</span>
+              <p style="font-size:0.75rem; color:#aaa; margin-top:4px;">Blues-rock, terciopelo y rebeldía de San Francisco.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-narrative">
+          <h2 style="color: var(--neon-amber);">Room 2: The Woodstock Caravan</h2>
+          <span class="room-badge-status" style="background: rgba(0, 255, 136, 0.15); color: var(--neon-green); border: 1px solid var(--neon-green);">
+            ESTADO: SUPERADO • PASOS 9 AL 12
+          </span>
+          <p>
+            Entre botellas de Southern Comfort y guitarras acústicas, Janis expuso sus directorios restringidos en el archivo <code>robots.txt</code>. 
+            Sembró un falso positivo (Rabbit Hole) en <code>/admin_trampa/</code>, mientras la bandera legítima yacía oculta al final de los bytes (EOF) de la imagen <code>janis.jpg</code>.
+          </p>
+          <div class="specs-grid">
+            <div><strong>Vector:</strong> CWE-200 Information Exposure</div>
+            <div><strong>Técnica:</strong> Esteganografía EOF con strings</div>
+            <div><strong>Rabbit Hole:</strong> <code>RABBIT_HOLE{Sigue_Buscando...}</code></div>
+            <div><strong>Bandera:</strong> <code>FLAG{Cry_Baby_Hidden_Data}</code></div>
+          </div>
+        </div>
+
+        <div class="stage-challenge-panel">
+          <div>
+            <h3>🌸 Bóveda Janis</h3>
+            <div class="room-track-player">
+              <div class="track-meta">
+                <span class="track-title">Cry Baby</span>
+                <span class="track-artist">Janis Joplin</span>
+              </div>
+              <button class="btn-play-track" onclick="playArtistTrack('joplin')">🎵 Reproducir Master Original (30s)</button>
+            </div>
+            <div style="background: rgba(0, 255, 136, 0.1); border: 1px solid var(--neon-green); border-radius: 8px; padding: 12px; font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--neon-green);">
+              ✓ FLAG{Cry_Baby_Hidden_Data} (+200 PTS)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLLAGE JANIS JOPLIN -->
+      <div class="rock-collage-section">
+        <div class="collage-header">
+          <h3 style="color: var(--neon-amber);">📸 Galería & Memorabilia • Janis Joplin & The Full Tilt Boogie</h3>
+          <span>The Chelsea Hotel • San Francisco & Woodstock</span>
+        </div>
+        <div class="polaroid-grid">
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/joplin_woodstock.jpg" alt="Woodstock 1969"></div>
+            <div class="polaroid-caption">Voz Desgarradora en Woodstock</div>
+            <span class="polaroid-date">La Reina Blanca del Blues • 1969</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/joplin_live.jpg" alt="Concierto San Francisco"></div>
+            <div class="polaroid-caption">Fuerza Emocional en Vivo</div>
+            <span class="polaroid-date">Big Brother & The Holding Co.</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/joplin_pearl_live.jpg" alt="Álbum Pearl"></div>
+            <div class="polaroid-caption">Sesiones del Álbum Pearl</div>
+            <span class="polaroid-date">Grabaciones Finales • 1970</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/joplin_album.jpg" alt="Pearl Vinyl"></div>
+            <div class="polaroid-caption">Vinilo de Oro: Cry Baby</div>
+            <span class="polaroid-date">Columbia Records • 33 RPM</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW: ROOM 3 - JIM MORRISON (THE DOORS CRYPT / VAULT) -->
+    <!-- =================================================================== -->
+    <section class="room-view" id="view-morrison">
+      <div class="room-stage stage-morrison">
+        <div class="media-showcase">
+          <div class="vinyl-sleeve-combo">
+            <img src="assets/images/morrison_album.jpg" class="album-cover-real" alt="The Doors">
+            <div class="vinyl-disc-out" id="vinyl-morrison">
+              <div class="vinyl-label"><img src="assets/images/morrison_photo.jpg" alt="Jim"></div>
+            </div>
+          </div>
+          <div class="artist-photo-box">
+            <img src="assets/images/morrison_photo.jpg" alt="Jim Morrison">
+            <div class="artist-bio-brief">
+              <h4>Jim Morrison</h4>
+              <span>"Light My Fire • 1967"</span>
+              <p style="font-size:0.75rem; color:#aaa; margin-top:4px;">El Rey Lagarto y la poesía de The Doors.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-narrative">
+          <h2 style="color: var(--neon-cyan);">Room 3: The Doors Crypt & Vault</h2>
+          <span class="room-badge-status" id="badge-room3" style="background: rgba(0, 240, 255, 0.2); color: var(--neon-cyan); border: 1px solid var(--neon-cyan);">
+            OBJETIVO ACTIVO • PASOS 13 AL 16
+          </span>
+          <p>
+            Detrás de las puertas de roble y el órgano psicodélico de The Doors, Jim Morrison resguarda el catálogo musical en <code>http://192.168.56.1/doors/?id=1</code>. 
+            El backend de MySQL concatena directamente el parámetro sin filtros (CWE-89). 
+            La tabla señuelo <code>doors_trap</code> contiene el verso de "The End" (Rabbit Hole), mientras la bandera real arde en <code>doors_vault</code>.
+          </p>
+          <div class="specs-grid">
+            <div><strong>Vulnerabilidad:</strong> CWE-89 (SQL Injection)</div>
+            <div><strong>Técnica:</strong> Inyección UNION Based</div>
+            <div><strong>Señuelo Trampa:</strong> <code>RABBIT_HOLE{The_End_Is_Not_Here}</code></div>
+            <div><strong>Bandera Real:</strong> <code>FLAG{Light_My_Fire_SQLi}</code></div>
+          </div>
+        </div>
+
+        <div class="stage-challenge-panel">
+          <div>
+            <h3>🚪 Bóveda de Morrison</h3>
+            <div class="room-track-player">
+              <div class="track-meta">
+                <span class="track-title">Light My Fire</span>
+                <span class="track-artist">The Doors</span>
+              </div>
+              <button class="btn-play-track" onclick="playArtistTrack('morrison')">🎵 Reproducir Master Original (30s)</button>
+            </div>
+
+            <form class="room-form" onsubmit="handleRoomFlagSubmit(event, 3)">
+              <input type="text" class="room-input" id="input-flag-3" placeholder="Ingresa la bandera de Jim..." required>
+              <button type="submit" class="btn-submit-flag">Desbloquear Puerta</button>
+            </form>
+            <div id="feedback-room-3" class="alert-banner"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Consola SQLi -->
+      <div class="interactive-dock">
+        <h4>📟 Auditoría en Vivo de la Base de Datos (192.168.56.1/doors/)</h4>
+        <div class="terminal-console">
+          <div style="color: var(--neon-cyan);">[INFO] Conectado al backend relacional de The Doors (MariaDB/MySQL).</div>
+          <div style="color: #fff;">kali@kali:~$ curl -s "http://192.168.56.1/doors/?id=1"</div>
+          <div style="color: #aaa;">&gt; Canción: Break On Through | Secreto: Pista: El fuego se enciende en el siguiente registro.</div>
+          <div style="color: #fff;">kali@kali:~$ curl -s "http://192.168.56.1/doors/?id=1'"</div>
+          <div style="color: var(--neon-red);">&gt; Error SQL: You have an error in your SQL syntax; check manual near '\'' at line 1</div>
+          <div style="color: var(--neon-green);">[+] Vulnerabilidad CWE-89 confirmada. Exfiltra con: UNION SELECT cancion, album, secreto FROM doors_vault WHERE id=2-- -</div>
+        </div>
+      </div>
+
+      <!-- COLLAGE MORRISON -->
+      <div class="rock-collage-section">
+        <div class="collage-header">
+          <h3 style="color: var(--neon-cyan);">📸 Galería & Memorabilia • The Doors & The Lizard King</h3>
+          <span>Sunset Strip • Hollywood Bowl & Venice Beach</span>
+        </div>
+        <div class="polaroid-grid">
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/morrison_young.jpg" alt="Young Lion 1967"></div>
+            <div class="polaroid-caption">The Young Lion Session</div>
+            <span class="polaroid-date">Joel Brodsky • Fotografía de 1967</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/morrison_live.jpg" alt="Hollywood Bowl"></div>
+            <div class="polaroid-caption">En Vivo en Hollywood Bowl</div>
+            <span class="polaroid-date">Concierto Legendario • Los Ángeles 1968</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/doors_band.jpg" alt="The Doors Band"></div>
+            <div class="polaroid-caption">The Doors en Estudio Elektra</div>
+            <span class="polaroid-date">Krieger, Manzarek, Densmore, Morrison</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/morrison_album.jpg" alt="The Doors Album"></div>
+            <div class="polaroid-caption">Vinilo Debut: Light My Fire</div>
+            <span class="polaroid-date">Elektra Records • Oro Histórico</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW: ROOM 4 - AMY WINEHOUSE (THE JAZZ SPEAKEASY) -->
+    <!-- =================================================================== -->
+    <section class="room-view" id="view-winehouse">
+      <div class="room-stage stage-winehouse">
+        <div class="media-showcase">
+          <div class="vinyl-sleeve-combo">
+            <img src="assets/images/winehouse_album.jpg" class="album-cover-real" alt="Back to Black">
+            <div class="vinyl-disc-out" id="vinyl-winehouse">
+              <div class="vinyl-label"><img src="assets/images/winehouse_photo.jpg" alt="Amy"></div>
+            </div>
+          </div>
+          <div class="artist-photo-box">
+            <img src="assets/images/winehouse_photo.jpg" alt="Amy Winehouse">
+            <div class="artist-bio-brief">
+              <h4>Amy Winehouse</h4>
+              <span>"Back to Black • 2006"</span>
+              <p style="font-size:0.75rem; color:#aaa; margin-top:4px;">La reina del soul de Camden y el micrófono vintage.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-narrative">
+          <h2 style="color: var(--neon-magenta);">Room 4: The Camden Speakeasy</h2>
+          <span class="room-badge-status" id="badge-room4" style="background: rgba(255, 255, 255, 0.1); color: var(--text-muted); border: 1px solid rgba(255, 255, 255, 0.2);">
+            OBJETIVO • PASOS 17 AL 19
+          </span>
+          <p>
+            En un club clandestino de jazz en Camden Town, el libro de firmas en <code>/winehouse/</code> almacena mensajes directamente sin saneamiento de entidades HTML. 
+            Esto permite ejecutar código JavaScript persistente (Stored XSS). 
+            La cookie de sesión de administración carece del atributo <code>HttpOnly</code>, permitiendo el secuestro de la sesión administrativa.
+          </p>
+          <div class="specs-grid">
+            <div><strong>Vulnerabilidad:</strong> CWE-79 (Stored Cross-Site Scripting)</div>
+            <div><strong>Impacto:</strong> Session Hijacking / Cookie Theft</div>
+            <div><strong>Cookie Trampa:</strong> <code>RABBIT_HOLE{Rehab_Was_A_Lie}</code></div>
+            <div><strong>Bandera Real:</strong> <code>FLAG{Back_To_Black_XSS}</code></div>
+          </div>
+        </div>
+
+        <div class="stage-challenge-panel">
+          <div>
+            <h3>🎙️ Micrófono de Amy</h3>
+            <div class="room-track-player">
+              <div class="track-meta">
+                <span class="track-title">Back To Black</span>
+                <span class="track-artist">Amy Winehouse</span>
+              </div>
+              <button class="btn-play-track" onclick="playArtistTrack('winehouse')">🎵 Reproducir Master Original (30s)</button>
+            </div>
+
+            <form class="room-form" onsubmit="handleRoomFlagSubmit(event, 4)">
+              <input type="text" class="room-input" id="input-flag-4" placeholder="Ingresa la bandera de Amy..." required>
+              <button type="submit" class="btn-submit-flag">Exfiltrar Sesión</button>
+            </form>
+            <div id="feedback-room-4" class="alert-banner"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLLAGE AMY WINEHOUSE -->
+      <div class="rock-collage-section">
+        <div class="collage-header">
+          <h3 style="color: var(--neon-magenta);">📸 Galería & Memorabilia • Amy Winehouse & The Dap-Kings</h3>
+          <span>Camden Town • Londres & Festivales de Soul</span>
+        </div>
+        <div class="polaroid-grid">
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/winehouse_live.jpg" alt="Amy Live"></div>
+            <div class="polaroid-caption">Voz Íntima en Concierto</div>
+            <span class="polaroid-date">Gira Europea • 2007</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/winehouse_mural.jpg" alt="Mural Camden"></div>
+            <div class="polaroid-caption">Mural en Camden Town</div>
+            <span class="polaroid-date">Templo del Soul • Londres</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/winehouse_eurokeennes.jpg" alt="Eurockeennes"></div>
+            <div class="polaroid-caption">Festival Eurockéennes</div>
+            <span class="polaroid-date">Magia y Emoción Pura • 2007</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/winehouse_album.jpg" alt="Back to Black"></div>
+            <div class="polaroid-caption">Vinilo Clásico: Back to Black</div>
+            <span class="polaroid-date">Island Records • 5 Premios Grammy</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW: ROOM 5 - KURT COBAIN (SEATTLE GRUNGE GARAGE) -->
+    <!-- =================================================================== -->
+    <section class="room-view" id="view-cobain">
+      <div class="room-stage stage-cobain">
+        <div class="media-showcase">
+          <div class="vinyl-sleeve-combo">
+            <img src="assets/images/cobain_album.jpg" class="album-cover-real" alt="Nevermind">
+            <div class="vinyl-disc-out" id="vinyl-cobain">
+              <div class="vinyl-label"><img src="assets/images/cobain_photo.jpg" alt="Kurt"></div>
+            </div>
+          </div>
+          <div class="artist-photo-box">
+            <img src="assets/images/cobain_photo.jpg" alt="Kurt Cobain">
+            <div class="artist-bio-brief">
+              <h4>Kurt Cobain</h4>
+              <span>"Smells Like Teen Spirit • 1991"</span>
+              <p style="font-size:0.75rem; color:#aaa; margin-top:4px;">El ícono del grunge de Seattle y la distorsión pura.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-narrative">
+          <h2 style="color: var(--neon-green);">Room 5: The Seattle Grunge Garage</h2>
+          <span class="room-badge-status" id="badge-room5" style="background: rgba(255, 255, 255, 0.1); color: var(--text-muted); border: 1px solid rgba(255, 255, 255, 0.2);">
+            DESAFÍO FINAL ROOT • PASOS 20 AL 22
+          </span>
+          <p>
+            En este garaje rústico de Seattle con pedales Boss DS-1 y guitarras destartaladas, 
+            el acceso por consola con el usuario <code>kurt:nirvana</code> da inicio a la auditoría del sistema de archivos. 
+            El binario <code>/usr/bin/find</code> posee permisos especiales SUID (CWE-250), permitiendo invocar una shell preservando el UID 0 (root) y capturar la bandera final en <code>/root/flag.txt</code>.
+          </p>
+          <div class="specs-grid">
+            <div><strong>Vulnerabilidad:</strong> CWE-250 (Execution with Unnecessary Privileges)</div>
+            <div><strong>Vector:</strong> Binario con bit SUID (/usr/bin/find)</div>
+            <div><strong>Acceso:</strong> <code>kurt:nirvana (UID 1000)</code></div>
+            <div><strong>Bandera Final:</strong> <code>FLAG{Smells_Like_Root_Spirit}</code></div>
+          </div>
+        </div>
+
+        <div class="stage-challenge-panel">
+          <div>
+            <h3>⚡ Amplificador de Kurt (Root)</h3>
+            <div class="room-track-player">
+              <div class="track-meta">
+                <span class="track-title">Smells Like Teen Spirit</span>
+                <span class="track-artist">Nirvana</span>
+              </div>
+              <button class="btn-play-track" onclick="playArtistTrack('cobain')">🎵 Reproducir Master Original (30s)</button>
+            </div>
+
+            <form class="room-form" onsubmit="handleRoomFlagSubmit(event, 5)">
+              <input type="text" class="room-input" id="input-flag-5" placeholder="Ingresa la bandera final de root..." required>
+              <button type="submit" class="btn-submit-flag" style="background: linear-gradient(90deg, #00ff88, #00f0ff); color: #000;">
+                👑 Reclamar Trono Root
+              </button>
+            </form>
+            <div id="feedback-room-5" class="alert-banner"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLLAGE KURT COBAIN -->
+      <div class="rock-collage-section">
+        <div class="collage-header">
+          <h3 style="color: var(--neon-green);">📸 Galería & Memorabilia • Nirvana & The Seattle Grunge Scene</h3>
+          <span>Sub Pop • MTV Unplugged & Reading Festival</span>
+        </div>
+        <div class="polaroid-grid">
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/cobain_live.jpg" alt="Kurt Live 1993"></div>
+            <div class="polaroid-caption">En Vivo en Seattle • 1993</div>
+            <span class="polaroid-date">El Sonido Sucio de la Generación X</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/collage/cobain_guitar.jpg" alt="Kurt Guitar"></div>
+            <div class="polaroid-caption">La Fender Jag-Stang Zurda</div>
+            <span class="polaroid-date">Diseñada a Mano por Kurt Cobain</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/cobain_album.jpg" alt="Nevermind Vinyl"></div>
+            <div class="polaroid-caption">Vinilo de Culto: Nevermind</div>
+            <span class="polaroid-date">DGC Records • Master 1991</span>
+          </div>
+          <div class="polaroid-card">
+            <div class="polaroid-pin"></div>
+            <div class="polaroid-img-wrapper"><img src="assets/images/cobain_photo.jpg" alt="Kurt Acoustic"></div>
+            <div class="polaroid-caption">Sesión Acústica de Nueva York</div>
+            <span class="polaroid-date">"Come As You Are"</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>Universidad de Cundinamarca • Facultad de Ingeniería • Línea de Profundización I</div>
+    <div>Servidor CTF: 192.168.56.1 | Contenedor: 27club_ctf | Red: Host-Only VirtualBox</div>
+  </footer>
+
+  <!-- LÓGICA DE CONTROL MULTIMEDIA Y JUEGO -->
+  <script>
+    let score = 350;
+    let penalties = 0;
+    let timeLeft = 60 * 60;
+    let timerInterval = null;
+
+    const MUSIC_CATALOG = {
+      hendrix: {
+        title: "Purple Haze",
+        artist: "The Jimi Hendrix Experience",
+        audioSrc: "assets/audio/hendrix.m4a"
+      },
+      joplin: {
+        title: "Cry Baby",
+        artist: "Janis Joplin",
+        audioSrc: "assets/audio/joplin.m4a"
+      },
+      morrison: {
+        title: "Light My Fire",
+        artist: "The Doors",
+        audioSrc: "assets/audio/morrison.m4a"
+      },
+      winehouse: {
+        title: "Back To Black",
+        artist: "Amy Winehouse",
+        audioSrc: "assets/audio/winehouse.m4a"
+      },
+      cobain: {
+        title: "Smells Like Teen Spirit",
+        artist: "Nirvana",
+        audioSrc: "assets/audio/cobain.m4a"
+      }
+    };
+
+    let currentArtistKey = 'hendrix';
+    const player = document.getElementById("realAudioPlayer");
+    const masterTurntable = document.getElementById("masterTurntable");
+
+    // Canvas Spectrum Visualizer Engine
+    const canvas = document.getElementById("visualizerCanvas");
+    const ctx = canvas.getContext("2d");
+    let isVisualizing = false;
+
+    function drawVisualizer() {
+      if (!isVisualizing) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const bars = 10;
+      const barWidth = 6;
+      const gap = 3;
+      const now = Date.now() / 150;
+
+      for (let i = 0; i < bars; i++) {
+        // Generar altura rítmica simulada realista para la música
+        const h = Math.abs(Math.sin(now + i * 0.8)) * 22 + 4;
+        const x = i * (barWidth + gap) + 2;
+        const y = canvas.height - h;
+
+        const grad = ctx.createLinearGradient(0, canvas.height, 0, 0);
+        grad.addColorStop(0, '#ff007f');
+        grad.addColorStop(1, '#00f0ff');
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(x, y, barWidth, h);
+      }
+      requestAnimationFrame(drawVisualizer);
+    }
+
+    function playArtistTrack(artistKey) {
+      const data = MUSIC_CATALOG[artistKey];
+      if (!data) return;
+
+      currentArtistKey = artistKey;
+      document.getElementById("jukeboxTrack").textContent = data.title;
+      document.getElementById("jukeboxArtist").textContent = data.artist;
+
+      player.src = data.audioSrc;
+      player.play().then(() => {
+        document.getElementById("btnPlayPause").textContent = "⏸";
+        masterTurntable.classList.add("spinning");
+        const vinylOut = document.getElementById("vinyl-" + artistKey);
+        if (vinylOut) vinylOut.classList.add("spinning");
+        isVisualizing = true;
+        drawVisualizer();
+      }).catch(e => {
+        console.log("Audio playback waiting for interaction:", e);
+      });
+    }
+
+    function togglePlayback() {
+      if (player.paused) {
+        if (!player.src || player.src === "") {
+          playArtistTrack(currentArtistKey);
+        } else {
+          player.play();
+          document.getElementById("btnPlayPause").textContent = "⏸";
+          masterTurntable.classList.add("spinning");
+          isVisualizing = true;
+          drawVisualizer();
+        }
+      } else {
+        player.pause();
+        document.getElementById("btnPlayPause").textContent = "▶";
+        masterTurntable.classList.remove("spinning");
+        document.querySelectorAll(".vinyl-disc-out").forEach(v => v.classList.remove("spinning"));
+        isVisualizing = false;
+      }
+    }
+
+    player.onended = function() {
+      document.getElementById("btnPlayPause").textContent = "▶";
+      masterTurntable.classList.remove("spinning");
+      document.querySelectorAll(".vinyl-disc-out").forEach(v => v.classList.remove("spinning"));
+      isVisualizing = false;
+    };
+
+    function switchRoom(roomId) {
+      document.querySelectorAll(".room-view").forEach(v => v.classList.remove("active"));
+      document.querySelectorAll(".btn-room").forEach(b => b.classList.remove("active"));
+
+      const targetView = document.getElementById("view-" + roomId);
+      const targetBtn = document.getElementById("nav-" + roomId);
+      if (targetView) targetView.classList.add("active");
+      if (targetBtn) targetBtn.classList.add("active");
+
+      if (['hendrix', 'joplin', 'morrison', 'winehouse', 'cobain'].includes(roomId)) {
+        playArtistTrack(roomId);
+      }
+    }
+
+    const CTF_DATABASE = {
+      "FLAG{Light_My_Fire_SQLi}": {
+        phase: 3,
+        type: "flag",
+        name: "Jim Morrison",
+        points: 250,
+        msg: "¡PUERTA DESBLOQUEADA! Inyección SQL UNION Based exitosa (+250 pts). Desbloqueando Room 4 (Amy Winehouse)."
+      },
+      "RABBIT_HOLE{The_End_Is_Not_Here}": {
+        phase: 3,
+        type: "rabbit_hole",
+        name: "Señuelo de Morrison (doors_trap)",
+        penalty: 50,
+        msg: "⚠️ RABBIT HOLE: Inyectaste en la tabla trampa doors_trap con el verso 'The End'. Penalización: -50 pts."
+      },
+      "FLAG{Back_To_Black_XSS}": {
+        phase: 4,
+        type: "flag",
+        name: "Amy Winehouse",
+        points: 200,
+        msg: "¡SESIÓN EXFILTRADA! Robo de cookie mediante Stored XSS (+200 pts). Desbloqueando Room 5 (Kurt Cobain)."
+      },
+      "RABBIT_HOLE{Rehab_Was_A_Lie}": {
+        phase: 4,
+        type: "rabbit_hole",
+        name: "Señuelo de Amy (Cookie de prueba)",
+        penalty: 50,
+        msg: "⚠️ RABBIT HOLE: Capturaste la cookie de prueba test_decoy. Penalización: -50 pts."
+      },
+      "FLAG{Smells_Like_Root_Spirit}": {
+        phase: 5,
+        type: "flag",
+        name: "Kurt Cobain",
+        points: 200,
+        msg: "👑 ¡COMPROMISO TOTAL DEL SISTEMA! Escalada a root completada (+200 pts). ¡Puntaje Máximo 1000/1000!"
+      }
+    };
+
+    function handleRoomFlagSubmit(e, phaseNum) {
+      e.preventDefault();
+      const input = document.getElementById(`input-flag-${phaseNum}`);
+      const banner = document.getElementById(`feedback-room-${phaseNum}`);
+      const val = input.value.trim();
+
+      const record = CTF_DATABASE[val];
+
+      if (!record) {
+        banner.className = "alert-banner alert-danger";
+        banner.style.display = "block";
+        banner.textContent = "❌ Bandera inválida para esta habitación.";
+        return;
+      }
+
+      if (record.type === "rabbit_hole") {
+        penalties++;
+        score = Math.max(0, score - record.penalty);
+        document.getElementById("penaltyDisplay").textContent = penalties;
+        document.getElementById("scoreDisplay").textContent = `${score} / 1000`;
+
+        banner.className = "alert-banner alert-warning";
+        banner.style.display = "block";
+        banner.textContent = record.msg;
+        return;
+      }
+
+      if (record.type === "flag") {
+        score += record.points;
+        document.getElementById("scoreDisplay").textContent = `${score} / 1000`;
+
+        banner.className = "alert-banner alert-success";
+        banner.style.display = "block";
+        banner.textContent = record.msg;
+
+        if (phaseNum === 3) {
+          document.getElementById("nav-morrison").classList.add("completed");
+          document.getElementById("badge-room3").style.background = "rgba(0,255,136,0.2)";
+          document.getElementById("badge-room3").style.color = "var(--neon-green)";
+          document.getElementById("badge-room3").textContent = "SUPERADO (+250 PTS)";
+          setTimeout(() => switchRoom('winehouse'), 1200);
+        } else if (phaseNum === 4) {
+          document.getElementById("nav-winehouse").classList.add("completed");
+          document.getElementById("badge-room4").style.background = "rgba(0,255,136,0.2)";
+          document.getElementById("badge-room4").style.color = "var(--neon-green)";
+          document.getElementById("badge-room4").textContent = "SUPERADO (+200 PTS)";
+          setTimeout(() => switchRoom('cobain'), 1200);
+        } else if (phaseNum === 5) {
+          document.getElementById("nav-cobain").classList.add("completed");
+          document.getElementById("badge-room5").style.background = "rgba(0,255,136,0.2)";
+          document.getElementById("badge-room5").style.color = "var(--neon-green)";
+          document.getElementById("badge-room5").textContent = "CONQUISTADO (+200 PTS)";
+          alert("👑 ¡FELICITACIONES! Has completado el 100% de The 27 Club CTF. Puntuación Final: 1000 / 1000.");
+        }
+      }
+    }
+
+    function activateSustentacionMode() {
+      document.getElementById("input-flag-3").value = "FLAG{Light_My_Fire_SQLi}";
+      document.getElementById("input-flag-4").value = "FLAG{Back_To_Black_XSS}";
+      document.getElementById("input-flag-5").value = "FLAG{Smells_Like_Root_Spirit}";
+
+      score = 1000;
+      document.getElementById("scoreDisplay").textContent = "1000 / 1000";
+
+      ['hendrix', 'joplin', 'morrison', 'winehouse', 'cobain'].forEach(r => {
+        document.getElementById("nav-" + r).classList.add("completed");
+      });
+
+      document.getElementById("badge-room3").textContent = "SUPERADO (+250 PTS)";
+      document.getElementById("badge-room3").style.color = "var(--neon-green)";
+      document.getElementById("badge-room4").textContent = "SUPERADO (+200 PTS)";
+      document.getElementById("badge-room4").style.color = "var(--neon-green)";
+      document.getElementById("badge-room5").textContent = "CONQUISTADO ROOT (+200 PTS)";
+      document.getElementById("badge-room5").style.color = "var(--neon-green)";
+
+      alert("🎓 MODO SUSTENTACIÓN ACTIVADO:\nTodas las 5 habitaciones de The 27 Club han sido desbloqueadas con éxito (1000/1000 pts).");
+      playArtistTrack('cobain');
+    }
+
+    timerInterval = setInterval(() => {
+      if (timeLeft > 0) {
+        timeLeft--;
+        const m = Math.floor(timeLeft / 60);
+        const s = timeLeft % 60;
+        document.getElementById("timerDisplay").textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      }
+    }, 1000);
+  </script>
+</body>
+</html>

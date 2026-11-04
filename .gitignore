@@ -1,0 +1,36 @@
+# Archivos temporales de Word y respaldos
+*.docx.tmp
+~$*.docx
+*backup*.docx
+
+# Entornos virtuales y caché de Python
+__pycache__/
+*.pyc
+
+# Logs de sistema
+*.log
+
+# Scripts de apoyo internos
+inspect_*.py
+dump_*.py
+format_*.py
+download_*.py
+fetch_*.py
+map_*.py
+extract_*.py
+
+# Documentos ajenos al CTF 27 Club
+CV_OscarRobayo.pdf
+Borrador_*.pdf
+Exploting.docx
+Guia*.pdf
+Guia*.docx
+LAB*.pdf
+lab*.pdf
+Laboratorio*.pdf
+Laboratorio*.docx
+Recopilacion*.docx
+Reconocimiento*.docx
+ubuntu.docx
+Análisis*.pdf
+"An\303\241lisis*.pdf"

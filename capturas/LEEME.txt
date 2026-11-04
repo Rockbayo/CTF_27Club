@@ -1,0 +1,1 @@
+Guarda aqui las capturas de pantalla de cada fase (ej. fase3_sqli.png, fase4_xss.png, fase5_root.png).

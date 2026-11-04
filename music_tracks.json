@@ -1,0 +1,32 @@
+{
+  "hendrix": {
+    "track": "Purple Haze",
+    "artist": "The Jimi Hendrix Experience",
+    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/bf/ba/6a/bfba6aa6-40a8-f2f8-8246-2e51041fb0cf/mzaf_10404999512672940742.plus.aac.p.m4a",
+    "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/53/e9/b9/53e9b9f0-97f4-aac7-ee5b-12c2f2007ad3/884977413878.jpg/600x600bb.jpg"
+  },
+  "joplin": {
+    "track": "Cry Baby",
+    "artist": "Janis Joplin",
+    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d8/61/0b/d8610bd5-b574-a690-cdc0-dea5692978cf/mzaf_4155186719916123270.plus.aac.p.m4a",
+    "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Features114/v4/82/d8/c7/82d8c7e8-e4d5-a98c-2e0c-85efebd58f24/dj.jnsyrcqp.jpg/600x600bb.jpg"
+  },
+  "morrison": {
+    "track": "Light My Fire",
+    "artist": "The Doors",
+    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ad/82/ea/ad82ea83-8048-3a06-6004-4f4dc7a710dc/mzaf_483167435383327667.plus.aac.p.m4a",
+    "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/43/f6/14/43f61467-931b-21af-6b22-13717edc8ed9/603497870295.jpg/600x600bb.jpg"
+  },
+  "winehouse": {
+    "track": "Back To Black (Original Demo)",
+    "artist": "Amy Winehouse",
+    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/21/57/ff/2157ff6e-4f52-a173-0385-bc952b03c02b/mzaf_11788677149468272112.plus.aac.p.m4a",
+    "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/4e/d7/f4/4ed7f4b7-c6ed-6ee1-3b2f-5928ea7b7f3b/26UM1IM00419.rgb.jpg/600x600bb.jpg"
+  },
+  "cobain": {
+    "track": "Smells Like Teen Spirit",
+    "artist": "Nirvana",
+    "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/65/49/4e/65494e02-b6d3-26d8-6b0c-9bd98dcf4d5d/mzaf_7665413316386155700.plus.aac.p.m4a",
+    "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/95/fd/b9/95fdb9b2-6d2b-92a6-97f2-51c1a6d77f1a/00602527874609.rgb.jpg/600x600bb.jpg"
+  }
+}
