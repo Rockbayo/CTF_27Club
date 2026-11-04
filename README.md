@@ -62,3 +62,29 @@ Abre el archivo `dashboard_27club.html` en tu navegador. El tablero incluye:
 | **Fase 3: Morrison** | CWE-89 (SQL Injection) | Lectura y manipulación de bases de datos | Consultas Preparadas con PDO / ORM parametrizado |
 | **Fase 4: Winehouse** | CWE-79 (Stored Cross-Site Scripting) | Secuestro de sesiones y robo de credenciales | Codificación contextual en salida y flag `HttpOnly` en cookies |
 | **Fase 5: Cobain** | CWE-250 (Execution with Unnecessary Privileges) | Compromiso total del sistema (Root) | Principio de mínimo privilegio y remoción de bits SUID |
+
+---
+
+## 🛡️ Enfoque Defensivo (Blue Team & Hardening Institucional)
+
+Para enriquecer la perspectiva de seguridad defensiva, el proyecto incluye artefactos formales de detección y remediación:
+
+### 1. Reglas de Detección Snort IDS (
+ules/27club_snort.rules)
+Conjunto de firmas y reglas en Capa 7 para sistemas de detección de intrusos (Snort/Suricata), diseñadas para alertar y registrar en tiempo real cada vector de ataque del reto:
+- **SID 2700001**: Detección de tráfico C&C y cabecera User-Agent con carga ofuscada ROT13 (Fase Hendrix).
+- **SID 2700002 / 2700003**: Alerta de reconocimiento en 
+obots.txt y acceso a directorios restringidos (Fase Joplin).
+- **SID 2700004 / 2700005**: Detección de inyección SQL basada en comillas y cláusulas UNION SELECT en /doors/ (Fase Morrison).
+- **SID 2700006 / 2700007**: Detección de inyecciones XSS (<script>, eventos DOM, exfiltración document.cookie) en /winehouse/ (Fase Winehouse).
+- **SID 2700008**: Auditoría de intentos de conexión administrativa por SSH (Fase Cobain).
+
+### 2. Script de Remediación Defensiva (hardening_remediacion.sh)
+Script automatizado que aplica los controles de seguridad y mejores prácticas de la industria (OWASP / MITRE) para mitigar las 5 vulnerabilidades en el servidor objetivo:
+`ash
+# Ejecutar remediación completa dentro del contenedor
+docker exec 27club_ctf /tmp/hardening_remediacion.sh
+`
+- **CWE-89 (SQLi):** Refactoriza el backend de Jim Morrison implementando **Consultas Preparadas con PDO** y validación de tipos enteros.
+- **CWE-79 (XSS):** Implementa escape contextual de caracteres mediante htmlspecialchars() y asegura las cookies de sesión con el atributo **HttpOnly**.
+- **CWE-250 (SUID):** Revoca el bit Setuid en /usr/bin/find (chmod u-s) y bloquea logins interactivos no autorizados.

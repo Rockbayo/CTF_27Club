@@ -1,0 +1,110 @@
+# ==============================================================================
+# REGLAS DE DETECCIÓN SNORT IDS - THE 27 CLUB CTF
+# Universidad de Cundinamarca - Seguridad de Aplicaciones y Hacking Ético
+# Estudiante: Óscar Robayo | Línea de Profundización I
+# ==============================================================================
+# Este conjunto de reglas permite a un equipo defensivo (Blue Team / SOC)
+# detectar, alertar y registrar en tiempo real los vectores de ataque
+# empleados contra la infraestructura vulnerable del laboratorio "The 27 Club".
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# FASE 1: JIMI HENDRIX - DETECCIÓN DE TRÁFICO C&C Y USER-AGENT OFUSCADO (ROT13)
+# ------------------------------------------------------------------------------
+# Detecta peticiones HTTP con cabeceras User-Agent que transportan el patrón
+# cifrado con ROT13 ("SYNT{") característico de la exfiltración C&C de Hendrix.
+alert tcp any any -> $HTTP_SERVERS 80 ( \
+    msg:"[27CLUB-IDS-01] Alerta C&C: User-Agent con Carga Ofuscada ROT13 (Fase Hendrix)"; \
+    flow:to_server,established; \
+    content:"SYNT{"; http_header; nocase; \
+    classtype:bad-unknown; \
+    sid:2700001; rev:1; \
+    metadata:author "Oscar Robayo", service http, cve "CWE-311"; \
+)
+
+# ------------------------------------------------------------------------------
+# FASE 2: JANIS JOPLIN - DETECCIÓN DE RECONOCIMIENTO Y ENUMERACIÓN WEB
+# ------------------------------------------------------------------------------
+# Regla 2.1: Alerta cuando un atacante intenta inspeccionar el archivo robots.txt
+alert tcp any any -> $HTTP_SERVERS 80 ( \
+    msg:"[27CLUB-IDS-02A] Reconocimiento Web: Petición a directiva robots.txt"; \
+    flow:to_server,established; \
+    content:"/robots.txt"; http_uri; nocase; \
+    classtype:attempted-recon; \
+    sid:2700002; rev:1; \
+    metadata:author "Oscar Robayo", service http, cve "CWE-200"; \
+)
+
+# Regla 2.2: Alerta cuando se accede a las rutas restringidas del reto Joplin
+alert tcp any any -> $HTTP_SERVERS 80 ( \
+    msg:"[27CLUB-IDS-02B] Acceso a Ruta Restringida /cry_baby/ o /admin_trampa/"; \
+    flow:to_server,established; \
+    pcre:"/\/(cry_baby|admin_trampa)\//i"; \
+    classtype:policy-violation; \
+    sid:2700003; rev:1; \
+    metadata:author "Oscar Robayo", service http, cve "CWE-200"; \
+)
+
+# ------------------------------------------------------------------------------
+# FASE 3: JIM MORRISON - DETECCIÓN DE INYECCIÓN SQL (CWE-89)
+# ------------------------------------------------------------------------------
+# Regla 3.1: Detección de caracteres de ruptura de sintaxis SQL (comilla simple o doble)
+alert tcp any any -> $HTTP_SERVERS 80 ( \
+    msg:"[27CLUB-IDS-03A] Intento de Inyección SQL (Ruptura con Comilla) en /doors/"; \
+    flow:to_server,established; \
+    content:"/doors/"; http_uri; \
+    pcre:"/\?id=[^&]*(\x27|\x22|%27|%22)/i"; \
+    classtype:web-application-attack; \
+    sid:2700004; rev:1; \
+    metadata:author "Oscar Robayo", service http, cve "CWE-89"; \
+)
+
+# Regla 3.2: Detección de técnicas UNION-Based SQL Injection
+alert tcp any any -> $HTTP_SERVERS 80 ( \
+    msg:"[27CLUB-IDS-03B] Explotación SQLi UNION-Based detectada en /doors/"; \
+    flow:to_server,established; \
+    content:"/doors/"; http_uri; \
+    content:"UNION"; nocase; http_uri; \
+    content:"SELECT"; nocase; http_uri; \
+    classtype:web-application-attack; \
+    sid:2700005; rev:1; \
+    metadata:author "Oscar Robayo", service http, cve "CWE-89"; \
+)
+
+# ------------------------------------------------------------------------------
+# FASE 4: AMY WINEHOUSE - DETECCIÓN DE STORED CROSS-SITE SCRIPTING (CWE-79)
+# ------------------------------------------------------------------------------
+# Regla 4.1: Detección de etiquetas <script> en el cuerpo POST del libro de firmas
+alert tcp any any -> $HTTP_SERVERS 80 ( \
+    msg:"[27CLUB-IDS-04A] Inyección de Script XSS en /winehouse/ (Tag <script>)"; \
+    flow:to_server,established; \
+    content:"POST"; http_method; \
+    content:"/winehouse/"; http_uri; \
+    pcre:"/(<script[\s\S]*?>[\s\S]*?<\/script>|%3Cscript[\s\S]*?%3E)/i"; \
+    classtype:web-application-attack; \
+    sid:2700006; rev:1; \
+    metadata:author "Oscar Robayo", service http, cve "CWE-79"; \
+)
+
+# Regla 4.2: Detección de eventos DOM peligrosos o ganchos BeEF (hook.js / document.cookie)
+alert tcp any any -> $HTTP_SERVERS 80 ( \
+    msg:"[27CLUB-IDS-04B] Vector XSS Avanzado: Intento de Gancho BeEF o Robo de Cookie"; \
+    flow:to_server,established; \
+    content:"/winehouse/"; http_uri; \
+    pcre:"/(document\.cookie|hook\.js|onerror=|onload=)/i"; \
+    classtype:web-application-attack; \
+    sid:2700007; rev:1; \
+    metadata:author "Oscar Robayo", service http, cve "CWE-79"; \
+)
+
+# ------------------------------------------------------------------------------
+# FASE 5: KURT COBAIN - DETECCIÓN DE AUDITORÍA Y ACCESO SOSPECHOSO SSH (CWE-250)
+# ------------------------------------------------------------------------------
+# Detecta múltiples conexiones SSH entrantes hacia el puerto de auditoría
+alert tcp any any -> $HOME_NET 22 ( \
+    msg:"[27CLUB-IDS-05] Conexión de Auditoría SSH Establecida hacia Servidor"; \
+    flow:to_server,established; \
+    classtype:attempted-admin; \
+    sid:2700008; rev:1; \
+    metadata:author "Oscar Robayo", service ssh, cve "CWE-250"; \
+)
