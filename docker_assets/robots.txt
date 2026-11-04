@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /cry_baby/
+Disallow: /admin_trampa/

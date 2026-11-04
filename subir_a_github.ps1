@@ -17,3 +17,4 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "2. Crea el repositorio con el nombre: CTF_27Club (público o privado, sin inicializar README ni .gitignore)" -ForegroundColor White
     Write-Host "3. Vuelve a ejecutar este script o corre: git push -u origin main" -ForegroundColor White
 }
+

@@ -1,16 +1,19 @@
-# Archivos temporales de Word y respaldos
-*.docx.tmp
-~$*.docx
-*backup*.docx
+# ==============================================================================
+# .gitignore - THE 27 CLUB CTF (Limpieza de Repositorio de Práctica)
+# ==============================================================================
 
-# Entornos virtuales y caché de Python
-__pycache__/
-*.pyc
+# Informes y documentos de entrega académica (no necesarios para ejecutar la práctica)
+*.docx
+*.doc
+*.pdf
+*.pptx
+Laboratorios/
 
-# Logs de sistema
-*.log
+# Carpeta de capturas de pantalla de evidencias (solo para el informe escrito)
+capturas/
 
-# Scripts de apoyo internos
+# Scripts de generación interna y utilitarios auxiliares
+*.py
 inspect_*.py
 dump_*.py
 format_*.py
@@ -18,19 +21,23 @@ download_*.py
 fetch_*.py
 map_*.py
 extract_*.py
+*.json
 
-# Documentos ajenos al CTF 27 Club
-CV_OscarRobayo.pdf
-Borrador_*.pdf
-Exploting.docx
-Guia*.pdf
-Guia*.docx
-LAB*.pdf
-lab*.pdf
-Laboratorio*.pdf
-Laboratorio*.docx
-Recopilacion*.docx
-Reconocimiento*.docx
-ubuntu.docx
-Análisis*.pdf
-"An\303\241lisis*.pdf"
+# Scripts de aprovisionamiento obsoletos/duplicados
+provision_27club_phases.ps1
+setup_fase3.*
+dashboard/
+
+# Archivos de respaldo y temporales
+*.tmp
+*.bak
+~$*.*
+.DS_Store
+Thumbs.db
+
+# Entornos virtuales y cachés de Python
+__pycache__/
+*.pyc
+
+# Logs
+*.log
