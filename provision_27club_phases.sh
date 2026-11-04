@@ -37,6 +37,11 @@ if [ -f /var/www/html/rock_404.html ]; then
 fi
 
 # ------------------------------------------------------------------------------
+# FASE 1: JIMI HENDRIX (BALIZA FORENSE HTTP)
+# ------------------------------------------------------------------------------
+nohup bash -c 'while true; do curl -s -A "SYNT{Checyr_Unmr_Argjbex}" http://127.0.0.1/ > /dev/null 2>&1; sleep 15; done' >/dev/null 2>&1 &
+
+# ------------------------------------------------------------------------------
 # FASE 2: JANIS JOPLIN (INYECCIÓN DINÁMICA DE ESTEGANOGRAFÍA EOF)
 # ------------------------------------------------------------------------------
 if [ -f /var/www/html/cry_baby/janis.jpg ]; then
