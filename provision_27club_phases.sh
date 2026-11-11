@@ -24,7 +24,7 @@ a2enmod headers 2>/dev/null || true
 cat << 'EOF' > /etc/apache2/conf-available/rock-headers.conf
 <IfModule mod_headers.c>
     Header set X-Rock-Memorial "The 27 Club CTF - Live Fast, Die Young, Leave a Clean Codebase"
-    Header set X-Artist-Tribute "Jimi Hendrix, Janis Joplin, Jim Morrison, Amy Winehouse, Kurt Cobain"
+    Header set X-Artist-Tribute "Robert Johnson, Jimi Hendrix, Janis Joplin, Jim Morrison, Amy Winehouse, Kurt Cobain"
     Header set X-Security-Auditor "Oscar Robayo - Universidad de Cundinamarca"
     Header set X-Powered-By "Marshall Amps & Fender Stratocaster"
     Header set X-Discovery-Token "27C{nmap_sc4n_r0ck_h0st_d1sc0v3ry}"
@@ -308,7 +308,7 @@ cat << EOF > /root/flag.txt
    COMPROMISO TOTAL DEL SISTEMA (ROOT UID 0 ALCANZADO)
 ========================================================================
 BANDERA FINAL: ${F_KURT}
-Felicidades Auditor. Has superado las 5 fases y conquistado el reto.
+Felicidades Auditor. Has superado las 6 fases y conquistado el reto.
 EOF
 chmod 600 /root/flag.txt
 
