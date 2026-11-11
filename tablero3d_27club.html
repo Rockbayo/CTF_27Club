@@ -3,26 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The 27 Club CTF - Vintage Rock Room & Guitar Fretboard 3D | Universidad de Cundinamarca</title>
+  <title>The 27 Club CTF - Vintage Rock Room & Guitar Slide | Universidad de Cundinamarca</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Permanent+Marker&family=Rajdhani:wght@500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Permanent+Marker&family=Rajdhani:wght@500;600;700&family=VT323&display=swap" rel="stylesheet">
   <style>
     :root {
-      --wood-dark: #0f0a07;
+      --wood-dark: #0a0705;
       --wood-med: #1a110c;
-      --wood-warm: #261811;
       --brass-gold: #c5a059;
-      --brass-light: #e4c580;
+      --brass-light: #f3d48d;
       --aged-cream: #f4ece1;
       --aged-paper: #e8dccb;
-      --text-muted: #9e8d7f;
-      --velvet-wine: #33151b;
-      --leather-trim: #422619;
-      --amber-glow: #e09f3e;
-      --amber-bright: #ffbe0b;
-      --success-olive: #588157;
+      --text-muted: #a69888;
+      --amber-warm: #e09f3e;
+      --amber-bright: #ffb703;
+      --crt-green: #33ff33;
+      --crt-amber: #ffb000;
+      --fender-tweed: #8c7355;
+      --fiesta-red: #c93a2b;
       --danger-rust: #9e2a2b;
+      --success-olive: #588157;
+      --chrome-hi: #ffffff;
+      --chrome-mid: #a0aab2;
+      --chrome-dark: #3a4249;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
@@ -36,703 +40,1199 @@
       color: var(--aged-cream);
     }
 
-    #webgl-canvas {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 1;
-      display: block;
-    }
-
-    /* TOP MASTER STUDIO CONSOLE HUD */
-    #hud-top {
+    /* TOP MASTER HUD CONSOLE */
+    #top-hud {
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 74px;
-      background: linear-gradient(180deg, rgba(18, 12, 9, 0.98), rgba(18, 12, 9, 0.82) 85%, transparent);
-      z-index: 20;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 24px;
-      backdrop-filter: blur(12px);
+      height: 60px;
+      background: linear-gradient(180deg, rgba(10, 7, 5, 0.96) 0%, rgba(20, 14, 10, 0.88) 100%);
       border-bottom: 2px solid rgba(197, 160, 89, 0.35);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.85);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.85);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      backdrop-filter: blur(8px);
     }
 
     .brand-section {
       display: flex;
       align-items: center;
-      gap: 14px;
-    }
-    .brand-vinyl-badge {
-      width: 44px; height: 44px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #b8860b 15%, #111 20%, #222 40%, #111 60%, #4a2d1e 95%);
-      box-shadow: 0 0 14px rgba(197, 160, 89, 0.45);
-      position: relative;
-      animation: vinylSpin 7s linear infinite;
-    }
-    .brand-vinyl-badge::after {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 7px; height: 7px;
-      background: var(--brass-gold);
-      border-radius: 50%;
-      box-shadow: 0 0 4px var(--brass-gold);
-    }
-    @keyframes vinylSpin { 100% { transform: rotate(360deg); } }
-
-    .brand-title {
-      font-family: 'Permanent Marker', cursive;
-      font-size: 1.55rem;
-      letter-spacing: 2px;
-      color: var(--brass-light);
-      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-      line-height: 1.1;
-    }
-    .brand-academic {
-      font-family: 'Fira Code', monospace;
-      font-size: 0.72rem;
-      color: var(--aged-paper);
-      letter-spacing: 0.5px;
-      opacity: 0.85;
+      gap: 12px;
     }
 
-    /* BOSS TELEMETRY (ANALOG VU METER STYLE) */
-    .boss-meter-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      min-width: 360px;
-    }
-    .boss-meta-row {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.76rem;
-      color: var(--aged-paper);
-    }
-    .boss-scale-frame {
-      width: 100%;
-      height: 16px;
-      background: rgba(10, 7, 5, 0.95);
-      border: 1px solid var(--brass-gold);
-      border-radius: 4px;
-      overflow: hidden;
-      box-shadow: inset 0 2px 6px rgba(0,0,0,0.9), 0 0 10px rgba(197, 160, 89, 0.25);
-      position: relative;
-      display: flex;
-    }
-    .boss-scale-fill {
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, #800e13, #d4a373, #588157);
-      transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .boss-segments {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      display: flex;
-      pointer-events: none;
-    }
-    .b-seg {
-      flex: 1;
-      border-right: 1px solid rgba(0, 0, 0, 0.7);
+    .brand-logo-disc {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #333 15%, #111 40%, #000 70%, #222 100%);
+      border: 2px solid var(--brass-gold);
+      box-shadow: 0 0 10px rgba(197, 160, 89, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.62rem;
-      font-family: 'Fira Code', monospace;
-      font-weight: 700;
-      color: rgba(244, 236, 225, 0.45);
-      letter-spacing: 0.5px;
+      animation: spinVinyl 6s linear infinite;
     }
-    .b-seg.done {
-      color: #ffd166;
-      background: rgba(224, 159, 62, 0.2);
+    .brand-logo-disc::after {
+      content: "27";
+      font-family: 'Permanent Marker', cursive;
+      font-size: 15px;
+      color: var(--amber-bright);
+    }
+    @keyframes spinVinyl { 100% { transform: rotate(360deg); } }
+
+    .brand-titles h1 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 18px;
+      letter-spacing: 1px;
+      color: var(--brass-light);
+      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+      line-height: 1.1;
+    }
+    .brand-titles .sub-title {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
     }
 
-    /* RIGHT STATS & CONTROLS */
-    .hud-controls-right {
+    /* Telemetry Stats */
+    .telemetry-bar {
       display: flex;
       align-items: center;
-      gap: 12px;
-    }
-    .vintage-pill {
-      background: rgba(26, 17, 12, 0.85);
-      border: 1px solid rgba(197, 160, 89, 0.3);
+      gap: 18px;
+      background: rgba(15, 10, 7, 0.7);
+      padding: 6px 16px;
       border-radius: 6px;
-      padding: 6px 12px;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.82rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      border: 1px solid rgba(197, 160, 89, 0.25);
     }
-    .btn-vintage {
-      background: linear-gradient(180deg, #382417, #21140d);
-      border: 1px solid var(--brass-gold);
-      color: var(--brass-light);
-      font-family: 'Rajdhani', sans-serif;
+    .telem-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.1;
+    }
+    .telem-lbl {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
       font-weight: 700;
-      font-size: 0.85rem;
-      padding: 7px 15px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: inline-flex;
+    }
+    .telem-val {
+      font-family: 'Fira Code', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--brass-light);
+    }
+    .telem-val.accent { color: var(--amber-bright); }
+
+    /* Audio Equalizer & Track Indicator */
+    .audio-telemetry {
+      display: flex;
       align-items: center;
+      gap: 10px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(197, 160, 89, 0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .eq-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 16px;
+    }
+    .eq-bar {
+      width: 3px;
+      height: 6px;
+      background: var(--amber-bright);
+      border-radius: 1px;
+    }
+    .eq-bars.playing .eq-bar:nth-child(1) { animation: eqJump 0.4s infinite alternate ease-in-out; }
+    .eq-bars.playing .eq-bar:nth-child(2) { animation: eqJump 0.6s infinite alternate ease-in-out 0.1s; }
+    .eq-bars.playing .eq-bar:nth-child(3) { animation: eqJump 0.3s infinite alternate ease-in-out 0.2s; }
+    .eq-bars.playing .eq-bar:nth-child(4) { animation: eqJump 0.5s infinite alternate ease-in-out 0.15s; }
+    @keyframes eqJump { 0% { height: 3px; } 100% { height: 16px; } }
+
+    .track-name {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--aged-paper);
+      max-width: 140px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Camera Switcher Buttons */
+    .view-switcher {
+      display: flex;
       gap: 6px;
-      text-decoration: none;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
-      transition: all 0.2s;
     }
-    .btn-vintage:hover {
-      background: linear-gradient(180deg, #4d3324, #2c1c13);
-      color: #fff;
-      border-color: #ffd700;
-      transform: translateY(-1px);
+    .btn-view {
+      background: rgba(26, 17, 12, 0.85);
+      border: 1px solid rgba(197, 160, 89, 0.4);
+      color: var(--aged-paper);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.25s ease;
     }
-    .btn-vintage-gold {
-      background: linear-gradient(180deg, #b08938, #7a5818);
-      color: #120d0a;
-      font-weight: 800;
-      border-color: #ffd700;
+    .btn-view:hover, .btn-view.active {
+      background: linear-gradient(180deg, var(--amber-warm) 0%, #b87a1d 100%);
+      color: #000;
+      border-color: var(--amber-bright);
+      box-shadow: 0 0 10px rgba(224, 159, 62, 0.5);
     }
-    .btn-vintage-gold:hover {
-      background: linear-gradient(180deg, #c59b44, #8b661e);
+
+    /* Actions: Drawer, Reset, Sustentación */
+    .hud-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-action {
+      background: rgba(30, 20, 15, 0.9);
+      border: 1px solid rgba(197, 160, 89, 0.4);
+      color: var(--brass-light);
+      padding: 6px 11px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-action:hover {
+      background: var(--brass-gold);
+      color: #000;
+    }
+    .btn-action.demo-btn {
+      border-color: var(--amber-bright);
+      color: var(--amber-bright);
+    }
+    .btn-action.demo-btn:hover {
+      background: var(--amber-bright);
       color: #000;
     }
 
-    /* LEFT TACTICAL ATTACK BRIEFING: LEATHER BINDER */
-    #tactical-drawer {
+    /* MASTER STAGE VIEWPORT */
+    #stage-viewport {
       position: absolute;
-      top: 90px;
-      left: 24px;
-      width: 410px;
-      max-height: calc(100vh - 180px);
-      background: linear-gradient(160deg, rgba(26, 18, 13, 0.96), rgba(15, 10, 7, 0.98));
-      border: 1px solid rgba(197, 160, 89, 0.35);
-      border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), inset 0 0 25px rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(14px);
-      z-index: 20;
-      display: flex;
-      flex-direction: column;
+      top: 60px;
+      left: 0;
+      right: 0;
+      bottom: 80px;
       overflow: hidden;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .drawer-header {
-      background: rgba(197, 160, 89, 0.08);
-      border-bottom: 1px solid rgba(197, 160, 89, 0.2);
-      padding: 12px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    #stage-canvas-wrap {
+      position: relative;
+      width: 1024px;
+      height: 571px;
+      max-width: 100%;
+      max-height: 100%;
+      aspect-ratio: 1024 / 571;
+      transform-origin: center center;
+      transition: transform 0.85s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
-    .drawer-header h3 {
+
+    /* Master Photo Layer */
+    #master-photo {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+      box-shadow: 0 0 50px rgba(0,0,0,0.9);
+    }
+
+    /* Cinematic Vignette & Lighting Filter */
+    #lighting-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      background: radial-gradient(circle at 75% 20%, rgba(255, 230, 180, 0.08) 0%, rgba(10, 6, 4, 0.25) 50%, rgba(0, 0, 0, 0.75) 100%);
+      mix-blend-mode: multiply;
+    }
+
+    /* INTERACTIVE ELEMENTS ON THE REAL PHOTO */
+    /* 1. GUITAR NECK & 27 FRETS OVERLAY */
+    #neck-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+
+    /* Interactive Fret Nodes (Clickable for Inspection) */
+    .fret-hotspot {
+      position: absolute;
+      width: 14px;
+      height: 28px;
+      transform: translate(-50%, -50%) rotate(68.85deg);
+      cursor: pointer;
+      pointer-events: auto;
+      border-radius: 2px;
+      transition: all 0.2s ease;
+      z-index: 20;
+    }
+    .fret-hotspot:hover {
+      background: rgba(255, 183, 3, 0.35);
+      box-shadow: 0 0 8px var(--amber-bright);
+    }
+    .fret-hotspot.milestone {
+      border: 1px solid rgba(197, 160, 89, 0.6);
+      background: rgba(197, 160, 89, 0.15);
+    }
+    .fret-hotspot.unlocked {
+      border-color: var(--amber-bright);
+      background: rgba(255, 183, 3, 0.3);
+      box-shadow: 0 0 10px rgba(255, 183, 3, 0.6);
+    }
+
+    /* Fret Number Tooltip */
+    .fret-hotspot .fret-badge {
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-68.85deg);
+      background: rgba(10, 7, 5, 0.9);
+      border: 1px solid var(--brass-gold);
+      color: var(--brass-light);
+      font-family: 'Fira Code', monospace;
+      font-size: 8px;
+      padding: 1px 3px;
+      border-radius: 2px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+    .fret-hotspot:hover .fret-badge,
+    .fret-hotspot.active-fret .fret-badge {
+      opacity: 1;
+    }
+
+    /* THE CHROME STEEL GUITAR SLIDE (BOTTLENECK) */
+    #chrome-slide {
+      position: absolute;
+      width: 32px;
+      height: 12px;
+      margin-left: -16px;
+      margin-top: -6px;
+      transform: rotate(68.85deg);
+      pointer-events: none;
+      z-index: 35;
+      /* Authentic Cylindrical Polished Steel Gradient */
+      background: linear-gradient(180deg, 
+        #25292e 0%, 
+        #7c858e 15%, 
+        #ffffff 45%, 
+        #f0f4f8 55%, 
+        #828d97 78%, 
+        #1e2226 100%
+      );
+      border-radius: 4px;
+      box-shadow: 
+        0 4px 10px rgba(0, 0, 0, 0.85),
+        0 0 14px rgba(255, 255, 255, 0.5),
+        inset 0 1px 2px rgba(255, 255, 255, 0.9),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.8);
+      transition: left 0.75s cubic-bezier(0.25, 1, 0.5, 1), top 0.75s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    /* Chrome Reflection Glint Flare */
+    #chrome-slide::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 10px;
+      width: 12px;
+      height: 2px;
+      background: #ffffff;
+      border-radius: 2px;
+      filter: blur(0.5px);
+      box-shadow: 0 0 6px #ffffff;
+      animation: chromeGlint 2.5s infinite alternate ease-in-out;
+    }
+    @keyframes chromeGlint {
+      0% { opacity: 0.6; transform: scaleX(0.8); }
+      100% { opacity: 1; transform: scaleX(1.3); }
+    }
+
+    /* Strings harmonic glow under slide */
+    #slide-glow {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      margin-left: -22px;
+      margin-top: -22px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 183, 3, 0.45) 0%, rgba(224, 159, 62, 0.15) 50%, transparent 75%);
+      pointer-events: none;
+      z-index: 25;
+      transition: left 0.75s cubic-bezier(0.25, 1, 0.5, 1), top 0.75s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* 2. VINYLS HOTSPOTS ON THE BED */
+    .vinyl-hotspot {
+      position: absolute;
+      border-radius: 50%;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: all 0.3s ease;
+      z-index: 15;
+    }
+    .vinyl-hotspot::before {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .vinyl-hotspot:hover::before {
+      border-color: var(--amber-bright);
+      box-shadow: 0 0 15px rgba(255, 183, 3, 0.6);
+    }
+    .vinyl-hotspot.active-phase::before {
+      border-color: var(--amber-bright);
+      box-shadow: 0 0 20px rgba(255, 183, 3, 0.85);
+      animation: pulseVinyl 1.8s infinite alternate ease-in-out;
+    }
+    @keyframes pulseVinyl {
+      0% { transform: scale(1); opacity: 0.7; }
+      100% { transform: scale(1.08); opacity: 1; }
+    }
+
+    /* 3. TURNTABLE HOTSPOT */
+    #turntable-hotspot {
+      position: absolute;
+      left: 410px;
+      top: 140px;
+      width: 105px;
+      height: 95px;
+      cursor: pointer;
+      pointer-events: auto;
+      z-index: 15;
+      border-radius: 6px;
+    }
+    #turntable-hotspot:hover {
+      box-shadow: inset 0 0 15px rgba(255, 183, 3, 0.4);
+    }
+
+    /* 4. FENDER AMPLIFIER HOTSPOT & PILOT LAMP */
+    #amp-hotspot {
+      position: absolute;
+      left: 710px;
+      top: 420px;
+      width: 105px;
+      height: 90px;
+      cursor: pointer;
+      pointer-events: auto;
+      z-index: 15;
+    }
+    #fender-pilot-light {
+      position: absolute;
+      left: 728px;
+      top: 456px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ff2222;
+      box-shadow: 0 0 8px #ff0000;
+      pointer-events: none;
+      z-index: 25;
+      animation: ampValveGlow 3s infinite alternate ease-in-out;
+    }
+    @keyframes ampValveGlow {
+      0% { opacity: 0.75; box-shadow: 0 0 5px #ff0000; }
+      100% { opacity: 1; box-shadow: 0 0 12px #ff3333, 0 0 20px rgba(255,0,0,0.5); }
+    }
+    #fender-pilot-light.fender-alert {
+      background: #ff0000;
+      box-shadow: 0 0 25px #ff0000, 0 0 45px #ff0000;
+      animation: ampAlertBlink 0.1s infinite alternate;
+    }
+    @keyframes ampAlertBlink {
+      0% { opacity: 0.2; }
+      100% { opacity: 1; }
+    }
+
+    /* 5. VINTAGE CRT TELEVISION HOTSPOT */
+    #crt-hotspot {
+      position: absolute;
+      left: 890px;
+      top: 270px;
+      width: 120px;
+      height: 180px;
+      cursor: pointer;
+      pointer-events: auto;
+      z-index: 15;
+    }
+    #crt-screen-overlay {
+      position: absolute;
+      left: 903px;
+      top: 295px;
+      width: 82px;
+      height: 64px;
+      background: rgba(10, 25, 10, 0.88);
+      border-radius: 6px;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 20;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.9), 0 0 8px rgba(51, 255, 51, 0.35);
+      border: 1px solid rgba(51, 255, 51, 0.4);
+      display: flex;
+      flex-direction: column;
+      padding: 3px;
+    }
+    #crt-screen-overlay::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
+      background-size: 100% 3px;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .crt-mini-text {
+      font-family: 'VT323', monospace;
+      font-size: 8px;
+      line-height: 1.1;
+      color: var(--crt-green);
+      text-shadow: 0 0 4px var(--crt-green);
+    }
+    .crt-blink-cursor {
+      display: inline-block;
+      width: 4px;
+      height: 7px;
+      background: var(--crt-green);
+      animation: crtBlink 0.8s infinite;
+    }
+    @keyframes crtBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+    /* BOTTOM INTERACTIVE MACRO FRETBOARD HIGHWAY */
+    #bottom-macro-bar {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 80px;
+      background: linear-gradient(180deg, rgba(20, 14, 10, 0.95) 0%, rgba(10, 7, 5, 0.99) 100%);
+      border-top: 2px solid rgba(197, 160, 89, 0.4);
+      box-shadow: 0 -4px 25px rgba(0,0,0,0.9);
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      padding: 4px 16px;
+    }
+
+    .macro-bar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 22px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .macro-bar-header .title {
       font-family: 'Permanent Marker', cursive;
-      font-size: 1.15rem;
+      color: var(--brass-light);
+      font-size: 13px;
+    }
+
+    .fretboard-strip {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      position: relative;
+      background: #140d09;
+      border: 1px solid rgba(197, 160, 89, 0.25);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 2px;
+    }
+
+    /* Wooden Grain Texture & Frets */
+    .fret-strip-item {
+      flex: 1;
+      height: 100%;
+      border-right: 2px solid #5a5f66; /* Nickel fret wire */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .fret-strip-item:hover {
+      background: rgba(255, 183, 3, 0.15);
+    }
+    .fret-strip-item.nut-fret {
+      flex: 0.8;
+      border-right: 4px solid #f4ece1; /* Bone nut */
+      background: #0f0a07;
+    }
+    .fret-strip-item.milestone-fret {
+      background: rgba(197, 160, 89, 0.12);
+      border-right-color: var(--brass-gold);
+    }
+    .fret-strip-item.unlocked-fret {
+      background: rgba(255, 183, 3, 0.22);
+    }
+    .fret-strip-item.active-fret {
+      background: rgba(255, 183, 3, 0.4);
+    }
+
+    /* Strings running horizontally through the macro bar */
+    .macro-string {
+      position: absolute;
+      left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, #555, #ccc, #888);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .macro-string.s1 { top: 20%; height: 1px; }
+    .macro-string.s2 { top: 32%; height: 1px; }
+    .macro-string.s3 { top: 44%; height: 1.5px; }
+    .macro-string.s4 { top: 56%; height: 1.5px; }
+    .macro-string.s5 { top: 68%; height: 2px; }
+    .macro-string.s6 { top: 80%; height: 2.5px; }
+
+    .fret-number-lbl {
+      position: absolute;
+      bottom: 2px;
+      font-family: 'Fira Code', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--text-muted);
+      z-index: 5;
+    }
+    .milestone-icon {
+      position: absolute;
+      top: 3px;
+      font-size: 10px;
+      z-index: 5;
+    }
+
+    /* Macro Slide Indicator */
+    #macro-slide-pill {
+      position: absolute;
+      top: 10%;
+      bottom: 10%;
+      width: 14px;
+      margin-left: -7px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #3a4249 0%, #a0aab2 20%, #ffffff 50%, #828d97 80%, #25292e 100%);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 2px 6px rgba(0,0,0,0.8);
+      z-index: 10;
+      pointer-events: none;
+      transition: left 0.75s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* TACTICAL ATTACK DRAWER (LEFT SIDEBAR) */
+    #attack-drawer {
+      position: absolute;
+      top: 60px;
+      left: -440px;
+      width: 440px;
+      bottom: 80px;
+      background: linear-gradient(180deg, rgba(20, 14, 10, 0.98) 0%, rgba(12, 8, 5, 0.98) 100%);
+      border-right: 2px solid var(--brass-gold);
+      box-shadow: 8px 0 35px rgba(0,0,0,0.9);
+      z-index: 110;
+      transition: left 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(10px);
+    }
+    #attack-drawer.open { left: 0; }
+
+    .drawer-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(197, 160, 89, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10, 7, 5, 0.6);
+    }
+    .drawer-header h2 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 17px;
       color: var(--brass-light);
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .fret-badge {
-      font-family: 'Fira Code', monospace;
-      font-size: 0.72rem;
-      padding: 2px 8px;
+    .drawer-close-btn {
+      background: transparent;
+      border: 1px solid var(--brass-gold);
+      color: var(--brass-light);
+      width: 26px;
+      height: 26px;
       border-radius: 4px;
-      background: rgba(224, 159, 62, 0.15);
-      color: var(--amber-glow);
-      border: 1px solid rgba(224, 159, 62, 0.35);
+      cursor: pointer;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
     }
+    .drawer-close-btn:hover { background: var(--brass-gold); color: #000; }
 
-    .drawer-body {
-      padding: 16px;
+    .drawer-content {
+      flex: 1;
       overflow-y: auto;
+      padding: 16px 18px;
       display: flex;
       flex-direction: column;
+      gap: 14px;
+    }
+    .drawer-content::-webkit-scrollbar { width: 6px; }
+    .drawer-content::-webkit-scrollbar-thumb { background: var(--brass-gold); border-radius: 3px; }
+
+    .target-card {
+      background: rgba(10, 7, 5, 0.85);
+      border: 1px solid rgba(197, 160, 89, 0.25);
+      border-radius: 6px;
+      padding: 12px;
+    }
+    .artist-hero-row {
+      display: flex;
       gap: 12px;
+      margin-bottom: 10px;
+    }
+    .artist-hero-photo {
+      width: 70px;
+      height: 70px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 2px solid var(--brass-gold);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    }
+    .artist-hero-info {
+      flex: 1;
+    }
+    .artist-hero-info h3 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 16px;
+      color: var(--amber-bright);
+    }
+    .artist-hero-info .phase-badge {
+      display: inline-block;
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: var(--brass-light);
+      background: rgba(197, 160, 89, 0.15);
+      border: 1px solid var(--brass-gold);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-top: 3px;
     }
 
-    .artist-binder-strip {
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .meta-box {
+      background: rgba(0,0,0,0.4);
+      padding: 6px 8px;
+      border-radius: 4px;
+      border-left: 2px solid var(--brass-gold);
+    }
+    .meta-box .lbl {
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .meta-box .val {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--aged-paper);
+      margin-top: 2px;
+    }
+
+    .kali-terminal-box {
+      background: #060a06;
+      border: 1px solid rgba(51, 255, 51, 0.35);
+      border-radius: 4px;
+      padding: 10px;
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: #99ff99;
+      position: relative;
+    }
+    .kali-terminal-box code {
+      color: #33ff33;
+      word-break: break-all;
+    }
+
+    /* INYECCIÓN DE BANDERA */
+    .flag-submission-box {
+      background: rgba(15, 10, 7, 0.95);
+      border: 1px solid var(--brass-gold);
+      border-radius: 6px;
+      padding: 14px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+    }
+    .flag-submission-box h4 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 14px;
+      color: var(--brass-light);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .flag-input-group {
+      display: flex;
+      gap: 8px;
+    }
+    .flag-input-group input {
+      flex: 1;
+      background: #000;
+      border: 1px solid var(--brass-gold);
+      color: var(--amber-bright);
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 4px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .flag-input-group input:focus {
+      border-color: var(--amber-bright);
+      box-shadow: 0 0 10px rgba(255, 183, 3, 0.4);
+    }
+    .btn-submit-flag {
+      background: linear-gradient(180deg, var(--amber-bright) 0%, #c48200 100%);
+      border: none;
+      color: #000;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 0 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-submit-flag:hover {
+      box-shadow: 0 0 12px rgba(255, 183, 3, 0.7);
+      transform: translateY(-1px);
+    }
+
+    .flag-feedback {
+      margin-top: 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      display: none;
+      line-height: 1.3;
+    }
+    .flag-feedback.success {
+      display: block;
+      background: rgba(88, 129, 87, 0.25);
+      border: 1px solid var(--success-olive);
+      color: #a3e635;
+    }
+    .flag-feedback.error {
+      display: block;
+      background: rgba(158, 42, 43, 0.25);
+      border: 1px solid var(--danger-rust);
+      color: #f87171;
+    }
+
+    /* Quick Phase Nav Buttons */
+    .drawer-phase-nav {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .btn-phase-tab {
+      flex: 1;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(197, 160, 89, 0.3);
+      color: var(--text-muted);
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      padding: 6px 0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-phase-tab:hover, .btn-phase-tab.active {
+      border-color: var(--amber-bright);
+      color: var(--brass-light);
+      background: rgba(197, 160, 89, 0.15);
+    }
+
+    /* POPUP NOTIFICATION BANNER */
+    #rock-toast {
+      position: absolute;
+      top: 75px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-30px);
+      background: rgba(10, 7, 5, 0.95);
+      border: 2px solid var(--amber-bright);
+      box-shadow: 0 0 30px rgba(255, 183, 3, 0.5), 0 8px 25px rgba(0,0,0,0.9);
+      padding: 12px 24px;
+      border-radius: 6px;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
       display: flex;
       align-items: center;
       gap: 14px;
-      background: rgba(10, 7, 5, 0.7);
-      border-radius: 8px;
-      padding: 10px;
-      border: 1px solid rgba(197, 160, 89, 0.2);
     }
-    .artist-binder-strip img {
-      width: 56px; height: 56px;
-      border-radius: 6px;
-      border: 2px solid var(--brass-gold);
-      object-fit: cover;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    #rock-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
-    .artist-binder-meta h4 {
+    #rock-toast .toast-icon { font-size: 24px; }
+    #rock-toast .toast-title {
       font-family: 'Permanent Marker', cursive;
-      font-size: 1.1rem;
-      color: var(--aged-cream);
-    }
-    .artist-binder-meta span {
-      font-family: 'Fira Code', monospace;
-      font-size: 0.75rem;
-      color: var(--amber-glow);
-    }
-
-    .spec-table-vintage {
-      background: rgba(10, 7, 5, 0.75);
-      border-radius: 6px;
-      border: 1px dashed rgba(197, 160, 89, 0.25);
-      padding: 10px 12px;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.78rem;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .spec-table-vintage div {
-      display: flex;
-      justify-content: space-between;
-    }
-    .spec-table-vintage span:first-child { color: var(--text-muted); }
-    .spec-table-vintage span:last-child { color: var(--brass-light); font-weight: 600; }
-
-    .terminal-guide-box {
-      background: #080503;
-      border: 1px solid rgba(197, 160, 89, 0.3);
-      border-radius: 6px;
-      padding: 10px 12px;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.74rem;
-      color: #d1b490;
-      line-height: 1.45;
-    }
-    .terminal-guide-box code {
+      font-size: 16px;
       color: var(--amber-bright);
-      background: rgba(255, 190, 11, 0.12);
-      padding: 1px 4px;
-      border-radius: 3px;
+    }
+    #rock-toast .toast-desc {
+      font-size: 12px;
+      color: var(--aged-paper);
     }
 
-    /* FLAG INJECTION FORM */
-    .injection-form {
-      background: linear-gradient(180deg, rgba(32, 21, 14, 0.85), rgba(18, 12, 8, 0.95));
-      border: 1px solid var(--brass-gold);
+    /* SUSTENTACIÓN MODAL */
+    #modal-sustentacion {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    #modal-sustentacion.open { display: flex; }
+    .modal-box {
+      width: 580px;
+      max-width: 90%;
+      background: linear-gradient(180deg, #18110b 0%, #0d0906 100%);
+      border: 2px solid var(--brass-gold);
       border-radius: 8px;
-      padding: 12px;
+      box-shadow: 0 0 40px rgba(197, 160, 89, 0.4);
+      padding: 24px;
       display: flex;
       flex-direction: column;
+      gap: 16px;
+    }
+    .modal-box h2 {
+      font-family: 'Permanent Marker', cursive;
+      color: var(--amber-bright);
+      font-size: 22px;
+      text-align: center;
+    }
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
-    .injection-form label {
-      font-family: 'Fira Code', monospace;
-      font-size: 0.73rem;
-      color: var(--aged-paper);
-      display: flex;
-      justify-content: space-between;
+    .modal-item {
+      background: rgba(0,0,0,0.5);
+      padding: 8px 12px;
+      border-radius: 4px;
+      border-left: 3px solid var(--brass-gold);
+      font-size: 12px;
     }
-    .flag-input-vintage {
-      background: rgba(10, 7, 5, 0.9);
-      border: 1px solid rgba(197, 160, 89, 0.4);
-      border-radius: 5px;
-      padding: 9px 12px;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.85rem;
-      color: var(--aged-cream);
-      outline: none;
-      transition: all 0.2s;
-    }
-    .flag-input-vintage:focus {
-      border-color: var(--brass-light);
-      box-shadow: 0 0 10px rgba(197, 160, 89, 0.4);
-    }
-    .btn-inject-vintage {
-      background: linear-gradient(180deg, #b08938, #7a5818);
-      border: 1px solid #ffd700;
-      color: #110d08;
-      font-family: 'Permanent Marker', cursive;
-      font-size: 1rem;
-      padding: 9px;
-      border-radius: 5px;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
-      transition: all 0.15s;
-    }
-    .btn-inject-vintage:hover {
-      background: linear-gradient(180deg, #c59b44, #8b661e);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 14px rgba(197, 160, 89, 0.4);
-    }
-
-    /* MINI LOG */
-    .mini-audit-log {
-      background: #060402;
-      border: 1px solid rgba(197, 160, 89, 0.15);
-      border-radius: 5px;
-      padding: 8px 10px;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.68rem;
-      height: 65px;
-      overflow-y: auto;
-      color: #9c8a78;
-      line-height: 1.4;
-    }
-
-    /* BOTTOM DOCK */
-    #bottom-dock {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      background: rgba(18, 12, 9, 0.95);
-      border: 1px solid rgba(197, 160, 89, 0.4);
-      border-radius: 25px;
-      padding: 8px 20px;
-      backdrop-filter: blur(14px);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
-    }
-    .pos-pill-vintage {
-      font-family: 'Fira Code', monospace;
-      font-size: 0.82rem;
-      color: var(--aged-paper);
-    }
-    .pos-pill-vintage strong {
-      color: var(--brass-light);
-      font-family: 'Permanent Marker', cursive;
-      font-size: 1.05rem;
-    }
-
-    .fret-jump-pills {
-      display: flex;
-      gap: 6px;
-    }
-    .f-pill {
-      background: rgba(30, 20, 14, 0.85);
-      border: 1px solid rgba(197, 160, 89, 0.25);
-      color: var(--text-muted);
-      border-radius: 12px;
-      padding: 4px 10px;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.72rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .f-pill:hover, .f-pill.active {
-      background: var(--leather-trim);
-      color: var(--brass-light);
-      border-color: var(--brass-gold);
-    }
-    .f-pill.comp {
-      border-color: var(--success-olive);
-      color: #99d98c;
-      background: rgba(88, 129, 87, 0.18);
-    }
-
-    .cam-pills {
-      display: flex;
-      gap: 6px;
-      border-left: 1px solid rgba(197, 160, 89, 0.2);
-      padding-left: 12px;
-    }
-    .cam-btn {
-      background: transparent;
-      border: 1px solid rgba(197, 160, 89, 0.25);
-      color: var(--aged-paper);
-      border-radius: 12px;
-      padding: 4px 10px;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.72rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .cam-btn.active, .cam-btn:hover {
+    .modal-item strong { color: var(--brass-light); }
+    .modal-close-btn {
+      align-self: center;
       background: var(--brass-gold);
-      color: #120d0a;
+      border: none;
+      color: #000;
+      font-family: 'Rajdhani', sans-serif;
       font-weight: 700;
-    }
-
-    /* TROLL TRAP MODAL */
-    #troll-modal {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: linear-gradient(150deg, #2d1316, #160a0b);
-      border: 2px solid var(--danger-rust);
-      box-shadow: 0 0 50px rgba(158, 42, 43, 0.7);
-      border-radius: 14px;
-      padding: 26px;
-      max-width: 480px;
-      width: 90%;
-      text-align: center;
-      z-index: 100;
-      display: none;
-      animation: snapShake 0.4s ease-in-out;
-    }
-    @keyframes snapShake {
-      0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
-      20% { transform: translate(-52%, -50%) rotate(-2.5deg); }
-      40% { transform: translate(-48%, -50%) rotate(2.5deg); }
-      60% { transform: translate(-51%, -50%) rotate(-1.5deg); }
-      80% { transform: translate(-49%, -50%) rotate(1.5deg); }
-    }
-    .troll-title-vintage {
-      font-family: 'Permanent Marker', cursive;
-      font-size: 1.8rem;
-      color: #ff9999;
-      margin: 8px 0;
-    }
-
-    /* VICTORY MODAL */
-    #victory-modal {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: linear-gradient(150deg, #1b261b, #0f160f);
-      border: 2px solid var(--success-olive);
-      box-shadow: 0 0 60px rgba(88, 129, 87, 0.7);
-      border-radius: 16px;
-      padding: 32px;
-      max-width: 560px;
-      width: 90%;
-      text-align: center;
-      z-index: 100;
-      display: none;
-    }
-    .victory-title-vintage {
-      font-family: 'Permanent Marker', cursive;
-      font-size: 2.2rem;
-      color: #b7e4c7;
-      margin-bottom: 8px;
+      font-size: 14px;
+      padding: 8px 24px;
+      border-radius: 4px;
+      cursor: pointer;
     }
   </style>
-
-  <!-- Three.js + Controles Locales con CDN Fallback -->
-  <script src="assets/js/three.min.js"></script>
-  <script src="assets/js/OrbitControls.js"></script>
-  <script>
-    if (typeof THREE === 'undefined') {
-      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\\/script>');
-      document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\\/script>');
-    }
-  </script>
 </head>
 <body>
 
-  <!-- 3D Canvas -->
-  <canvas id="webgl-canvas"></canvas>
-
-  <!-- Top Studio Console Header -->
-  <header id="hud-top">
+  <!-- TOP MASTER STUDIO CONSOLE HUD -->
+  <header id="top-hud">
     <div class="brand-section">
-      <div class="brand-vinyl-badge"></div>
-      <div>
-        <div class="brand-title">THE 27 CLUB • VINTAGE ROCK ROOM</div>
-        <div class="brand-academic">UNIVERSIDAD DE CUNDINAMARCA • HACKING ÉTICO & AUDITORÍA OFENSIVA</div>
+      <div class="brand-logo-disc"></div>
+      <div class="brand-titles">
+        <h1>THE 27 CLUB CTF</h1>
+        <div class="sub-title">Vintage Rock Room • Slide Highway</div>
       </div>
     </div>
 
-    <!-- Daemon Boss Health Scale (VU Meter Style) -->
-    <div class="boss-meter-box">
-      <div class="boss-meta-row">
-        <span>TARGET: <code>27CLUB_SRV (192.168.56.1)</code></span>
-        <span id="bossHpVal">100 / 100 HP</span>
+    <!-- Telemetry -->
+    <div class="telemetry-bar">
+      <div class="telem-item">
+        <span class="telem-lbl">Posición Mástil</span>
+        <span class="telem-val accent" id="hud-fret-pos">TRASTE 0 (NUT)</span>
       </div>
-      <div class="boss-scale-frame">
-        <div class="boss-scale-fill" id="bossHpFill"></div>
-        <div class="boss-segments">
-          <div class="b-seg" id="seg-1">HENDRIX</div>
-          <div class="b-seg" id="seg-2">JOPLIN</div>
-          <div class="b-seg" id="seg-3">MORRISON</div>
-          <div class="b-seg" id="seg-4">WINEHOUSE</div>
-          <div class="b-seg" id="seg-5">COBAIN</div>
-        </div>
+      <div class="telem-item">
+        <span class="telem-lbl">Artista Activo</span>
+        <span class="telem-val" id="hud-artist">HENDRIX (FASE 1)</span>
+      </div>
+      <div class="telem-item">
+        <span class="telem-lbl">Puntaje</span>
+        <span class="telem-val accent" id="hud-score">0 PTS</span>
+      </div>
+      <div class="telem-item">
+        <span class="telem-lbl">Banderas</span>
+        <span class="telem-val" id="hud-flags">0 / 5</span>
       </div>
     </div>
 
-    <!-- Controls Right -->
-    <div class="hud-controls-right">
-      <div class="vintage-pill">
-        <span>🏆 SCORE:</span>
-        <strong id="scoreVal" style="color: var(--brass-light);">0 / 1000 PTS</strong>
+    <!-- Audio Player State -->
+    <div class="audio-telemetry">
+      <div class="eq-bars" id="audio-eq">
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
       </div>
-      <div class="vintage-pill">
-        <span>⏱️</span>
-        <strong id="timerVal" style="color: #ffd166;">60:00</strong>
-      </div>
-      <button class="btn-vintage" id="btnJukebox" onclick="toggleJukeboxMusic()">
-        🎵 <span id="jukeboxLabel">Purple Haze (Play)</span>
-      </button>
-      <button class="btn-vintage" onclick="resetFretboardLab()">
-        🔄 REINICIAR
-      </button>
-      <button class="btn-vintage btn-vintage-gold" onclick="activateSustentacionLab()">
-        🎓 SUSTENTACIÓN 100%
-      </button>
+      <span class="track-name" id="hud-track-title">Sin Reproducción</span>
+      <button id="btn-toggle-sound" class="btn-action" style="padding:2px 7px; font-size:10px;">🔊 MUTE</button>
+    </div>
+
+    <!-- Camera View Switcher -->
+    <div class="view-switcher">
+      <button class="btn-view active" onclick="switchCameraView('room')">📻 HABITACIÓN</button>
+      <button class="btn-view" onclick="switchCameraView('fret')">🎸 ENFOCAR MÁSTIL</button>
+      <button class="btn-view" onclick="switchCameraView('tv')">📺 MONITOR KALI</button>
+      <button class="btn-view" onclick="switchCameraView('turntable')">🎵 TOCADISCOS</button>
+    </div>
+
+    <!-- Actions -->
+    <div class="hud-actions">
+      <button class="btn-action" onclick="toggleAttackDrawer()">📁 DOSSIER ATAQUE</button>
+      <button class="btn-action demo-btn" onclick="openSustentacionModal()">🎓 SUSTENTACIÓN</button>
+      <button class="btn-action" onclick="resetCTFProgress()" title="Reiniciar">🔄</button>
     </div>
   </header>
 
-  <!-- Left Tactical Attack Briefing: Leather Binder -->
-  <aside id="tactical-drawer">
+  <!-- MASTER STAGE VIEWPORT (REAL PHOTOGRAPH + INTERACTIVE GLISSANDO SLIDE) -->
+  <main id="stage-viewport">
+    <div id="stage-canvas-wrap">
+      <!-- High Resolution Real Rock Bedroom Photograph -->
+      <img id="master-photo" src="assets/images/rock_bedroom_bg.jpg" alt="Vintage Rock Bedroom 80s" />
+
+      <!-- Cinematic Ambient Lighting Filter -->
+      <div id="lighting-overlay"></div>
+
+      <!-- GUITAR NECK INTERACTIVE LAYER (27 FRETS + REAL CHROME SLIDE) -->
+      <div id="neck-overlay">
+        <!-- 28 Frets (0 = Nut, 1 to 27) generated dynamically -->
+        <div id="fret-nodes-container"></div>
+
+        <!-- The Chrome Steel Bottleneck Slide -->
+        <div id="chrome-slide"></div>
+        <div id="slide-glow"></div>
+      </div>
+
+      <!-- VINYLS HOTSPOTS ON THE BED (THE 5 SANCTUARIES) -->
+      <!-- Hendrix: Left vinyl on bed -->
+      <div class="vinyl-hotspot" id="vinyl-1" style="left:125px; top:460px; width:130px; height:80px;" onclick="selectPhase(1)" title="Fase 1: Jimi Hendrix"></div>
+      <!-- Joplin: Top bed pillow vinyl -->
+      <div class="vinyl-hotspot" id="vinyl-2" style="left:225px; top:335px; width:110px; height:75px;" onclick="selectPhase(2)" title="Fase 2: Janis Joplin"></div>
+      <!-- Morrison: Center quilt vinyl -->
+      <div class="vinyl-hotspot" id="vinyl-3" style="left:530px; top:405px; width:135px; height:90px;" onclick="selectPhase(3)" title="Fase 3: Jim Morrison"></div>
+      <!-- Winehouse: Lower right bed vinyl -->
+      <div class="vinyl-hotspot" id="vinyl-4" style="left:650px; top:460px; width:145px; height:85px;" onclick="selectPhase(4)" title="Fase 4: Amy Winehouse"></div>
+
+      <!-- TURNTABLE HOTSPOT ON DRESSER (KURT COBAIN FASE 5) -->
+      <div id="turntable-hotspot" onclick="selectPhase(5)" title="Fase 5: Kurt Cobain (Tocadiscos)"></div>
+
+      <!-- FENDER AMP & PILOT LIGHT -->
+      <div id="amp-hotspot" onclick="testAmpFeedback()" title="Fender Amp (Amplificador a Válvulas)"></div>
+      <div id="fender-pilot-light"></div>
+
+      <!-- VINTAGE CRT TV HOTSPOT & LIVE SCREEN -->
+      <div id="crt-hotspot" onclick="switchCameraView('tv')" title="Monitor CRT Kali Linux"></div>
+      <div id="crt-screen-overlay">
+        <div class="crt-mini-text">> KALI_CTF v2.7</div>
+        <div class="crt-mini-text" id="crt-phase-target">> TARGET: 192.168.56.1</div>
+        <div class="crt-mini-text" id="crt-cwe">> CWE-311 (PCAP)</div>
+        <div class="crt-mini-text">> INJECT FLAG...<span class="crt-blink-cursor"></span></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- BOTTOM MACRO FRETBOARD HIGHWAY (ALL 27 FRETS WITH SLIDE GLISSANDO) -->
+  <footer id="bottom-macro-bar">
+    <div class="macro-bar-header">
+      <span class="title">🎸 DIAPASÓN VINTAGE DE 27 TRASTES (CLICK EN CUALQUIER TRASTE O INYECTA LA BANDERA)</span>
+      <span id="macro-status-text">AVANCE AUTOMÁTICO EXCLUSIVAMENTE POR BANDERAS CAPTURADAS</span>
+    </div>
+    <div class="fretboard-strip" id="macro-fretboard-strip">
+      <!-- 6 Guitar Strings -->
+      <div class="macro-string s1"></div>
+      <div class="macro-string s2"></div>
+      <div class="macro-string s3"></div>
+      <div class="macro-string s4"></div>
+      <div class="macro-string s5"></div>
+      <div class="macro-string s6"></div>
+
+      <!-- Chrome Slide Pill Indicator in Macro Bar -->
+      <div id="macro-slide-pill"></div>
+
+      <!-- 28 Frets injected via JS -->
+    </div>
+  </footer>
+
+  <!-- TACTICAL ATTACK DRAWER -->
+  <aside id="attack-drawer">
     <div class="drawer-header">
-      <h3 id="drawerPhaseTitle">🎸 FASE 1: JIMI HENDRIX</h3>
-      <span class="fret-badge" id="drawerFretTag">TRASTE 6</span>
+      <h2>📁 DOSSIER DE ATAQUE KALI LINUX</h2>
+      <button class="drawer-close-btn" onclick="toggleAttackDrawer()">✕</button>
     </div>
 
-    <div class="drawer-body">
-      <!-- Artist Portrait in Vintage Frame -->
-      <div class="artist-binder-strip">
-        <img id="drawerArtistPhoto" src="assets/images/hendrix_photo.jpg" alt="Artista">
-        <div class="artist-binder-meta">
-          <h4 id="drawerArtistName">Jimi Hendrix Experience</h4>
-          <span id="drawerMilestoneSubtitle">Electric Church Studios • Londres 1967</span>
+    <!-- Quick Phase Tabs -->
+    <div class="drawer-phase-nav" style="padding: 0 18px;">
+      <button class="btn-phase-tab active" id="tab-p1" onclick="selectPhase(1)">1. HENDRIX</button>
+      <button class="btn-phase-tab" id="tab-p2" onclick="selectPhase(2)">2. JOPLIN</button>
+      <button class="btn-phase-tab" id="tab-p3" onclick="selectPhase(3)">3. MORRISON</button>
+      <button class="btn-phase-tab" id="tab-p4" onclick="selectPhase(4)">4. AMY</button>
+      <button class="btn-phase-tab" id="tab-p5" onclick="selectPhase(5)">5. COBAIN</button>
+    </div>
+
+    <div class="drawer-content">
+      <div class="target-card">
+        <div class="artist-hero-row">
+          <img id="drawer-photo" src="assets/images/hendrix_photo.jpg" class="artist-hero-photo" alt="Artista">
+          <div class="artist-hero-info">
+            <h3 id="drawer-title">Fase 1: Jimi Hendrix</h3>
+            <span class="phase-badge" id="drawer-traste-badge">TRASTE 6 • 150 PTS</span>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;" id="drawer-sub">Electric Church Studios</div>
+          </div>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta-box">
+            <div class="lbl">Vector de Ataque</div>
+            <div class="val" id="drawer-vector">PCAP DPI / User-Agent</div>
+          </div>
+          <div class="meta-box">
+            <div class="lbl">Estándar CWE</div>
+            <div class="val" id="drawer-cwe">ROT13 / CWE-311</div>
+          </div>
+          <div class="meta-box" style="grid-column: span 2;">
+            <div class="lbl">Objetivo / Contenedor</div>
+            <div class="val" id="drawer-target">192.168.56.1 (Puerto 80 HTTP)</div>
+          </div>
+        </div>
+
+        <div class="lbl" style="margin-bottom:4px; font-weight:700; color:var(--brass-light); font-size:10px;">GUÍA KALI LINUX & COMANDO SUGERIDO:</div>
+        <div class="kali-terminal-box" id="drawer-kali">
+          <code>tshark -r jimi_hendrix.pcap -Y "http.request" -T fields -e http.user_agent | tr 'A-Za-z' 'N-ZA-Mn-za-m'</code>
         </div>
       </div>
 
-      <!-- Vulnerability Technical Specs -->
-      <div class="spec-table-vintage">
-        <div><span>Vector Ofensivo:</span> <span id="specVector">PCAP DPI / User-Agent Header</span></div>
-        <div><span>Defecto Estándar:</span> <span id="specCwe">ROT13 / CWE-311</span></div>
-        <div><span>Objetivo en Red:</span> <span id="specTarget">192.168.56.1 (Puerto 80 HTTP)</span></div>
-        <div><span>Puntaje de Fase:</span> <span id="specPoints" style="color:var(--brass-light);">+150 PTS</span></div>
-      </div>
-
-      <!-- Kali Linux Exploitation Guidance -->
-      <div class="terminal-guide-box" id="kaliGuideText">
-        <strong>💻 AUDITORÍA EN KALI LINUX:</strong><br>
-        <code>tshark -r jimi_hendrix.pcap -Y "http.request" -T fields -e http.user_agent | tr 'A-Za-z' 'N-ZA-Mn-za-m'</code><br><br>
-        Filtra las peticiones HTTP de la captura forense y decodifica la baliza ROT13.
-      </div>
-
-      <!-- Flag Injection Form (Clean & Uncheated) -->
-      <form class="injection-form" onsubmit="handleFlagSubmit(event)">
-        <label>
-          <span>INYECTAR BANDERA DESCUBIERTA EN KALI:</span>
-          <span>FLAG{...}</span>
-        </label>
-        <input type="text" class="flag-input-vintage" id="flagInput" placeholder="Ingresa la bandera de la fase activa..." required autocomplete="off">
-        <button type="submit" class="btn-inject-vintage">
-          ⚡ VALIDAR BANDERA Y AVANZAR
-        </button>
-      </form>
-
-      <!-- Mini Live Audit Log -->
-      <div class="mini-audit-log" id="miniAuditLog">
-        [00:00:00] Laboratorio iniciado. Conectado a 192.168.56.1.<br>
-        [00:00:00] Traste 0 activo. Esperando compromiso de Fase 1 en Kali.
+      <!-- Inyección de Bandera Descubierta -->
+      <div class="flag-submission-box">
+        <h4>🏴 INYECTAR BANDERA DESCUBIERTA</h4>
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">
+          Ingresa la flag capturada en tu consola Kali Linux para deslizar el Slide metálico al siguiente traste:
+        </div>
+        <div class="flag-input-group">
+          <input type="text" id="flag-input" placeholder="FLAG{...}" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') submitFlag()">
+          <button class="btn-submit-flag" onclick="submitFlag()">VALIDAR</button>
+        </div>
+        <div id="flag-feedback" class="flag-feedback"></div>
       </div>
     </div>
   </aside>
 
-  <!-- Bottom Navigation & Camera Dock -->
-  <nav id="bottom-dock">
-    <div class="pos-pill-vintage">
-      <span>POSICIÓN:</span>
-      <strong id="posChipLabel">TRASTE 0 (INICIO)</strong>
+  <!-- NOTIFICATION TOAST -->
+  <div id="rock-toast">
+    <div class="toast-icon">⚡</div>
+    <div>
+      <div class="toast-title" id="toast-title">¡FLAG CAPTURADA!</div>
+      <div class="toast-desc" id="toast-desc">El Slide metálico se desliza al Traste 6.</div>
     </div>
-
-    <!-- Milestones -->
-    <div class="fret-jump-pills">
-      <button class="f-pill active" id="pill-0" onclick="focusMilestone(0)">Traste 0 (Nut)</button>
-      <button class="f-pill" id="pill-1" onclick="focusMilestone(1)">1. Hendrix (T6)</button>
-      <button class="f-pill" id="pill-2" onclick="focusMilestone(2)">2. Janis (T11)</button>
-      <button class="f-pill" id="pill-3" onclick="focusMilestone(3)">3. Morrison (T16)</button>
-      <button class="f-pill" id="pill-4" onclick="focusMilestone(4)">4. Amy (T21)</button>
-      <button class="f-pill" id="pill-5" onclick="focusMilestone(5)">5. Kurt (T27)</button>
-    </div>
-
-    <!-- Camera Angles -->
-    <div class="cam-pills">
-      <button class="cam-btn active" id="camIso" onclick="setCameraMode('iso')">📐 Isométrica</button>
-      <button class="cam-btn" id="camFront" onclick="setCameraMode('front')">🎸 Frontal Mástil</button>
-      <button class="cam-btn" id="camFree" onclick="setCameraMode('free')">🛰️ Libre 360°</button>
-    </div>
-  </nav>
-
-  <!-- Troll Trap Modal (Broken String Alert) -->
-  <div id="troll-modal">
-    <div style="font-size:3.5rem; margin-bottom:6px;">⚡💥💀</div>
-    <div class="troll-title-vintage">¡CUERDA ROTA! SEÑUELO DETECTADO</div>
-    <p id="trollModalMsg" style="color:var(--aged-cream); font-size:0.95rem; line-height:1.5; margin-bottom:14px;">
-      Has caído en un Rabbit Hole. El servidor absorbió tu intento.
-    </p>
-    <div style="background:rgba(158,42,43,0.25); border:1px dashed var(--danger-rust); border-radius:6px; padding:10px; color:#ff9999; font-family:'Fira Code', monospace; font-weight:bold; margin-bottom:16px;">
-      ⚠️ PENALIZACIÓN: -50 PUNTOS | CUERDA PARTIDA
-    </div>
-    <button class="btn-inject-vintage" onclick="document.getElementById('troll-modal').style.display='none'">
-      😅 ¡ENTENDIDO, VOLVER A LA TERMINAL KALI!
-    </button>
   </div>
 
-  <!-- Victory Modal -->
-  <div id="victory-modal">
-    <div style="font-size:3.2rem; margin-bottom:8px;">👑🎸🎶</div>
-    <div class="victory-title-vintage">ROOT TOTAL CONQUISTADO</div>
-    <p style="color:var(--brass-light); font-weight:bold; font-size:1.1rem; margin-bottom:10px;">
-      ¡EL CLAVIJERO DORADO DEL CLUB 27 HA SIDO COMPROMETIDO!
-    </p>
-    <p style="color:var(--aged-cream); font-size:0.95rem; line-height:1.6; margin-bottom:18px;">
-      Has superado las 5 fases técnicas: DPI en Hendrix, Esteganografía en Janis,
-      Inyección SQL en Morrison, Stored XSS en Amy y Escalación SUID con find en Kurt Cobain.
-    </p>
-    <div style="background:rgba(0,0,0,0.55); border:1px dashed var(--success-olive); padding:14px; border-radius:8px; margin-bottom:18px;">
-      <div style="color:#aaa; font-size:0.8rem;">CALIFICACIÓN FINAL CTF:</div>
-      <div style="font-size:2.2rem; color:#99d98c; font-weight:bold; font-family:'Fira Code', monospace;">1000 / 1000 PTS</div>
-      <div style="color:var(--brass-light); font-size:0.85rem; margin-top:4px;">AUDITORÍA KALI LINUX: EXITOSA</div>
+  <!-- SUSTENTACIÓN MODAL -->
+  <div id="modal-sustentacion">
+    <div class="modal-box">
+      <h2>🎓 FICHA TÉCNICA DE SUSTENTACIÓN ACADÉMICA</h2>
+      <div class="modal-grid">
+        <div class="modal-item">
+          <strong>Estudiante:</strong> Óscar Robayo (@rockbayo)
+        </div>
+        <div class="modal-item">
+          <strong>Materia:</strong> Línea I: Hacking Ético & Seg. Aplicaciones
+        </div>
+        <div class="modal-item">
+          <strong>Institución:</strong> Universidad de Cundinamarca
+        </div>
+        <div class="modal-item">
+          <strong>Infraestructura:</strong> Docker Linux (`27club_ctf`)
+        </div>
+        <div class="modal-item" style="grid-column: span 2;">
+          <strong>Vectores Explotados:</strong> PCAP DPI (CWE-311), Stego EOF (CWE-200), SQLi UNION (CWE-89), Stored XSS (CWE-79), SUID Escalation find (CWE-250).
+        </div>
+      </div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:8px;">
+        <button class="btn-action demo-btn" onclick="execute100PercentDemo()">⚡ EJECUTAR DEMOSTRACIÓN 100%</button>
+        <button class="modal-close-btn" onclick="closeSustentacionModal()">CERRAR</button>
+      </div>
     </div>
-    <button class="btn-inject-vintage" style="background:linear-gradient(180deg, #588157, #344e41); color:#fff;" onclick="document.getElementById('victory-modal').style.display='none'">
-      🎸 ADMIRAR HABITACIÓN Y DISCOS
-    </button>
   </div>
 
-  <!-- Hidden Master Audio Player -->
-  <audio id="audioMaster" preload="none"></audio>
+  <!-- AUDIO ELEMENT (MASTER RECORDINGS) -->
+  <audio id="master-audio" preload="auto"></audio>
 
+  <!-- JAVASCRIPT MASTER ENGINE -->
   <script>
     // =========================================================================
-    // 🎸 PHOTOREALISTIC 3D VINTAGE ROCK ROOM & FRETBOARD ENGINE
+    // CTF METADATA & 27 FRETS LOGARITHMIC POSITIONING
     // =========================================================================
-
-    let scene, camera, renderer, controls;
-    let cameraMode = 'iso';
-
-    let score = 0;
-    let bossHp = 100;
-    let currentFret = 0; // Starts strictly at Fret 0
-    let activePhase = 1;
-    let completedPhases = new Set();
-    let isMoving = false;
-    let timerSeconds = 60 * 60;
-    let timerInterval = null;
-
-    // 3D Meshes & Lights
-    let guitarGroup;
-    let puaMesh;
-    let stringMeshes = [];
-    let vinylDiscMeshes = {};
-    let lampLight;
-
-    // 27 Fretboard Dimensions
     const TOTAL_FRETS = 27;
-    const NECK_LENGTH = 54;
-    const NECK_WIDTH = 3.8;
 
-    // Fret positions along Z axis (Nut to Headstock)
-    const fretPositionsZ = [];
+    // Real Geometry on 1024 x 571 photograph:
+    // Nut (Traste 0): x=526, y=282
+    // Fret 27 (End of neck): x=358, y=347
+    const NUT_COORD = { x: 526, y: 282 };
+    const FRET27_COORD = { x: 358, y: 347 };
+
+    // Calculate fret positions using realistic guitar scale factor
+    const FRET_COORDINATES = [];
     for (let i = 0; i <= TOTAL_FRETS; i++) {
-      const pct = 1 - Math.pow(0.963, i * 1.32);
-      fretPositionsZ.push(-pct * NECK_LENGTH);
+      if (i === 0) {
+        FRET_COORDINATES.push({ x: NUT_COORD.x, y: NUT_COORD.y, fret: 0 });
+      } else {
+        // Logarithmic spacing factor
+        const pct = (1 - Math.pow(0.963, i * 1.32)) / (1 - Math.pow(0.963, TOTAL_FRETS * 1.32));
+        const fx = NUT_COORD.x + (FRET27_COORD.x - NUT_COORD.x) * pct;
+        const fy = NUT_COORD.y + (FRET27_COORD.y - NUT_COORD.y) * pct;
+        FRET_COORDINATES.push({ x: Math.round(fx), y: Math.round(fy), fret: i });
+      }
     }
 
     // Milestones Data
@@ -794,7 +1294,7 @@
       }
     };
 
-    // Client-side Cryptographic Hash Database (Matches Docker environment)
+    // Client-side Cryptographic Hash Database (Matches provision_27club_phases.sh)
     const CTF_HASH_DB = {
       "5e92acd0d04435bfcd1301c88b1a6f10ff4e88ecca45213f1c89dc6649900aac": {
         phase: 1, type: "flag", name: "Jimi Hendrix", points: 150, nextPhase: 2,
@@ -830,1118 +1330,565 @@
       }
     };
 
-    async function computeSHA256(text) {
-      const msgBuffer = new TextEncoder().encode(text.trim());
-      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    // State Variables
+    let currentFret = 0;
+    let activePhase = 1;
+    let score = 0;
+    let capturedFlagsCount = 0;
+    const completedPhases = new Set();
+    let isSoundMuted = false;
+
+    // Web Audio API Context
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
     }
 
     // =========================================================================
-    // PROCEDURAL PBR TEXTURE GENERATORS (IN MEMORY)
+    // SOUND EFFECTS (STEEL SLIDE GLISSANDO & BROKEN STRING SNAP)
     // =========================================================================
     
-    // 1. Procedural 3-Tone Sunburst Texture (1024x1024)
-    function generateSunburstTexture() {
-      const cv = document.createElement('canvas');
-      cv.width = 1024; cv.height = 1024;
-      const ctx = cv.getContext('2d');
-
-      // Base Amber Honey Wood Grain
-      const grad = ctx.createRadialGradient(512, 580, 60, 512, 540, 480);
-      grad.addColorStop(0.0, '#f9be7d');  // Warm Honey Center
-      grad.addColorStop(0.35, '#d97d26'); // Amber Gold
-      grad.addColorStop(0.65, '#852d11'); // Cherry Burnt Umber
-      grad.addColorStop(0.88, '#2b0c06'); // Deep Mahogany
-      grad.addColorStop(1.0, '#0a0403');  // Outer Black Edge
-
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 1024, 1024);
-
-      // Fine Wood Grain Ribs
-      ctx.fillStyle = 'rgba(40, 20, 10, 0.04)';
-      for (let y = 0; y < 1024; y += 4) {
-        ctx.fillRect(0, y + (Math.sin(y * 0.05) * 2), 1024, 1.5);
-      }
-
-      const tex = new THREE.CanvasTexture(cv);
-      tex.wrapS = THREE.ClampToEdgeWrapping;
-      tex.wrapT = THREE.ClampToEdgeWrapping;
-      return tex;
-    }
-
-    // 2. Procedural Wood Grain & Bump Map (512x512)
-    function generateWoodGrainTexture(baseColorHex, fiberColorHex) {
-      const cv = document.createElement('canvas');
-      cv.width = 512; cv.height = 512;
-      const ctx = cv.getContext('2d');
-
-      ctx.fillStyle = baseColorHex || '#1e140e';
-      ctx.fillRect(0, 0, 512, 512);
-
-      // Longitudinal fine grain lines
-      ctx.fillStyle = fiberColorHex || 'rgba(10, 6, 4, 0.22)';
-      for (let i = 0; i < 512; i += 3) {
-        const wobble = Math.sin(i * 0.08) * 3;
-        ctx.fillRect(i + wobble, 0, 1.2, 512);
-      }
-
-      const tex = new THREE.CanvasTexture(cv);
-      tex.wrapS = THREE.RepeatWrapping;
-      tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(1, 4);
-      return tex;
-    }
-
-    // 3. Procedural Micro-Groove Vinyl Texture (512x512)
-    function generateVinylGrooveTexture() {
-      const cv = document.createElement('canvas');
-      cv.width = 512; cv.height = 512;
-      const ctx = cv.getContext('2d');
-
-      ctx.fillStyle = '#080808';
-      ctx.fillRect(0, 0, 512, 512);
-
-      // Concentric micro-grooves
-      ctx.strokeStyle = 'rgba(35, 35, 35, 0.25)';
-      ctx.lineWidth = 1;
-      for (let r = 35; r < 250; r += 2.5) {
-        ctx.beginPath();
-        ctx.arc(256, 256, r, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
-      const tex = new THREE.CanvasTexture(cv);
-      return tex;
-    }
-
-    // 4. Procedural Fabric Weave Bump Map for Velvet Bed (256x256)
-    function generateFabricWeaveTexture() {
-      const cv = document.createElement('canvas');
-      cv.width = 256; cv.height = 256;
-      const ctx = cv.getContext('2d');
-
-      ctx.fillStyle = '#222222';
-      ctx.fillRect(0, 0, 256, 256);
-
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
-      for (let x = 0; x < 256; x += 4) {
-        for (let y = 0; y < 256; y += 4) {
-          if ((x + y) % 8 === 0) ctx.fillRect(x, y, 2, 2);
-        }
-      }
-
-      const tex = new THREE.CanvasTexture(cv);
-      tex.wrapS = THREE.RepeatWrapping;
-      tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(12, 12);
-      return tex;
-    }
-
-    // =========================================================================
-    // AUDIO SYNTHESIZERS (SNAPPING STRING & POWER CHORDS)
-    // =========================================================================
-    function playBrokenStringSound() {
+    // 1. Realistic Steel Bottleneck Slide Glissando Sound
+    function playSlideGlissando(startFret, endFret) {
+      if (isSoundMuted) return;
       try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return;
-        const ctx = new AudioCtx();
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        const duration = 0.72;
 
-        // 1. Sudden violent high-frequency metal snap
+        const baseFreq = 164.81; // Low E string frequency
+        const startFreq = baseFreq * Math.pow(2, startFret / 12);
+        const endFreq = baseFreq * Math.pow(2, endFret / 12);
+
+        // Primary Dual Tones for Rich String Body Resonance
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        osc1.type = "sawtooth";
+        osc2.type = "triangle";
+
+        osc1.frequency.setValueAtTime(startFreq, now);
+        osc1.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
+
+        osc2.frequency.setValueAtTime(startFreq * 1.5, now);
+        osc2.frequency.exponentialRampToValueAtTime(endFreq * 1.5, now + duration);
+
+        // Acoustic Resonant Filter
+        const filter = ctx.createBiquadFilter();
+        filter.type = "bandpass";
+        filter.frequency.setValueAtTime(startFreq * 2.2, now);
+        filter.frequency.exponentialRampToValueAtTime(endFreq * 2.2, now + duration);
+        filter.Q.value = 6.0;
+
+        // String Friction Noise Generator (simulates slide friction against windings)
+        const bufferSize = ctx.sampleRate * duration;
+        const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = (Math.random() * 2 - 1) * 0.12;
+        }
+        const whiteNoise = ctx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+
+        const noiseFilter = ctx.createBiquadFilter();
+        noiseFilter.type = "highpass";
+        noiseFilter.frequency.value = 2200;
+
+        const noiseGain = ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.08, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        // Master Gain Envelope
+        const masterGain = ctx.createGain();
+        masterGain.gain.setValueAtTime(0.0, now);
+        masterGain.gain.linearRampToValueAtTime(0.35, now + 0.05);
+        masterGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        osc1.connect(filter);
+        osc2.connect(filter);
+        filter.connect(masterGain);
+
+        whiteNoise.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(masterGain);
+
+        masterGain.connect(ctx.destination);
+
+        osc1.start(now);
+        osc2.start(now);
+        whiteNoise.start(now);
+
+        osc1.stop(now + duration);
+        osc2.stop(now + duration);
+        whiteNoise.stop(now + duration);
+      } catch (e) {
+        console.warn("Audio Context error:", e);
+      }
+    }
+
+    // 2. Snapped String Sound (Broken String Snap + De-tension Twang)
+    function playBrokenStringSound() {
+      if (isSoundMuted) return;
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+
+        // Flash Fender Amp Pilot Light
+        const pilot = document.getElementById("fender-pilot-light");
+        if (pilot) {
+          pilot.classList.add("fender-alert");
+          setTimeout(() => pilot.classList.remove("fender-alert"), 1200);
+        }
+
+        // Violent High-Tension Snap
         const snapOsc = ctx.createOscillator();
         const snapGain = ctx.createGain();
         snapOsc.type = "sawtooth";
-        snapOsc.frequency.setValueAtTime(2400, ctx.currentTime);
-        snapOsc.frequency.exponentialRampToValueAtTime(500, ctx.currentTime + 0.04);
-        snapGain.gain.setValueAtTime(0.35, ctx.currentTime);
-        snapGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.04);
+        snapOsc.frequency.setValueAtTime(1900, now);
+        snapOsc.frequency.exponentialRampToValueAtTime(140, now + 0.08);
+
+        snapGain.gain.setValueAtTime(0.65, now);
+        snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
         snapOsc.connect(snapGain);
         snapGain.connect(ctx.destination);
-        snapOsc.start();
-        snapOsc.stop(ctx.currentTime + 0.04);
 
-        // 2. Out-of-tune de-tensioned string vibration (twang drop)
+        // De-tension Detuned Twang
         const twangOsc = ctx.createOscillator();
         const twangGain = ctx.createGain();
         twangOsc.type = "triangle";
-        twangOsc.frequency.setValueAtTime(380, ctx.currentTime + 0.02);
-        twangOsc.frequency.exponentialRampToValueAtTime(55, ctx.currentTime + 0.65);
-        twangGain.gain.setValueAtTime(0.3, ctx.currentTime + 0.02);
-        twangGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.65);
+        twangOsc.frequency.setValueAtTime(320, now + 0.04);
+        twangOsc.frequency.exponentialRampToValueAtTime(55, now + 0.7);
+
+        twangGain.gain.setValueAtTime(0.0, now);
+        twangGain.gain.setValueAtTime(0.5, now + 0.04);
+        twangGain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+
         twangOsc.connect(twangGain);
         twangGain.connect(ctx.destination);
-        twangOsc.start(ctx.currentTime + 0.02);
-        twangOsc.stop(ctx.currentTime + 0.65);
 
-        // 3. Amplifier valve buzz
-        const buzzOsc = ctx.createOscillator();
-        const buzzGain = ctx.createGain();
-        buzzOsc.type = "square";
-        buzzOsc.frequency.setValueAtTime(60, ctx.currentTime + 0.05);
-        buzzGain.gain.setValueAtTime(0.08, ctx.currentTime + 0.05);
-        buzzGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-        buzzOsc.connect(buzzGain);
-        buzzGain.connect(ctx.destination);
-        buzzOsc.start(ctx.currentTime + 0.05);
-        buzzOsc.stop(ctx.currentTime + 0.4);
-      } catch(e) {}
+        // 60Hz Amp Valve Hum Burst
+        const humOsc = ctx.createOscillator();
+        const humGain = ctx.createGain();
+        humOsc.type = "sine";
+        humOsc.frequency.value = 60;
+        humGain.gain.setValueAtTime(0.3, now);
+        humGain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+        humOsc.connect(humGain);
+        humGain.connect(ctx.destination);
+
+        snapOsc.start(now);
+        twangOsc.start(now + 0.04);
+        humOsc.start(now);
+
+        snapOsc.stop(now + 0.08);
+        twangOsc.stop(now + 0.75);
+        humOsc.stop(now + 0.55);
+      } catch (e) {
+        console.warn("Audio Context error:", e);
+      }
     }
 
-    function playWarmGuitarStrum(baseFreq) {
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return;
-        const ctx = new AudioCtx();
-        const root = baseFreq || 146.83; // D3
-        [root, root * 1.25, root * 1.5, root * 2].forEach((f, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = "triangle";
-          osc.frequency.setValueAtTime(f, ctx.currentTime + idx * 0.035);
-          gain.gain.setValueAtTime(0.2, ctx.currentTime + idx * 0.035);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.035 + 1.1);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(ctx.currentTime + idx * 0.035);
-          osc.stop(ctx.currentTime + idx * 0.035 + 1.1);
-        });
-      } catch(e) {}
+    // Play Master Track
+    function playMasterTrack(audioSrc, title) {
+      if (isSoundMuted || !audioSrc) return;
+      const audio = document.getElementById("master-audio");
+      const trackTitleEl = document.getElementById("hud-track-title");
+      const eqEl = document.getElementById("audio-eq");
+
+      audio.src = audioSrc;
+      audio.volume = 0.85;
+      audio.play().then(() => {
+        if (trackTitleEl) trackTitleEl.textContent = title || "Reproduciendo";
+        if (eqEl) eqEl.classList.add("playing");
+      }).catch(err => {
+        console.warn("Audio play prevented:", err);
+      });
+
+      audio.onended = () => {
+        if (eqEl) eqEl.classList.remove("playing");
+      };
     }
 
     // =========================================================================
-    // 3D SCENE SETUP: PHOTOREALISTIC ENGINE (ACES FILMIC + SOFT SHADOWS)
+    // SLIDE MOVEMENT & POSITIONING ENGINE
     // =========================================================================
-    function initPhotorealRoom() {
-      const canvas = document.getElementById("webgl-canvas");
+    function moveSlideToFret(targetFret) {
+      const prevFret = currentFret;
+      currentFret = Math.max(0, Math.min(TOTAL_FRETS, targetFret));
 
-      // 1. Scene & Volumetric Tungsten Fog
-      scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x0e0906);
-      scene.fog = new THREE.FogExp2(0x0e0906, 0.014);
+      const targetCoord = FRET_COORDINATES[currentFret];
+      const slideEl = document.getElementById("chrome-slide");
+      const glowEl = document.getElementById("slide-glow");
 
-      // 2. Camera with Film Lens Focal Length
-      camera = new THREE.PerspectiveCamera(46, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-      // 3. Renderer with ACES Filmic Tone Mapping & sRGB Color Space
-      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-      // CINEMATIC GRAPHICS SETTINGS
-      if (renderer.toneMapping !== undefined) {
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.15;
+      if (slideEl && targetCoord) {
+        slideEl.style.left = targetCoord.x + "px";
+        slideEl.style.top = targetCoord.y + "px";
       }
-      if (renderer.outputEncoding !== undefined) {
-        renderer.outputEncoding = THREE.sRGBEncoding;
-      }
-      renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-      // 4. Orbit Controls
-      controls = new THREE.OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.05;
-
-      // 5. Lighting Architecture
-      setupCinematicLighting();
-
-      // 6. Realistic 3D Environment
-      buildRoomAndFloorboards();
-      buildVelvetBedAndPillows();
-      buildMasterGuitar();
-      buildScatteredAlbumsAndVinyl();
-      buildTortoiseshellPua();
-      buildFloorAmplifier();
-
-      // Initial Camera View
-      setCameraMode('iso');
-
-      window.addEventListener('resize', onWindowResize);
-      startTimer();
-      animate();
-    }
-
-    function setupCinematicLighting() {
-      // 1. Warm Ambient Base (Deep wood reflection)
-      const ambLight = new THREE.AmbientLight(0x2f1f14, 1.1);
-      scene.add(ambLight);
-
-      // 2. Main Key Light: Tungsten Bedside Lamp with Soft Shadows
-      lampLight = new THREE.PointLight(0xffbe0b, 3.2, 60, 1.6);
-      lampLight.position.set(16, 17, -15);
-      lampLight.castShadow = true;
-      lampLight.shadow.mapSize.width = 2048;
-      lampLight.shadow.mapSize.height = 2048;
-      lampLight.shadow.camera.near = 0.5;
-      lampLight.shadow.camera.far = 70;
-      lampLight.shadow.bias = -0.00015;
-      lampLight.shadow.radius = 2.4; // Soft PCF shadow edges
-      scene.add(lampLight);
-
-      // Glowing Filament Mesh inside the lamp shade
-      const filamentGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.8, 8);
-      const filamentMat = new THREE.MeshBasicMaterial({ color: 0xfff0b3 });
-      const filament = new THREE.Mesh(filamentGeo, filamentMat);
-      filament.position.set(16, 15.5, -15);
-      scene.add(filament);
-
-      // 3. Directional Rim Light (Deep wine/amber highlight along the guitar edge)
-      const rimLight = new THREE.DirectionalLight(0xd4a373, 0.8);
-      rimLight.position.set(-20, 25, 10);
-      rimLight.castShadow = true;
-      rimLight.shadow.mapSize.width = 1024;
-      rimLight.shadow.mapSize.height = 1024;
-      scene.add(rimLight);
-
-      // 4. Subtle Downlight
-      const ceilingSpot = new THREE.SpotLight(0xffecd1, 1.2, 80, Math.PI / 3.5, 0.4);
-      ceilingSpot.position.set(0, 32, -25);
-      ceilingSpot.target.position.set(0, 0, -25);
-      scene.add(ceilingSpot);
-      scene.add(ceilingSpot.target);
-    }
-
-    // Dark Oak Wooden Floor with procedural wood grain
-    function buildRoomAndFloorboards() {
-      const woodTex = generateWoodGrainTexture('#160e0a', 'rgba(0,0,0,0.35)');
-      const floorGeo = new THREE.PlaneGeometry(130, 130);
-      const floorMat = new THREE.MeshStandardMaterial({
-        map: woodTex,
-        bumpMap: woodTex,
-        bumpScale: 0.05,
-        roughness: 0.65,
-        metalness: 0.12
-      });
-      const floor = new THREE.Mesh(floorGeo, floorMat);
-      floor.rotation.x = -Math.PI / 2;
-      floor.position.y = -2.5;
-      floor.receiveShadow = true;
-      scene.add(floor);
-
-      // Bedroom Wall with Concert Posters
-      const wallTex = generateWoodGrainTexture('#140d09', 'rgba(5,3,2,0.4)');
-      const wallGeo = new THREE.PlaneGeometry(130, 55);
-      const wallMat = new THREE.MeshStandardMaterial({ map: wallTex, roughness: 0.85 });
-      const wall = new THREE.Mesh(wallGeo, wallMat);
-      wall.position.set(0, 25, -62);
-      wall.receiveShadow = true;
-      scene.add(wall);
-    }
-
-    // Wooden Bed with Wrinkled Velvet Quilt and Soft Pillows
-    function buildVelvetBedAndPillows() {
-      const bedGroup = new THREE.Group();
-      const woodTex = generateWoodGrainTexture('#1f130c', 'rgba(10,5,2,0.4)');
-
-      // Solid Walnut Bed Frame with bevels
-      const frameGeo = new THREE.BoxGeometry(25, 2.6, 68);
-      const frameMat = new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.5, metalness: 0.15 });
-      const frame = new THREE.Mesh(frameGeo, frameMat);
-      frame.position.set(0, -1.2, -26);
-      frame.receiveShadow = true;
-      bedGroup.add(frame);
-
-      // Classical Carved Headboard
-      const headGeo = new THREE.BoxGeometry(25.5, 9, 2.2);
-      const headboard = new THREE.Mesh(headGeo, frameMat);
-      headboard.position.set(0, 3.5, -59);
-      headboard.castShadow = true;
-      bedGroup.add(headboard);
-
-      // Wrinkled Velvet Bed Duvet (Terciopelo con bump map de micro-tejido)
-      const fabricTex = generateFabricWeaveTexture();
-      const duvetGeo = new THREE.BoxGeometry(23.6, 2.0, 65.5);
-      const duvetMat = new THREE.MeshStandardMaterial({
-        color: 0x2e1419, // Deep burgundy velvet
-        bumpMap: fabricTex,
-        bumpScale: 0.04,
-        roughness: 0.82,
-        metalness: 0.04
-      });
-      const duvet = new THREE.Mesh(duvetGeo, duvetMat);
-      duvet.position.set(0, 0, -26);
-      duvet.receiveShadow = true;
-      bedGroup.add(duvet);
-
-      // Two Soft Pillows against the headboard
-      const pillowGeo = new THREE.BoxGeometry(9.5, 1.6, 6.5);
-      const pillowMat = new THREE.MeshStandardMaterial({
-        color: 0x3d1c23,
-        bumpMap: fabricTex,
-        bumpScale: 0.03,
-        roughness: 0.9
-      });
-      const p1 = new THREE.Mesh(pillowGeo, pillowMat);
-      p1.position.set(-5.5, 1.4, -54);
-      p1.rotation.x = 0.25;
-      p1.castShadow = true;
-      bedGroup.add(p1);
-
-      const p2 = new THREE.Mesh(pillowGeo, pillowMat);
-      p2.position.set(5.5, 1.4, -54);
-      p2.rotation.x = 0.25;
-      p2.castShadow = true;
-      bedGroup.add(p2);
-
-      // Bedside Nightstand Table
-      const tableGeo = new THREE.BoxGeometry(6.5, 4.5, 6.5);
-      const table = new THREE.Mesh(tableGeo, frameMat);
-      table.position.set(16, 0.2, -15);
-      table.receiveShadow = true;
-      bedGroup.add(table);
-
-      // Vintage Lamp on Table (Lámpara de bronce con tulipa de lino)
-      const baseGeo = new THREE.CylinderGeometry(1.6, 2.0, 0.6, 16);
-      const brassMat = new THREE.MeshStandardMaterial({ color: 0xc5a059, metalness: 0.85, roughness: 0.25 });
-      const lampBase = new THREE.Mesh(baseGeo, brassMat);
-      lampBase.position.set(16, 2.7, -15);
-      bedGroup.add(lampBase);
-
-      const rodGeo = new THREE.CylinderGeometry(0.18, 0.18, 4.2, 12);
-      const lampRod = new THREE.Mesh(rodGeo, brassMat);
-      lampRod.position.set(16, 4.8, -15);
-      bedGroup.add(lampRod);
-
-      const shadeGeo = new THREE.ConeGeometry(2.4, 3.2, 16, 1, true);
-      const shadeMat = new THREE.MeshStandardMaterial({ color: 0xd4a373, roughness: 0.65, side: THREE.DoubleSide });
-      const lampShade = new THREE.Mesh(shadeGeo, shadeMat);
-      lampShade.position.set(16, 6.8, -15);
-      bedGroup.add(lampShade);
-
-      scene.add(bedGroup);
-    }
-
-    // =========================================================================
-    // PHOTOREALISTIC GUITAR WITH CLEARCOAT LACQUER & 27 FRETS
-    // =========================================================================
-    function buildMasterGuitar() {
-      guitarGroup = new THREE.Group();
-      guitarGroup.position.set(0, 1.1, 0); // Resting comfortably on the bed surface
-
-      // 1. Procedural 3-Tone Sunburst Lacquered Body (Physical Clearcoat!)
-      const sunburstTex = generateSunburstTexture();
-
-      const bodyShape = new THREE.Shape();
-      bodyShape.moveTo(0, 0);
-      bodyShape.bezierCurveTo(3.8, 1, 6.0, 4, 5.2, 8.5);
-      bodyShape.bezierCurveTo(4.5, 11.5, 2.8, 12.5, 3.5, 16.5);
-      bodyShape.bezierCurveTo(4.2, 19.5, 5.4, 20.5, 4.8, 23.5); // Horn cutaway
-      bodyShape.bezierCurveTo(3.8, 23.5, 2.4, 21.5, 2.0, 19.5);
-      bodyShape.bezierCurveTo(1.4, 19.5, -1.4, 19.5, -2.0, 19.5);
-      bodyShape.bezierCurveTo(-2.4, 21.5, -3.8, 23.5, -4.8, 23.5);
-      bodyShape.bezierCurveTo(-5.4, 20.5, -4.2, 19.5, -3.5, 16.5);
-      bodyShape.bezierCurveTo(-2.8, 12.5, -4.5, 11.5, -5.2, 8.5);
-      bodyShape.bezierCurveTo(-6.0, 4, -3.8, 1, 0, 0);
-
-      const bodySettings = { depth: 1.15, bevelEnabled: true, bevelSegments: 5, steps: 1, bevelSize: 0.38, bevelThickness: 0.38 };
-      const bodyGeo = new THREE.ExtrudeGeometry(bodyShape, bodySettings);
-
-      // THREE.MeshPhysicalMaterial: NITROCELLULOSE HIGH GLOSS CLEARCOAT
-      let bodyMat;
-      if (THREE.MeshPhysicalMaterial) {
-        bodyMat = new THREE.MeshPhysicalMaterial({
-          map: sunburstTex,
-          clearcoat: 0.95,          // Glass-like high-gloss lacquer
-          clearcoatRoughness: 0.08, // Sharp, mirror-like specular reflections
-          roughness: 0.22,
-          metalness: 0.08,
-          reflectivity: 0.65
-        });
-      } else {
-        bodyMat = new THREE.MeshStandardMaterial({
-          map: sunburstTex,
-          roughness: 0.25,
-          metalness: 0.15
-        });
+      if (glowEl && targetCoord) {
+        glowEl.style.left = targetCoord.x + "px";
+        glowEl.style.top = targetCoord.y + "px";
       }
 
-      const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
-      bodyMesh.rotation.x = Math.PI / 2;
-      bodyMesh.rotation.z = Math.PI;
-      bodyMesh.position.set(0, 0, 19);
-      bodyMesh.castShadow = true;
-      bodyMesh.receiveShadow = true;
-      guitarGroup.add(bodyMesh);
+      // Update Macro Fretboard Bar Slide Indicator
+      updateMacroSlide(currentFret);
 
-      // Aged Cream Pickguard (Vintage Mint Parchment)
-      const pgShape = new THREE.Shape();
-      pgShape.moveTo(0, 2.5);
-      pgShape.bezierCurveTo(3.0, 3, 4.0, 5.5, 3.8, 8.5);
-      pgShape.bezierCurveTo(3.4, 11.5, 1.8, 12.5, 2.5, 15.5);
-      pgShape.bezierCurveTo(1.6, 17.5, 0, 17.5, -1.6, 17.5);
-      pgShape.bezierCurveTo(-1.8, 12.5, -3.4, 11.5, -3.8, 8.5);
-      pgShape.bezierCurveTo(-4.0, 5.5, -3.0, 3, 0, 2.5);
-
-      const pgGeo = new THREE.ExtrudeGeometry(pgShape, { depth: 0.09, bevelEnabled: false });
-      const pgMat = new THREE.MeshStandardMaterial({ color: 0xfaedcd, roughness: 0.35 });
-      const pickguard = new THREE.Mesh(pgGeo, pgMat);
-      pickguard.rotation.x = Math.PI / 2;
-      pickguard.rotation.z = Math.PI;
-      pickguard.position.set(0, 0.62, 18);
-      guitarGroup.add(pickguard);
-
-      // Chrome Bridge, Saddles & Tailpiece (Brushed Chrome)
-      const bridgeGeo = new THREE.BoxGeometry(2.5, 0.42, 1.5);
-      const chromeMat = new THREE.MeshStandardMaterial({ color: 0xe0e0e0, metalness: 0.98, roughness: 0.12 });
-      const bridge = new THREE.Mesh(bridgeGeo, chromeMat);
-      bridge.position.set(0, 0.72, 4.5);
-      bridge.castShadow = true;
-      guitarGroup.add(bridge);
-
-      // Single-Coil Pickups with Alnico Magnets
-      [9.5, 12.5, 15.5].forEach(pz => {
-        const puGeo = new THREE.BoxGeometry(2.4, 0.3, 0.7);
-        const puMat = new THREE.MeshStandardMaterial({ color: 0xfefae0, roughness: 0.3 });
-        const pu = new THREE.Mesh(puGeo, puMat);
-        pu.position.set(0, 0.7, pz);
-        guitarGroup.add(pu);
-      });
-
-      // Volume & Tone Knobs (Numbered Bakelite)
-      [-1.0, -1.7, -2.3].forEach((kx, idx) => {
-        const knobGeo = new THREE.CylinderGeometry(0.35, 0.38, 0.35, 16);
-        const knobMat = new THREE.MeshStandardMaterial({ color: 0xfefae0, roughness: 0.25 });
-        const knob = new THREE.Mesh(knobGeo, knobMat);
-        knob.position.set(kx, 0.8, 7.0 + idx * 1.5);
-        guitarGroup.add(knob);
-      });
-
-      // 2. The 27-Fret Guitar Neck (Rosewood Fretboard with PBR wood grain)
-      const rosewoodTex = generateWoodGrainTexture('#24150e', 'rgba(5,2,1,0.5)');
-      const neckGeo = new THREE.BoxGeometry(NECK_WIDTH, 0.75, NECK_LENGTH + 2);
-      const neckMat = new THREE.MeshStandardMaterial({
-        map: rosewoodTex,
-        bumpMap: rosewoodTex,
-        bumpScale: 0.03,
-        roughness: 0.52,
-        metalness: 0.06
-      });
-      const neck = new THREE.Mesh(neckGeo, neckMat);
-      neck.position.set(0, 0.22, -NECK_LENGTH / 2);
-      neck.castShadow = true;
-      neck.receiveShadow = true;
-      guitarGroup.add(neck);
-
-      // 27 Nickel-Silver Frets (Trastes pulidos con destellos)
-      const fretMat = new THREE.MeshStandardMaterial({ color: 0xe8e8e8, metalness: 0.95, roughness: 0.12 });
-      for (let i = 0; i <= TOTAL_FRETS; i++) {
-        const zPos = fretPositionsZ[i];
-        const fretGeo = new THREE.BoxGeometry(NECK_WIDTH - 0.2, 0.16, 0.11);
-        const fretMesh = new THREE.Mesh(fretGeo, fretMat);
-        fretMesh.position.set(0, 0.62, zPos);
-        guitarGroup.add(fretMesh);
-
-        // Natural mother-of-pearl inlays
-        if ([3, 5, 7, 9, 15, 17, 19, 21].includes(i)) {
-          createInlayDot(0, zPos + 0.5);
-        } else if (i === 12 || i === 24) {
-          createInlayDot(-0.95, zPos + 0.5);
-          createInlayDot(0.95, zPos + 0.5);
-        }
+      // Play Realistic Steel Slide Glissando Sound
+      if (prevFret !== currentFret) {
+        playSlideGlissando(prevFret, currentFret);
       }
 
-      // 3. Vintage Headstock (Pala clásica con 6 clavijas cromadas)
-      const headstockGeo = new THREE.BoxGeometry(5.0, 0.72, 9.5);
-      const mapleTex = generateWoodGrainTexture('#2b1a10', 'rgba(15,8,4,0.3)');
-      const headMat = new THREE.MeshStandardMaterial({ map: mapleTex, roughness: 0.4 });
-      const headstock = new THREE.Mesh(headstockGeo, headMat);
-      headstock.position.set(0, 0.1, -NECK_LENGTH - 4.8);
-      headstock.castShadow = true;
-      guitarGroup.add(headstock);
-
-      // 6 Chrome Tuning Pegs with Machine Heads
-      for (let p = 0; p < 6; p++) {
-        const px = (p % 2 === 0) ? -2.8 : 2.8;
-        const pz = -NECK_LENGTH - 2.2 - Math.floor(p / 2) * 2.5;
-        const pegGeo = new THREE.CylinderGeometry(0.22, 0.22, 0.9, 12);
-        const peg = new THREE.Mesh(pegGeo, chromeMat);
-        peg.rotation.z = Math.PI / 2;
-        peg.position.set(px, 0.22, pz);
-        guitarGroup.add(peg);
+      // Update HUD
+      const fretPosEl = document.getElementById("hud-fret-pos");
+      if (fretPosEl) {
+        fretPosEl.textContent = currentFret === 0 ? "TRASTE 0 (NUT)" : `TRASTE ${currentFret} / 27`;
       }
 
-      // 4. 6 Realistic Guitar Strings with Specular Highlights
-      const spacing = (NECK_WIDTH - 0.8) / 5;
-      const gauges = [0.026, 0.035, 0.046, 0.06, 0.078, 0.096];
-      const stringLength = NECK_LENGTH + 9;
-
-      for (let s = 0; s < 6; s++) {
-        const sx = - (NECK_WIDTH - 0.8) / 2 + s * spacing;
-        const strGeo = new THREE.CylinderGeometry(gauges[s], gauges[s], stringLength, 8);
-        const strMat = new THREE.MeshStandardMaterial({
-          color: (s >= 3) ? 0xcc9933 : 0xededed, // Wound bronze for low strings, nickel for high strings
-          metalness: 0.98,
-          roughness: 0.1
-        });
-        const strMesh = new THREE.Mesh(strGeo, strMat);
-        strMesh.rotation.x = Math.PI / 2;
-        strMesh.position.set(sx, 0.76, -NECK_LENGTH / 2 + 1);
-        guitarGroup.add(strMesh);
-        stringMeshes.push({ mesh: strMesh, origX: sx, seed: s });
-      }
-
-      scene.add(guitarGroup);
-    }
-
-    function createInlayDot(x, z) {
-      const dotGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.03, 16);
-      const dotMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.25 });
-      const dot = new THREE.Mesh(dotGeo, dotMat);
-      dot.position.set(x, 0.6, z);
-      guitarGroup.add(dot);
-    }
-
-    // =========================================================================
-    // SCATTERED 12" VINYL ALBUMS WITH CONCENTRIC ANISOTROPIC GROOVES
-    // =========================================================================
-    function buildScatteredAlbumsAndVinyl() {
-      const albumsData = [
-        { phase: 1, cover: "assets/images/hendrix_album.jpg", x: -7.5, z: fretPositionsZ[6] + 2, rotY: 0.28, rotZ: 0.03 },
-        { phase: 2, cover: "assets/images/joplin_album.jpg", x: 7.2, z: fretPositionsZ[11] + 1, rotY: -0.22, rotZ: -0.02 },
-        { phase: 3, cover: "assets/images/morrison_album.jpg", x: -7.6, z: fretPositionsZ[16] + 3, rotY: 0.16, rotZ: 0.02 },
-        { phase: 4, cover: "assets/images/winehouse_album.jpg", x: 7.0, z: fretPositionsZ[21] + 2, rotY: -0.3, rotZ: -0.03 },
-        { phase: 5, cover: "assets/images/cobain_album.jpg", x: 0, z: -NECK_LENGTH - 11, rotY: 0.06, rotZ: 0.01 }
-      ];
-
-      const texLoader = new THREE.TextureLoader();
-      const vinylGroovesTex = generateVinylGrooveTexture();
-
-      albumsData.forEach(alb => {
-        const sleeveGroup = new THREE.Group();
-        sleeveGroup.position.set(alb.x, 0.96, alb.z);
-        sleeveGroup.rotation.y = alb.rotY;
-        sleeveGroup.rotation.z = alb.rotZ;
-
-        // 12" Cardboard Album Sleeve with Soft Shadow
-        const sleeveGeo = new THREE.BoxGeometry(6.4, 0.09, 6.4);
-        texLoader.load(alb.cover, (tex) => {
-          const sleeveMat = new THREE.MeshStandardMaterial({
-            map: tex,
-            roughness: 0.58,
-            metalness: 0.04
-          });
-          const sleeve = new THREE.Mesh(sleeveGeo, sleeveMat);
-          sleeve.castShadow = true;
-          sleeve.receiveShadow = true;
-          sleeveGroup.add(sleeve);
-        });
-
-        // 12" Black Vinyl Record with Micro-Grooves Bump Map
-        const vinylGeo = new THREE.CylinderGeometry(3.0, 3.0, 0.05, 32);
-        const vinylMat = new THREE.MeshStandardMaterial({
-          color: 0x080808,
-          bumpMap: vinylGroovesTex,
-          bumpScale: 0.04,
-          roughness: 0.28,
-          metalness: 0.85
-        });
-        const vinyl = new THREE.Mesh(vinylGeo, vinylMat);
-        vinyl.position.set(alb.x < 0 ? -1.9 : 1.9, 0.07, 0.5);
-        vinyl.castShadow = true;
-        sleeveGroup.add(vinyl);
-
-        // Center Paper Label on Vinyl
-        const labelGeo = new THREE.CylinderGeometry(1.0, 1.0, 0.06, 24);
-        const labelMat = new THREE.MeshStandardMaterial({ color: 0xd4a373, roughness: 0.4 });
-        const label = new THREE.Mesh(labelGeo, labelMat);
-        label.position.set(alb.x < 0 ? -1.9 : 1.9, 0.08, 0.5);
-        sleeveGroup.add(label);
-
-        // Warm Golden Amber Highlight Lamp
-        const discLight = new THREE.PointLight(0xffbe0b, 0, 12);
-        discLight.position.set(0, 2.5, 0);
-        sleeveGroup.add(discLight);
-
-        vinylDiscMeshes[alb.phase] = { group: sleeveGroup, light: discLight };
-        scene.add(sleeveGroup);
+      // Update active fret classes on hotspots
+      document.querySelectorAll(".fret-hotspot").forEach((el, idx) => {
+        el.classList.toggle("active-fret", idx === currentFret);
+      });
+      document.querySelectorAll(".fret-strip-item").forEach((el, idx) => {
+        el.classList.toggle("active-fret", idx === currentFret);
       });
     }
 
-    // =========================================================================
-    // VINTAGE COILED GUITAR CABLE & FLOOR PRACTICE AMPLIFIER
-    // =========================================================================
-    function buildFloorAmplifier() {
-      const ampGroup = new THREE.Group();
-      ampGroup.position.set(-15, 0.5, 12);
+    // Update Macro Fretboard Bar Slide
+    function updateMacroSlide(fret) {
+      const strip = document.getElementById("macro-fretboard-strip");
+      const pill = document.getElementById("macro-slide-pill");
+      if (!strip || !pill) return;
 
-      // Black Tolex Textured Amplifier Box
-      const ampGeo = new THREE.BoxGeometry(6.5, 6.0, 3.8);
-      const ampMat = new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.8, metalness: 0.1 });
-      const ampBox = new THREE.Mesh(ampGeo, ampMat);
-      ampBox.castShadow = true;
-      ampBox.receiveShadow = true;
-      ampGroup.add(ampBox);
-
-      // Silver / Gold Tweed Grille Cloth
-      const grilleGeo = new THREE.BoxGeometry(5.6, 4.4, 0.1);
-      const grilleMat = new THREE.MeshStandardMaterial({ color: 0xa89984, roughness: 0.85 });
-      const grille = new THREE.Mesh(grilleGeo, grilleMat);
-      grille.position.set(0, -0.4, 1.95);
-      ampGroup.add(grille);
-
-      // Red Jewel Power Indicator Light
-      const jewelGeo = new THREE.CylinderGeometry(0.18, 0.18, 0.1, 12);
-      const jewelMat = new THREE.MeshBasicMaterial({ color: 0xff0033 });
-      const jewel = new THREE.Mesh(jewelGeo, jewelMat);
-      jewel.rotation.x = Math.PI / 2;
-      jewel.position.set(2.2, 2.2, 1.95);
-      ampGroup.add(jewel);
-
-      const jewelLight = new THREE.PointLight(0xff0033, 1.2, 4);
-      jewelLight.position.set(2.2, 2.2, 2.2);
-      ampGroup.add(jewelLight);
-
-      scene.add(ampGroup);
-
-      // Curly / Coiled Black Guitar Cable running from guitar jack to amp
-      const cablePoints = [];
-      const start = new THREE.Vector3(-1.8, 1.6, 17);
-      const end = new THREE.Vector3(-14, -1.8, 13);
-      for (let i = 0; i <= 24; i++) {
-        const t = i / 24;
-        const x = THREE.MathUtils.lerp(start.x, end.x, t) + Math.sin(t * Math.PI * 4) * 0.4;
-        const y = THREE.MathUtils.lerp(start.y, end.y, t) - Math.sin(t * Math.PI) * 0.8;
-        const z = THREE.MathUtils.lerp(start.z, end.z, t);
-        cablePoints.push(new THREE.Vector3(x, y, z));
-      }
-      const curve = new THREE.CatmullRomCurve3(cablePoints);
-      const cableGeo = new THREE.TubeGeometry(curve, 32, 0.1, 8, false);
-      const cableMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.6 });
-      const cable = new THREE.Mesh(cableGeo, cableMat);
-      scene.add(cable);
-    }
-
-    // =========================================================================
-    // PLAYER PAWN: TORTOISESHELL CELLULOID GUITAR PICK (PÚA DE CAREY)
-    // =========================================================================
-    function buildTortoiseshellPua() {
-      const puaGroup = new THREE.Group();
-
-      const shape = new THREE.Shape();
-      shape.moveTo(0, 0.85);
-      shape.bezierCurveTo(0.65, 0.75, 0.85, 0.35, 0.75, -0.15);
-      shape.bezierCurveTo(0.65, -0.75, 0, -0.95, 0, -0.95);
-      shape.bezierCurveTo(0, -0.95, -0.65, -0.75, -0.75, -0.15);
-      shape.bezierCurveTo(-0.85, 0.35, -0.65, 0.75, 0, 0.85);
-
-      const geo = new THREE.ExtrudeGeometry(shape, { depth: 0.15, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.05, bevelThickness: 0.05 });
-      const mat = new THREE.MeshStandardMaterial({
-        color: 0xcc7a1e,       // Rich tortoiseshell amber
-        roughness: 0.28,
-        metalness: 0.2,
-        emissive: 0x5a2d05,
-        emissiveIntensity: 0.4
-      });
-
-      const body = new THREE.Mesh(geo, mat);
-      body.rotation.x = Math.PI / 2;
-      body.scale.set(0.9, 0.9, 0.9);
-      puaGroup.add(body);
-
-      // Warm Amber Under-Glow
-      const pickLight = new THREE.PointLight(0xffbe0b, 1.8, 5);
-      pickLight.position.set(0, 0.25, 0);
-      puaGroup.add(pickLight);
-
-      puaMesh = puaGroup;
-      puaMesh.position.set(0, 2.3, fretPositionsZ[0] + 0.5);
-      scene.add(puaMesh);
-    }
-
-    // =========================================================================
-    // CAMERA PRESET MODES
-    // =========================================================================
-    function setCameraMode(mode) {
-      cameraMode = mode;
-      document.querySelectorAll('.cam-btn').forEach(b => b.classList.remove('active'));
-
-      if (mode === 'iso') {
-        document.getElementById('camIso').classList.add('active');
-        controls.enabled = false;
-        updateCameraIso();
-      } else if (mode === 'front') {
-        document.getElementById('camFront').classList.add('active');
-        controls.enabled = false;
-        updateCameraFront();
-      } else if (mode === 'free') {
-        document.getElementById('camFree').classList.add('active');
-        controls.enabled = true;
-      }
-    }
-
-    function updateCameraIso() {
-      if (!puaMesh) return;
-      const targetZ = puaMesh.position.z;
-      camera.position.set(13, 17, targetZ + 14);
-      camera.lookAt(0, 1.8, targetZ - 4);
-    }
-
-    function updateCameraFront() {
-      if (!puaMesh) return;
-      const targetZ = puaMesh.position.z;
-      camera.position.set(0, 6.2, targetZ + 11);
-      camera.lookAt(0, 1.8, targetZ - 8);
-    }
-
-    function focusMilestone(phaseIdx) {
-      document.querySelectorAll('.f-pill').forEach(p => p.classList.remove('active'));
-      const activePill = document.getElementById(`pill-${phaseIdx}`);
-      if (activePill) activePill.classList.add('active');
-
-      if (phaseIdx === 0) {
-        updateDrawerUI(1);
-        if (cameraMode !== 'free') {
-          camera.position.set(12, 16, fretPositionsZ[0] + 15);
-          camera.lookAt(0, 1.8, fretPositionsZ[0] - 2);
-        }
-      } else {
-        updateDrawerUI(phaseIdx);
-        const m = MILESTONES[phaseIdx];
-        if (m && cameraMode !== 'free') {
-          const z = fretPositionsZ[m.fret];
-          camera.position.set(m.fret === 27 ? 0 : 13, 16, z + 13);
-          camera.lookAt(0, 1.8, z - 3);
-        }
+      const items = strip.querySelectorAll(".fret-strip-item");
+      if (items[fret]) {
+        const itemRect = items[fret].offsetLeft + items[fret].offsetWidth / 2;
+        pill.style.left = itemRect + "px";
       }
     }
 
     // =========================================================================
-    // TACTICAL DRAWER DATA BINDING
+    // CAMERA CINEMATIC VIEWS
     // =========================================================================
-    function updateDrawerUI(phase) {
-      const data = MILESTONES[phase];
-      if (!data) return;
+    function switchCameraView(viewName) {
+      const wrap = document.getElementById("stage-canvas-wrap");
+      const buttons = document.querySelectorAll(".btn-view");
+      buttons.forEach(b => b.classList.remove("active"));
 
-      document.getElementById('drawerPhaseTitle').textContent = `🎸 FASE ${phase}: ${data.name.toUpperCase()}`;
-      document.getElementById('drawerFretTag').textContent = `TRASTE ${data.fret}`;
-      document.getElementById('drawerArtistPhoto').src = data.photo;
-      document.getElementById('drawerArtistName').textContent = data.title;
-      document.getElementById('drawerMilestoneSubtitle').textContent = data.sub;
+      const activeBtn = Array.from(buttons).find(b => b.getAttribute("onclick")?.includes(viewName));
+      if (activeBtn) activeBtn.classList.add("active");
 
-      document.getElementById('specVector').textContent = data.vector;
-      document.getElementById('specCwe').textContent = data.cwe;
-      document.getElementById('specTarget').textContent = data.target;
-      document.getElementById('specPoints').textContent = `+${data.points} PTS`;
+      if (!wrap) return;
 
-      document.getElementById('kaliGuideText').innerHTML = `
-        <strong>💻 AUDITORÍA EN KALI LINUX:</strong><br>
-        ${data.kaliGuide}
-      `;
-
-      // Clear flag input (Uncheated)
-      const inputEl = document.getElementById('flagInput');
-      inputEl.value = "";
-      inputEl.placeholder = `Ingresa la bandera de ${data.name} (FLAG{...})...`;
+      switch(viewName) {
+        case "room":
+          wrap.style.transform = "scale(1) translate(0px, 0px)";
+          break;
+        case "fret":
+          // Zoom into the Stratocaster on the bed
+          wrap.style.transform = "scale(2.5) translate(40px, -20px)";
+          break;
+        case "tv":
+          // Zoom into the vintage CRT television
+          wrap.style.transform = "scale(2.7) translate(-360px, -70px)";
+          break;
+        case "turntable":
+          // Zoom into the vintage turntable
+          wrap.style.transform = "scale(2.8) translate(30px, 140px)";
+          break;
+      }
     }
 
     // =========================================================================
-    // FLAG SUBMISSION & ETHICAL HACKING VERIFICATION
+    // FLAG SUBMISSION & CRYPTOGRAPHIC VERIFICATION (SHA-256)
     // =========================================================================
-    async function handleFlagSubmit(event) {
-      if (event) event.preventDefault();
+    async function sha256Hex(str) {
+      const buf = new TextEncoder().encode(str.trim());
+      const hashBuf = await crypto.subtle.digest("SHA-256", buf);
+      const hashArr = Array.from(new Uint8Array(hashBuf));
+      return hashArr.map(b => b.toString(16).padStart(2, "0")).join("");
+    }
 
-      const inputEl = document.getElementById('flagInput');
-      const val = inputEl ? inputEl.value.trim() : "";
+    async function submitFlag() {
+      const input = document.getElementById("flag-input");
+      const feedback = document.getElementById("flag-feedback");
+      if (!input || !feedback) return;
 
-      if (!val) {
-        logAudit("⚠️ Intento vacío. Ingresa la bandera descubierta en Kali.");
+      const rawVal = input.value.trim();
+      if (!rawVal) {
+        feedback.className = "flag-feedback error";
+        feedback.textContent = "Error: El campo de bandera no puede estar vacío.";
+        playBrokenStringSound();
         return;
       }
 
-      const hash = await computeSHA256(val);
-      const entry = CTF_HASH_DB[hash];
+      const inputHash = await sha256Hex(rawVal);
+      const entry = CTF_HASH_DB[inputHash];
 
       if (entry) {
-        if (entry.type === "flag") {
-          if (!completedPhases.has(entry.phase)) {
-            completedPhases.add(entry.phase);
-            score += entry.points;
-            bossHp = Math.max(0, bossHp - 20);
-
-            // Update Telemetry HUD
-            updateTelemetryHUD();
-            logAudit(`🎯 [FASE ${entry.phase} RESUELTA] ${entry.msg} (+${entry.points} PTS)`);
-
-            // Play the REAL SONG of this artist immediately!
-            playArtistSong(entry.phase);
-
-            // Animate Púa jump to target fret!
-            const milestoneData = MILESTONES[entry.phase];
-            animatePuaJump(currentFret, milestoneData.fret);
-
-            // Illuminate the vinyl sleeve on the bed!
-            if (vinylDiscMeshes[entry.phase]) {
-              vinylDiscMeshes[entry.phase].light.intensity = 2.5;
-            }
-
-            // Mark phase completed in UI
-            const seg = document.getElementById(`seg-${entry.phase}`);
-            if (seg) seg.classList.add('done');
-            const pill = document.getElementById(`pill-${entry.phase}`);
-            if (pill) pill.classList.add('comp');
-
-            // Advance target phase
-            if (entry.nextPhase) {
-              activePhase = entry.nextPhase;
-              setTimeout(() => {
-                focusMilestone(activePhase);
-              }, 1100);
-            }
-
-            // Check Victory
-            if (entry.isRoot || bossHp === 0) {
-              setTimeout(() => {
-                triggerVictoryScreen();
-              }, 1400);
-            }
-          } else {
-            alert("ℹ️ Esta bandera ya fue registrada anteriormente.");
-          }
-        } else if (entry.type === "rabbit_hole") {
+        if (entry.type === "rabbit_hole") {
+          // Trap Triggered!
           score = Math.max(0, score - entry.penalty);
-          updateTelemetryHUD();
-          
-          // PLAY REALISTIC BROKEN GUITAR STRING SOUND!
+          updateTelemetryUI();
+          feedback.className = "flag-feedback error";
+          feedback.innerHTML = `⚠️ <strong>${entry.name}</strong><br>${entry.msg} Penalización: -${entry.penalty} PTS.`;
           playBrokenStringSound();
-          shakeStringsOnSnap();
+          showToast("⚠️ RABBIT HOLE ACTIVADO", entry.msg);
+          return;
+        }
 
-          logAudit(`🚨 [RABBIT HOLE] ${entry.name} - ${entry.msg} (-50 PTS)`);
+        if (entry.type === "flag") {
+          // Valid Flag Captured!
+          if (completedPhases.has(entry.phase)) {
+            feedback.className = "flag-feedback error";
+            feedback.textContent = `ℹ️ Ya habías capturado la bandera de la Fase ${entry.phase} (${entry.name}).`;
+            return;
+          }
 
-          document.getElementById('trollModalMsg').innerHTML = `
-            <strong>${entry.name}</strong><br><br>
-            ${entry.msg}<br><br>
-            ¡Sonó el chasquido de una cuerda rota! El servidor absorbió tu ataque.
-          `;
-          document.getElementById('troll-modal').style.display = "block";
+          completedPhases.add(entry.phase);
+          capturedFlagsCount++;
+          score += entry.points;
+
+          const milestone = MILESTONES[entry.phase];
+          feedback.className = "flag-feedback success";
+          feedback.innerHTML = `✅ <strong>${entry.msg}</strong><br>+${entry.points} PTS • Bandera verificada criptográficamente (SHA-256).`;
+
+          // Slide Glissando to the artist fret!
+          moveSlideToFret(milestone.fret);
+
+          // Highlight vinyl on bed
+          const vinylEl = document.getElementById(`vinyl-${entry.phase}`);
+          if (vinylEl) vinylEl.classList.add("active-phase");
+
+          // Play Master Track
+          playMasterTrack(milestone.audio, `${milestone.name} - ${milestone.trackTitle}`);
+
+          // Show Toast
+          showToast(`⚡ ¡BANDERA FASE ${entry.phase} VERIFICADA!`, `Slide deslizándose al Traste ${milestone.fret} (${milestone.name})`);
+
+          // Unlock fret styling
+          markFretsUpTo(milestone.fret);
+
+          // Advance to next phase if available
+          if (entry.nextPhase && entry.nextPhase <= 5) {
+            selectPhase(entry.nextPhase);
+          }
+
+          updateTelemetryUI();
+          input.value = "";
         }
       } else {
-        // PLAY REALISTIC BROKEN STRING ON INCORRECT FLAG!
+        // Invalid Flag
+        feedback.className = "flag-feedback error";
+        feedback.innerHTML = "❌ Bandera inválida. No coincide con ningún artefacto de la fase. Cuerda rota (SNAP!).";
         playBrokenStringSound();
-        shakeStringsOnSnap();
-
-        logAudit(`❌ Bandera rechazada en Fase ${activePhase}. Revisa la sintaxis en Kali.`);
-        alert("❌ BANDERA INCORRECTA (SNAP! CUERDA ROTA)\n\nEl hash no coincide con ninguna bandera del laboratorio. Revisa tus comandos y artefactos en Kali Linux.");
+        showToast("❌ BANDERA INCORRECTA", "Revisa tus artefactos en Kali Linux. Cuerda rota.");
       }
     }
 
-    // Play actual master track from assets/audio/
-    function playArtistSong(phase) {
-      const audio = document.getElementById('audioMaster');
-      const label = document.getElementById('jukeboxLabel');
-      const data = MILESTONES[phase];
-
-      if (audio && data && data.audio) {
-        audio.src = data.audio;
-        audio.play().then(() => {
-          if (label) label.textContent = `${data.trackTitle} (Sonando 🎵)`;
-        }).catch(() => {});
-      }
-    }
-
-    function toggleJukeboxMusic() {
-      const audio = document.getElementById('audioMaster');
-      const label = document.getElementById('jukeboxLabel');
-      const data = MILESTONES[activePhase] || MILESTONES[1];
-
-      if (audio.paused) {
-        audio.src = data.audio;
-        audio.play().then(() => {
-          label.textContent = `${data.trackTitle} (Pausar)`;
-        }).catch(() => {});
-      } else {
-        audio.pause();
-        label.textContent = `${data.trackTitle} (Play)`;
-      }
-    }
-
-    function shakeStringsOnSnap() {
-      stringMeshes.forEach(s => {
-        s.mesh.position.x += (Math.random() - 0.5) * 0.16;
+    function markFretsUpTo(fret) {
+      document.querySelectorAll(".fret-hotspot").forEach((el, idx) => {
+        if (idx <= fret) el.classList.add("unlocked");
       });
-      setTimeout(() => {
-        stringMeshes.forEach(s => { s.mesh.position.x = s.origX; });
-      }, 350);
+      document.querySelectorAll(".fret-strip-item").forEach((el, idx) => {
+        if (idx <= fret) el.classList.add("unlocked-fret");
+      });
     }
 
     // =========================================================================
-    // MOVEMENT ANIMATION (PARABOLIC GUITAR PICK JUMP)
+    // PHASE SELECTION & UI UPDATES
     // =========================================================================
-    function animatePuaJump(fromFret, toFret) {
-      if (isMoving) return;
-      isMoving = true;
+    function selectPhase(phaseNum) {
+      activePhase = phaseNum;
+      const m = MILESTONES[phaseNum];
+      if (!m) return;
 
-      const startZ = puaMesh.position.z;
-      const endZ = fretPositionsZ[toFret] + 0.5;
-      const duration = 850;
-      const startTime = performance.now();
+      // Update Drawer UI
+      document.getElementById("drawer-photo").src = m.photo;
+      document.getElementById("drawer-title").textContent = m.title;
+      document.getElementById("drawer-traste-badge").textContent = `TRASTE ${m.fret} • ${m.points} PTS`;
+      document.getElementById("drawer-sub").textContent = m.sub;
+      document.getElementById("drawer-vector").textContent = m.vector;
+      document.getElementById("drawer-cwe").textContent = m.cwe;
+      document.getElementById("drawer-target").textContent = m.target;
+      document.getElementById("drawer-kali").innerHTML = m.kaliGuide;
 
-      playWarmGuitarStrum(130 + toFret * 8);
-
-      function jumpStep(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(1, elapsed / duration);
-
-        // Parabolic arc above the guitar neck
-        const height = Math.sin(progress * Math.PI) * 3.0;
-        puaMesh.position.y = 2.3 + height;
-        puaMesh.position.z = startZ + (endZ - startZ) * progress;
-
-        // 360 flip
-        puaMesh.rotation.z = progress * Math.PI * 2;
-
-        if (cameraMode === 'iso') updateCameraIso();
-        else if (cameraMode === 'front') updateCameraFront();
-
-        if (progress < 1) {
-          requestAnimationFrame(jumpStep);
-        } else {
-          puaMesh.position.y = 2.3;
-          puaMesh.position.z = endZ;
-          puaMesh.rotation.z = 0;
-          currentFret = toFret;
-          isMoving = false;
-
-          document.getElementById('posChipLabel').textContent = `TRASTE ${toFret} / 27`;
-        }
+      // Update Phase Tab Buttons
+      for (let p = 1; p <= 5; p++) {
+        const tab = document.getElementById(`tab-p${p}`);
+        if (tab) tab.classList.toggle("active", p === phaseNum);
       }
 
-      requestAnimationFrame(jumpStep);
+      // Update CRT Screen
+      document.getElementById("crt-phase-target").textContent = `> TARGET: ${m.target.split(' ')[0]}`;
+      document.getElementById("crt-cwe").textContent = `> ${m.cwe}`;
+
+      // Update HUD
+      document.getElementById("hud-artist").textContent = `${m.name.toUpperCase()} (FASE ${phaseNum})`;
     }
 
-    function updateTelemetryHUD() {
-      document.getElementById('scoreVal').textContent = `${score} / 1000 PTS`;
-      document.getElementById('bossHpVal').textContent = `${bossHp} / 100 HP`;
-      document.getElementById('bossHpFill').style.width = `${bossHp}%`;
+    function updateTelemetryUI() {
+      document.getElementById("hud-score").textContent = `${score} PTS`;
+      document.getElementById("hud-flags").textContent = `${capturedFlagsCount} / 5`;
     }
 
-    function triggerVictoryScreen() {
-      bossHp = 0;
-      updateTelemetryHUD();
-      document.getElementById('victory-modal').style.display = "block";
+    function toggleAttackDrawer() {
+      const drawer = document.getElementById("attack-drawer");
+      drawer.classList.toggle("open");
     }
 
-    function logAudit(msg) {
-      const log = document.getElementById('miniAuditLog');
-      const timeStr = new Date().toTimeString().split(' ')[0];
-      log.innerHTML += `<br>[${timeStr}] ${msg}`;
-      log.scrollTop = log.scrollHeight;
+    function showToast(title, desc) {
+      const toast = document.getElementById("rock-toast");
+      document.getElementById("toast-title").textContent = title;
+      document.getElementById("toast-desc").textContent = desc;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
     }
 
-    function startTimer() {
-      if (timerInterval) clearInterval(timerInterval);
-      timerInterval = setInterval(() => {
-        timerSeconds--;
-        if (timerSeconds <= 0) {
-          clearInterval(timerInterval);
-          timerSeconds = 0;
-        }
-        const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
-        const s = (timerSeconds % 60).toString().padStart(2, '0');
-        document.getElementById('timerVal').textContent = `${m}:${s}`;
-      }, 1000);
+    function testAmpFeedback() {
+      playBrokenStringSound();
+      showToast("🎸 AMPLIFICADOR FENDER", "Válvulas encendidas. Cable conectado a la Stratocaster.");
     }
 
-    // =========================================================================
-    // DEMO & RESET CONTROLS
-    // =========================================================================
-    function resetFretboardLab() {
-      score = 0;
-      bossHp = 100;
+    // Sustentación Modal
+    function openSustentacionModal() {
+      document.getElementById("modal-sustentacion").classList.add("open");
+    }
+    function closeSustentacionModal() {
+      document.getElementById("modal-sustentacion").classList.remove("open");
+    }
+
+    // 100% Academic Demo for the Professor
+    async function execute100PercentDemo() {
+      closeSustentacionModal();
+      showToast("🎓 INICIANDO DEMOSTRACIÓN 100%", "Inyectando las 5 banderas del CTF...");
+
+      const demoFlags = [
+        "FLAG{Purple_Haze_Network}",
+        "FLAG{Cry_Baby_Hidden_Data}",
+        "FLAG{Light_My_Fire_SQLi}",
+        "FLAG{Back_To_Black_XSS}",
+        "FLAG{Smells_Like_Root_Spirit}"
+      ];
+
+      for (let i = 0; i < demoFlags.length; i++) {
+        await new Promise(r => setTimeout(r, 1400));
+        document.getElementById("flag-input").value = demoFlags[i];
+        await submitFlag();
+      }
+    }
+
+    // Reset Progress
+    function resetCTFProgress() {
       currentFret = 0;
       activePhase = 1;
+      score = 0;
+      capturedFlagsCount = 0;
       completedPhases.clear();
-      timerSeconds = 60 * 60;
 
-      const audio = document.getElementById('audioMaster');
-      if (audio) audio.pause();
+      moveSlideToFret(0);
+      selectPhase(1);
+      updateTelemetryUI();
 
-      updateTelemetryHUD();
-      document.getElementById('posChipLabel').textContent = "TRASTE 0 (INICIO)";
-      if (puaMesh) {
-        puaMesh.position.set(0, 2.3, fretPositionsZ[0] + 0.5);
-      }
+      document.querySelectorAll(".vinyl-hotspot").forEach(v => v.classList.remove("active-phase"));
+      document.querySelectorAll(".fret-hotspot").forEach(f => f.classList.remove("unlocked"));
+      document.querySelectorAll(".fret-strip-item").forEach(f => f.classList.remove("unlocked-fret"));
 
-      // Reset vinyl lights
-      Object.values(vinylDiscMeshes).forEach(v => {
-        if (v.light) v.light.intensity = 0;
-      });
+      const audio = document.getElementById("master-audio");
+      audio.pause();
+      audio.currentTime = 0;
+      document.getElementById("audio-eq").classList.remove("playing");
+      document.getElementById("hud-track-title").textContent = "Sin Reproducción";
 
-      for (let i = 1; i <= 5; i++) {
-        const seg = document.getElementById(`seg-${i}`);
-        if (seg) seg.classList.remove('done');
-        const pill = document.getElementById(`pill-${i}`);
-        if (pill) pill.classList.remove('comp');
-      }
-
-      focusMilestone(0);
-      setCameraMode('iso');
-      logAudit("🔄 Laboratorio reiniciado. Púa en Traste 0 y Servidor al 100% HP.");
-    }
-
-    function activateSustentacionLab() {
-      completedPhases.add(1); completedPhases.add(2);
-      completedPhases.add(3); completedPhases.add(4);
-      completedPhases.add(5);
-
-      score = 1000;
-      bossHp = 0;
-      updateTelemetryHUD();
-
-      // Light up all vinyl covers on bed
-      Object.values(vinylDiscMeshes).forEach(v => {
-        if (v.light) v.light.intensity = 2.5;
-      });
-
-      for (let i = 1; i <= 5; i++) {
-        const seg = document.getElementById(`seg-${i}`);
-        if (seg) seg.classList.add('done');
-        const pill = document.getElementById(`pill-${i}`);
-        if (pill) pill.classList.add('comp');
-      }
-
-      playArtistSong(5);
-      animatePuaJump(currentFret, 27);
-      setTimeout(() => {
-        triggerVictoryScreen();
-      }, 950);
-      logAudit("🎓 Modo Sustentación Institucional activado: 1000/1000 PTS (Todas las fases resueltas).");
-    }
-
-    function onWindowResize() {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      showToast("🔄 PROGRESO REINICIADO", "Slide vuelto al Traste 0 (Nut). ¡A la caza de banderas!");
     }
 
     // =========================================================================
-    // MAIN RENDER LOOP (STRING VIBRATION & WARM LAMP BOBBING)
+    // INITIALIZATION & DOM GENERATION
     // =========================================================================
-    function animate() {
-      requestAnimationFrame(animate);
+    function initFretboardUI() {
+      // 1. Generate Fret Hotspots on the Real Photo
+      const container = document.getElementById("fret-nodes-container");
+      container.innerHTML = "";
 
-      const time = performance.now() * 0.003;
+      FRET_COORDINATES.forEach((coord, i) => {
+        const node = document.createElement("div");
+        node.className = `fret-hotspot ${i === 0 ? 'nut-hotspot' : ''}`;
+        node.style.left = coord.x + "px";
+        node.style.top = coord.y + "px";
 
-      // Realistic String Vibration
-      stringMeshes.forEach(s => {
-        s.mesh.position.x = s.origX + Math.sin(time * 7 + s.seed) * 0.016;
+        // Check if it's a milestone fret
+        const milestoneKey = Object.keys(MILESTONES).find(k => MILESTONES[k].fret === i);
+        if (milestoneKey) {
+          node.classList.add("milestone");
+        }
+
+        const badge = document.createElement("span");
+        badge.className = "fret-badge";
+        badge.textContent = i === 0 ? "NUT" : `T${i}`;
+        node.appendChild(badge);
+
+        node.onclick = (e) => {
+          e.stopPropagation();
+          if (milestoneKey) {
+            selectPhase(parseInt(milestoneKey));
+            toggleAttackDrawer();
+          }
+        };
+
+        container.appendChild(node);
       });
 
-      // Pua hovering bobbing when idle
-      if (puaMesh && !isMoving) {
-        puaMesh.position.y = 2.3 + Math.sin(time * 3.2) * 0.09;
+      // 2. Generate Macro Fretboard Strip Items
+      const macroStrip = document.getElementById("macro-fretboard-strip");
+      for (let i = 0; i <= TOTAL_FRETS; i++) {
+        const item = document.createElement("div");
+        item.className = `fret-strip-item ${i === 0 ? 'nut-fret' : ''}`;
+
+        const milestoneKey = Object.keys(MILESTONES).find(k => MILESTONES[k].fret === i);
+        if (milestoneKey) {
+          item.classList.add("milestone-fret");
+          const icon = document.createElement("span");
+          icon.className = "milestone-icon";
+          icon.textContent = "⭐";
+          item.appendChild(icon);
+        }
+
+        const numLbl = document.createElement("span");
+        numLbl.className = "fret-number-lbl";
+        numLbl.textContent = i === 0 ? "0" : i;
+        item.appendChild(numLbl);
+
+        item.onclick = () => {
+          if (milestoneKey) {
+            selectPhase(parseInt(milestoneKey));
+            toggleAttackDrawer();
+          }
+        };
+
+        macroStrip.appendChild(item);
       }
 
-      if (controls && controls.enabled) {
-        controls.update();
-      }
+      // Initial Slide Placement at Nut (Traste 0)
+      moveSlideToFret(0);
+      selectPhase(1);
 
-      renderer.render(scene, camera);
+      // Sound mute toggle button
+      document.getElementById("btn-toggle-sound").onclick = () => {
+        isSoundMuted = !isSoundMuted;
+        document.getElementById("btn-toggle-sound").textContent = isSoundMuted ? "🔇 UNMUTE" : "🔊 MUTE";
+        const audio = document.getElementById("master-audio");
+        if (isSoundMuted) audio.pause();
+      };
     }
 
     window.addEventListener("DOMContentLoaded", () => {
-      initPhotorealRoom();
-      updateDrawerUI(1);
+      initFretboardUI();
     });
   </script>
 </body>
