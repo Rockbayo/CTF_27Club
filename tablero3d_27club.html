@@ -2278,11 +2278,11 @@
         return;
       }
 
-      // Valid lab IPs (192.168.56.x or localhost / 127.0.0.1 for local docker testing)
-      const isLocalhost = val === "127.0.0.1" || val.toLowerCase() === "localhost";
-      const isSubnet56 = /^192\.168\.56\.\d{1,3}$/.test(val);
+      // Validación ESTRICTA: La IP debe ser EXACTAMENTE la asignada a la máquina virtual objetivo
+      const EXACT_TARGET_IPS = ["192.168.56.1", "127.0.0.1", "localhost"];
+      const isExactTarget = EXACT_TARGET_IPS.includes(val);
 
-      if (isSubnet56 || isLocalhost) {
+      if (isExactTarget) {
         targetHostVerified = val;
         feedback.className = "gate-feedback-msg success";
         feedback.innerHTML = `✅ <strong>HOST AUTORIZADO (${val})</strong>. Sincronizando con Cyber Range...`;
@@ -2301,7 +2301,7 @@
         }, 600);
       } else {
         feedback.className = "gate-feedback-msg error";
-        feedback.textContent = `❌ Objetivo no reconocido (${val}). Verifica tu escaneo en el segmento de red.`;
+        feedback.textContent = `❌ Acceso Denegado: La IP (${val}) no coincide con la máquina víctima objetivo. Debes escanear la red para encontrar la IP exacta.`;
         playBrokenStringSound();
       }
     }
