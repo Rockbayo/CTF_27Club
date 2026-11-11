@@ -2,12 +2,2426 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=tablero3d_27club.html">
-  <title>The 27 Club CTF - Redirigiendo a Cyber Range 3D...</title>
-  <script>window.location.href = "tablero3d_27club.html";</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The 27 Club CTF - Vintage Rock Studio & Slide Highway | Universidad de Cundinamarca</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Permanent+Marker&family=Rajdhani:wght@500;600;700&family=VT323&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --wood-dark: #0a0705;
+      --wood-med: #16100c;
+      --wood-panel: #221610;
+      --brass-gold: #c5a059;
+      --brass-light: #f3d48d;
+      --aged-cream: #f4ece1;
+      --aged-paper: #e8dccb;
+      --text-muted: #a69888;
+      --amber-warm: #e09f3e;
+      --amber-bright: #ffb703;
+      --crt-green: #33ff33;
+      --crt-glow: rgba(51, 255, 51, 0.4);
+      --danger-rust: #9e2a2b;
+      --success-olive: #588157;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--wood-dark);
+      font-family: 'Rajdhani', sans-serif;
+      color: var(--aged-cream);
+    }
+
+    /* TOP MASTER HUD */
+    #top-hud {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 56px;
+      background: linear-gradient(180deg, rgba(12, 8, 6, 0.98) 0%, rgba(20, 14, 10, 0.95) 100%);
+      border-bottom: 2px solid rgba(197, 160, 89, 0.4);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.85);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-disc {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #333 15%, #111 40%, #000 70%, #222 100%);
+      border: 2px solid var(--brass-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: spinVinyl 6s linear infinite;
+    }
+    .brand-disc::after {
+      content: "27";
+      font-family: 'Permanent Marker', cursive;
+      font-size: 14px;
+      color: var(--amber-bright);
+    }
+    @keyframes spinVinyl { 100% { transform: rotate(360deg); } }
+
+    .brand-titles h1 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 18px;
+      color: var(--brass-light);
+      line-height: 1.1;
+      letter-spacing: 0.8px;
+    }
+    .brand-titles .sub {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* Telemetry HUD */
+    .telemetry-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(0,0,0,0.45);
+      padding: 4px 14px;
+      border-radius: 6px;
+      border: 1px solid rgba(197, 160, 89, 0.25);
+    }
+    .telem-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.1;
+    }
+    .telem-lbl {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .telem-val {
+      font-family: 'Fira Code', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brass-light);
+    }
+    .telem-val.accent { color: var(--amber-bright); }
+
+    /* Audio Equalizer & Track */
+    .audio-now-playing {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(197, 160, 89, 0.25);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .eq-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 15px;
+    }
+    .eq-bar {
+      width: 3px;
+      height: 4px;
+      background: var(--amber-bright);
+      border-radius: 1px;
+    }
+    .eq-bars.playing .eq-bar:nth-child(1) { animation: eqJump 0.4s infinite alternate ease-in-out; }
+    .eq-bars.playing .eq-bar:nth-child(2) { animation: eqJump 0.6s infinite alternate ease-in-out 0.1s; }
+    .eq-bars.playing .eq-bar:nth-child(3) { animation: eqJump 0.3s infinite alternate ease-in-out 0.2s; }
+    .eq-bars.playing .eq-bar:nth-child(4) { animation: eqJump 0.5s infinite alternate ease-in-out 0.15s; }
+    @keyframes eqJump { 0% { height: 3px; } 100% { height: 15px; } }
+
+    .track-title {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--aged-paper);
+      max-width: 130px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn-top {
+      background: rgba(26, 17, 12, 0.85);
+      border: 1px solid rgba(197, 160, 89, 0.4);
+      color: var(--brass-light);
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-top:hover {
+      background: var(--brass-gold);
+      color: #000;
+    }
+    .btn-top.accent {
+      border-color: var(--amber-bright);
+      color: var(--amber-bright);
+    }
+    .btn-top.accent:hover {
+      background: var(--amber-bright);
+      color: #000;
+    }
+
+    /* MAIN APP WORKSPACE (SPLIT LAYOUT: CLEAN BEDROOM ON LEFT, STRATEGIC KALI RACK ON RIGHT) */
+    #main-workspace {
+      position: absolute;
+      top: 56px;
+      left: 0;
+      right: 0;
+      bottom: 84px;
+      display: flex;
+      overflow: hidden;
+      background: #080605;
+    }
+
+    /* LEFT: CLEAN UNCLUTTERED VINTAGE ROCK ROOM */
+    #room-pane {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
+    #clean-room-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      pointer-events: none;
+    }
+    /* Subtle warm lighting vignette */
+    #room-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 60% 40%, transparent 40%, rgba(10, 6, 4, 0.6) 85%, rgba(0, 0, 0, 0.85) 100%);
+      pointer-events: none;
+    }
+
+    /* Fender Amp Pilot Jewel (Interactive Sound trigger) */
+    #room-amp-clicker {
+      position: absolute;
+      right: 17%;
+      bottom: 12%;
+      width: 70px;
+      height: 70px;
+      cursor: pointer;
+      border-radius: 50%;
+      z-index: 10;
+    }
+    #amp-jewel-lamp {
+      position: absolute;
+      right: 19.5%;
+      bottom: 17%;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ff1111;
+      box-shadow: 0 0 10px #ff0000;
+      pointer-events: none;
+      z-index: 12;
+      animation: jewelBreath 3s infinite alternate;
+    }
+    @keyframes jewelBreath {
+      0% { opacity: 0.7; box-shadow: 0 0 6px #ff0000; }
+      100% { opacity: 1; box-shadow: 0 0 16px #ff3333, 0 0 25px rgba(255,0,0,0.5); }
+    }
+    #amp-jewel-lamp.snap-alert {
+      background: #ff0000;
+      box-shadow: 0 0 35px #ff0000, 0 0 60px #ff0000;
+      animation: snapBlink 0.1s infinite alternate;
+    }
+    @keyframes snapBlink { 0% { opacity: 0.1; } 100% { opacity: 1; } }
+
+    /* RIGHT: STRATEGIC STUDIO RACK (CRT MONITOR KALI + VINYL SANCTUARIES) */
+    #studio-rack-pane {
+      width: 460px;
+      height: 100%;
+      background: linear-gradient(180deg, #18110b 0%, #100b07 100%);
+      border-left: 2px solid var(--brass-gold);
+      box-shadow: -8px 0 30px rgba(0,0,0,0.85);
+      display: flex;
+      flex-direction: column;
+      z-index: 20;
+    }
+
+    /* 1. HIGH-END PRO KALI LINUX TERMINAL */
+    #crt-monitor-section {
+      padding: 14px;
+      background: #0d0a07;
+      border-bottom: 2px solid rgba(197, 160, 89, 0.35);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .kali-terminal-window {
+      background: #0f1318;
+      border: 1px solid rgba(197, 160, 89, 0.35);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85), 0 0 1px rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Terminal Window Header (macOS/Linux Dots + Kali Dragon Title) */
+    .terminal-titlebar {
+      height: 32px;
+      background: #181d24;
+      border-bottom: 1px solid #242c37;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+    }
+    .terminal-window-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .term-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .term-dot.red { background: #ff5f56; }
+    .term-dot.yellow { background: #ffbd2e; }
+    .term-dot.green { background: #27c93f; }
+
+    .terminal-title-text {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .term-status-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: #86efac;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      padding: 1px 7px;
+      border-radius: 12px;
+    }
+    .status-pulse-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 6px #22c55e;
+      animation: pulseGreen 1.5s infinite;
+    }
+    @keyframes pulseGreen { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    /* Terminal Body Content */
+    .terminal-content-body {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #0b0f14;
+    }
+
+    /* Structured Metadata Badges */
+    .target-specs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .spec-card {
+      background: #131922;
+      border: 1px solid #1f2937;
+      border-radius: 5px;
+      padding: 6px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .spec-card.full-width {
+      grid-column: span 2;
+    }
+    .spec-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #64748b;
+      font-weight: 700;
+    }
+    .spec-value {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: #e2e8f0;
+      font-weight: 600;
+      word-break: break-all;
+    }
+    .spec-value.accent-yellow { color: #facc15; }
+    .spec-value.accent-cyan { color: #38bdf8; }
+
+    /* Kali Linux Interactive Code Box */
+    .terminal-command-wrap {
+      background: #070a0e;
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .cmd-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cmd-user-prompt {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .cmd-user-prompt .at { color: #64748b; }
+    .cmd-user-prompt .path { color: #a78bfa; }
+    
+    .btn-copy-cmd {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      font-family: 'Fira Code', monospace;
+      font-size: 9px;
+      padding: 2px 7px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-copy-cmd:hover {
+      background: var(--brass-gold);
+      color: #000;
+      border-color: var(--amber-bright);
+    }
+
+    .cmd-code-line {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: #a3e635;
+      line-height: 1.35;
+      word-break: break-all;
+    }
+
+    /* Flag Submission Console */
+    .terminal-injection-area {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .injection-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: #94a3b8;
+    }
+    .injection-format-hint {
+      color: var(--amber-warm);
+      font-size: 9px;
+    }
+
+    .flag-input-group-pro {
+      display: flex;
+      gap: 8px;
+    }
+    .flag-input-pro {
+      flex: 1;
+      background: #070a0e;
+      border: 1px solid #334155;
+      color: #f8fafc;
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      padding: 8px 12px;
+      border-radius: 5px;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+    .flag-input-pro:focus {
+      border-color: var(--amber-bright);
+      box-shadow: 0 0 12px rgba(255, 183, 3, 0.35);
+      background: #0a0e14;
+    }
+    .btn-submit-pro {
+      background: linear-gradient(180deg, var(--amber-bright) 0%, #b87a1d 100%);
+      border: none;
+      color: #000;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      padding: 0 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-submit-pro:hover {
+      box-shadow: 0 0 15px rgba(255, 183, 3, 0.6);
+      transform: translateY(-1px);
+    }
+
+    .terminal-feedback-pro {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      display: none;
+      line-height: 1.35;
+      margin-top: 4px;
+    }
+    .terminal-feedback-pro.success {
+      display: block;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #86efac;
+    }
+    .terminal-feedback-pro.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    /* 2. THE 5 VINYL SANCTUARIES (REVEALED AS FLAGS ARE DISCOVERED) */
+    #vinyl-showcase-section {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    #vinyl-showcase-section::-webkit-scrollbar { width: 5px; }
+    #vinyl-showcase-section::-webkit-scrollbar-thumb { background: var(--brass-gold); border-radius: 3px; }
+
+    .showcase-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .showcase-header h2 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 14px;
+      color: var(--brass-light);
+      letter-spacing: 0.5px;
+    }
+    .showcase-header .count {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--amber-bright);
+    }
+
+    /* 5 Vinyl Cards in Showcase */
+    .sanctuary-slot-card {
+      background: rgba(10, 7, 5, 0.85);
+      border: 1px solid rgba(197, 160, 89, 0.25);
+      border-radius: 6px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .sanctuary-slot-card:hover {
+      border-color: var(--amber-bright);
+      background: rgba(20, 14, 10, 0.95);
+    }
+
+    /* Active phase glow */
+    .sanctuary-slot-card.active {
+      border-color: var(--amber-bright);
+      box-shadow: 0 0 15px rgba(255, 183, 3, 0.35);
+      background: rgba(30, 20, 14, 0.9);
+    }
+    /* Completed / Unlocked Cover */
+    .sanctuary-slot-card.unlocked {
+      border-color: var(--success-olive);
+      box-shadow: 0 0 14px rgba(88, 129, 87, 0.4);
+    }
+
+    /* Album Cover Artwork Container */
+    .slot-jacket-art {
+      width: 64px;
+      height: 64px;
+      border-radius: 4px;
+      position: relative;
+      flex-shrink: 0;
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+    }
+    .slot-jacket-art img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: filter 0.3s ease, opacity 0.3s ease;
+    }
+    /* Locked state cover silhouette / mystery overlay */
+    .slot-jacket-art.locked img {
+      filter: grayscale(1) brightness(0.25) contrast(1.2);
+      opacity: 0.4;
+    }
+    .slot-lock-icon {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--brass-light);
+      background: rgba(0, 0, 0, 0.4);
+    }
+    .slot-jacket-art.unlocked .slot-lock-icon { display: none; }
+
+    /* Peeking vinyl disc on unlocked card */
+    .slot-spinning-disc {
+      position: absolute;
+      right: -15px;
+      top: 5px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #333 20%, #111 40%, #000 65%, #222 100%);
+      box-shadow: 0 0 8px rgba(0,0,0,0.9);
+      display: none;
+      z-index: -1;
+    }
+    .sanctuary-slot-card.unlocked .slot-spinning-disc {
+      display: block;
+      animation: spinVinyl 5s linear infinite;
+    }
+
+    .slot-info-box {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .slot-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .slot-artist-name {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 14px;
+      color: var(--aged-paper);
+    }
+    .sanctuary-slot-card.active .slot-artist-name { color: var(--amber-bright); }
+    .sanctuary-slot-card.unlocked .slot-artist-name { color: #86efac; }
+
+    .slot-traste-tag {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: var(--brass-light);
+      background: rgba(197, 160, 89, 0.15);
+      border: 1px solid var(--brass-gold);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    .slot-track-title {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .sanctuary-slot-card.unlocked .slot-track-title {
+      color: var(--brass-light);
+      font-weight: 600;
+    }
+
+    .slot-vector-cwe {
+      font-family: 'Fira Code', monospace;
+      font-size: 9px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* BOTTOM INTERACTIVE MACRO DIAPASÓN HIGHWAY (27 FRETS + SLIDE GLISSANDO) */
+    #bottom-macro-fretboard {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 84px;
+      background: linear-gradient(180deg, rgba(22, 16, 12, 0.98) 0%, rgba(10, 7, 5, 0.99) 100%);
+      border-top: 2px solid var(--brass-gold);
+      box-shadow: 0 -4px 25px rgba(0,0,0,0.9);
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      padding: 4px 16px;
+    }
+
+    .fret-bar-top-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 20px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .fret-bar-top-info .brand {
+      font-family: 'Permanent Marker', cursive;
+      color: var(--brass-light);
+      font-size: 13px;
+    }
+
+    .diapason-strip {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      position: relative;
+      background: #150e09;
+      border: 1px solid rgba(197, 160, 89, 0.35);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 2px;
+    }
+
+    /* 6 Realistic Guitar Strings */
+    .fret-string {
+      position: absolute;
+      left: 0; right: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: linear-gradient(90deg, #444, #ddd 50%, #666);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    }
+    .fret-string.s1 { top: 18%; height: 1px; }
+    .fret-string.s2 { top: 30%; height: 1px; }
+    .fret-string.s3 { top: 43%; height: 1.5px; }
+    .fret-string.s4 { top: 56%; height: 1.8px; }
+    .fret-string.s5 { top: 69%; height: 2.2px; }
+    .fret-string.s6 { top: 82%; height: 2.6px; }
+
+    /* Fret Slots (0 to 27) */
+    .fret-unit {
+      flex: 1;
+      height: 100%;
+      border-right: 2px solid #5d636b; /* Nickel Fret Wire */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .fret-unit:hover {
+      background: rgba(255, 183, 3, 0.18);
+    }
+    .fret-unit.nut-fret {
+      flex: 0.9;
+      border-right: 4px solid #f4ece1; /* Bone Nut */
+      background: #0f0a07;
+    }
+    .fret-unit.milestone-fret {
+      background: rgba(197, 160, 89, 0.12);
+      border-right-color: var(--brass-gold);
+    }
+    .fret-unit.unlocked-fret {
+      background: rgba(255, 183, 3, 0.25);
+    }
+    .fret-unit.active-fret {
+      background: rgba(255, 183, 3, 0.45);
+    }
+
+    .fret-num-text {
+      position: absolute;
+      bottom: 2px;
+      font-family: 'Fira Code', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--text-muted);
+      z-index: 5;
+    }
+    .milestone-star {
+      position: absolute;
+      top: 2px;
+      font-size: 10px;
+      z-index: 5;
+    }
+
+    /* THE CHROME STEEL BOTTLENECK SLIDE ON THE DIAPASÓN */
+    #diapason-slide {
+      position: absolute;
+      top: 8%;
+      bottom: 8%;
+      width: 16px;
+      margin-left: -8px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, 
+        #1f2429 0%, 
+        #7a8288 20%, 
+        #ffffff 50%, 
+        #e0e5eb 55%, 
+        #858f96 80%, 
+        #2a3138 100%
+      );
+      box-shadow: 
+        0 0 16px rgba(255, 255, 255, 0.9), 
+        0 4px 8px rgba(0, 0, 0, 0.9),
+        inset 0 1px 2px #fff,
+        inset 0 -1px 2px #000;
+      z-index: 20;
+      pointer-events: none;
+      transition: left 0.75s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    #diapason-slide::after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 6px;
+      width: 4px;
+      bottom: 4px;
+      background: #fff;
+      border-radius: 2px;
+      filter: blur(0.5px);
+      opacity: 0.9;
+    }
+
+    /* TOAST NOTIFICATION */
+    #rock-toast {
+      position: absolute;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-30px);
+      background: rgba(12, 8, 6, 0.96);
+      border: 2px solid var(--amber-bright);
+      box-shadow: 0 0 30px rgba(255, 183, 3, 0.5), 0 8px 25px rgba(0,0,0,0.9);
+      padding: 12px 24px;
+      border-radius: 6px;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    #rock-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    #rock-toast .icon { font-size: 24px; }
+    #rock-toast .title {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 16px;
+      color: var(--amber-bright);
+    }
+    #rock-toast .desc { font-size: 12px; color: var(--aged-paper); }
+
+    /* SUSTENTACIÓN MODAL */
+    #modal-sustentacion {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    #modal-sustentacion.open { display: flex; }
+    .modal-box {
+      width: 580px;
+      max-width: 90%;
+      background: linear-gradient(180deg, #18110b 0%, #0d0906 100%);
+      border: 2px solid var(--brass-gold);
+      border-radius: 8px;
+      box-shadow: 0 0 40px rgba(197, 160, 89, 0.4);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .modal-box h2 {
+      font-family: 'Permanent Marker', cursive;
+      color: var(--amber-bright);
+      font-size: 22px;
+      text-align: center;
+    }
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .modal-item {
+      background: rgba(0,0,0,0.5);
+      padding: 8px 12px;
+      border-radius: 4px;
+      border-left: 3px solid var(--brass-gold);
+      font-size: 12px;
+    }
+    .modal-item strong { color: var(--brass-light); }
+
+    /* RETRO ROCK TV / FEEDBACK VIDEO MODAL */
+    #video-feedback-modal {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 250;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    #video-feedback-modal.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    .video-tv-housing {
+      width: 680px;
+      max-width: 92%;
+      background: linear-gradient(180deg, #1f1610 0%, #0c0805 100%);
+      border: 3px solid var(--brass-gold);
+      border-radius: 10px;
+      box-shadow: 0 0 50px rgba(0,0,0,0.95), 0 0 30px rgba(197, 160, 89, 0.4);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .video-tv-header {
+      padding: 10px 16px;
+      background: #0a0705;
+      border-bottom: 2px solid rgba(197, 160, 89, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .video-tv-title {
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+      color: var(--amber-bright);
+      letter-spacing: 1px;
+    }
+    .btn-video-close {
+      background: transparent;
+      border: 1px solid var(--brass-gold);
+      color: var(--brass-light);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-video-close:hover {
+      background: var(--brass-gold);
+      color: #000;
+    }
+
+    .video-screen-frame {
+      position: relative;
+      width: 100%;
+      background: #000;
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #feedback-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .video-scanlines {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+      background-size: 100% 3px;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* EPIC VICTORY FINALE MODAL */
+    #victory-modal {
+      position: absolute;
+      inset: 0;
+      background: rgba(5, 3, 2, 0.94);
+      backdrop-filter: blur(12px);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    #victory-modal.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    #confetti-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 501;
+    }
+
+    .victory-card {
+      position: relative;
+      width: 720px;
+      max-width: 94%;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: linear-gradient(180deg, #1c130c 0%, #0d0906 100%);
+      border: 3px solid var(--amber-bright);
+      border-radius: 12px;
+      box-shadow: 0 0 60px rgba(255, 183, 3, 0.6), 0 0 100px rgba(0,0,0,0.95);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      z-index: 505;
+      gap: 16px;
+    }
+    .victory-card::-webkit-scrollbar { width: 6px; }
+    .victory-card::-webkit-scrollbar-thumb { background: var(--brass-gold); border-radius: 3px; }
+
+    .victory-trophy-badge {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffe066 10%, #d4a373 40%, #111 80%);
+      border: 3px solid var(--amber-bright);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      box-shadow: 0 0 30px rgba(255, 183, 3, 0.8);
+      animation: victoryPulse 2s infinite alternate ease-in-out;
+    }
+    @keyframes victoryPulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 20px rgba(255, 183, 3, 0.6); }
+      100% { transform: scale(1.08); box-shadow: 0 0 45px rgba(255, 183, 3, 0.95); }
+    }
+
+    .victory-header h1 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 28px;
+      color: var(--amber-bright);
+      text-shadow: 0 0 15px rgba(255, 183, 3, 0.5);
+      letter-spacing: 1px;
+      line-height: 1.1;
+    }
+    .victory-header .sub {
+      font-size: 13px;
+      color: var(--aged-paper);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    /* Giant Score Display */
+    .giant-score-box {
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid var(--brass-gold);
+      border-radius: 8px;
+      padding: 12px 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    }
+    .giant-score-lbl {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .giant-score-val {
+      font-family: 'Fira Code', monospace;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--amber-bright);
+      text-shadow: 0 0 20px rgba(255, 183, 3, 0.8);
+      line-height: 1.1;
+    }
+    .giant-score-grade {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 14px;
+      color: #86efac;
+      margin-top: 2px;
+    }
+
+    /* Academic Proof Grid */
+    .victory-academic-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      text-align: left;
+    }
+    .academic-stat-box {
+      background: rgba(10, 7, 5, 0.7);
+      border-left: 3px solid var(--brass-gold);
+      padding: 8px 12px;
+      border-radius: 4px;
+    }
+    .academic-stat-box .lbl {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .academic-stat-box .val {
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      color: var(--aged-paper);
+      margin-top: 2px;
+    }
+
+    /* Solved Phases List */
+    .solved-phases-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+    .solved-phases-table th {
+      background: rgba(197, 160, 89, 0.18);
+      color: var(--brass-light);
+      padding: 6px 8px;
+      text-align: left;
+      font-weight: 700;
+      border-bottom: 1px solid var(--brass-gold);
+    }
+    .solved-phases-table td {
+      padding: 6px 8px;
+      border-bottom: 1px solid rgba(197, 160, 89, 0.15);
+      color: var(--aged-paper);
+    }
+    .solved-phases-table td.pts {
+      color: var(--amber-bright);
+      font-weight: 700;
+      text-align: right;
+    }
+
+    /* Victory Action Buttons */
+    .victory-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .btn-victory {
+      padding: 10px 22px;
+      border-radius: 6px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-victory.primary {
+      background: linear-gradient(180deg, var(--amber-bright) 0%, #b87a1d 100%);
+      border: none;
+      color: #000;
+      box-shadow: 0 0 20px rgba(255, 183, 3, 0.5);
+    }
+    .btn-victory.primary:hover {
+      box-shadow: 0 0 30px rgba(255, 183, 3, 0.9);
+      transform: translateY(-2px);
+    }
+    .btn-victory.secondary {
+      background: transparent;
+      border: 1px solid var(--brass-gold);
+      color: var(--brass-light);
+    }
+    .btn-victory.secondary:hover {
+      background: var(--brass-gold);
+      color: #000;
+    }
+
+    /* Empty State in Vinyl Showcase */
+    .showcase-empty-state {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px dashed rgba(197, 160, 89, 0.35);
+      border-radius: 8px;
+      padding: 30px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+    }
+    .showcase-empty-state .empty-icon {
+      font-size: 32px;
+      opacity: 0.6;
+      animation: floatDisc 3s infinite alternate ease-in-out;
+    }
+    @keyframes floatDisc {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-6px); }
+    }
+    .showcase-empty-state .empty-title {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 15px;
+      color: var(--brass-light);
+      letter-spacing: 0.5px;
+    }
+    .showcase-empty-state .empty-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      max-width: 280px;
+    }
+
+    /* Card Reveal Slide-in Animation */
+    .sanctuary-slot-card.anim-pop {
+      animation: slideInPop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+    @keyframes slideInPop {
+      0% { opacity: 0; transform: translateX(30px) scale(0.9); }
+      100% { opacity: 1; transform: translateX(0) scale(1); }
+    }
+  </style>
 </head>
-<body style="background:#07080f; color:#00f0ff; font-family:sans-serif; display:flex; justify-content:center; align-items:center; height:100vh;">
-  <p>Cargando Cyber Range 3D The 27 Club... <a href="tablero3d_27club.html" style="color:#ff007f;">Haz clic aquí si no redirige automáticamente.</a></p>
+<body>
+
+  <!-- TOP MASTER STUDIO CONSOLE HUD -->
+  <header id="top-hud">
+    <div class="brand-section">
+      <div class="brand-disc"></div>
+      <div class="brand-titles">
+        <h1>THE 27 CLUB CTF</h1>
+        <div class="sub">Vintage Rock Studio & Slide Highway • Universidad de Cundinamarca</div>
+      </div>
+    </div>
+
+    <!-- Telemetry -->
+    <div class="telemetry-row">
+      <div class="telem-box">
+        <span class="telem-lbl">Posición Mástil</span>
+        <span class="telem-val accent" id="hud-fret-pos">TRASTE 0 (NUT)</span>
+      </div>
+      <div class="telem-box">
+        <span class="telem-lbl">Fase Activa</span>
+        <span class="telem-val" id="hud-artist">0. RECONOCIMIENTO</span>
+      </div>
+      <div class="telem-box">
+        <span class="telem-lbl">Puntaje</span>
+        <span class="telem-val accent" id="hud-score">0 PTS</span>
+      </div>
+      <div class="telem-box">
+        <span class="telem-lbl">Banderas</span>
+        <span class="telem-val" id="hud-flags">0 / 6</span>
+      </div>
+    </div>
+
+    <!-- Audio Player State -->
+    <div class="audio-now-playing">
+      <div class="eq-bars" id="audio-eq">
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+      </div>
+      <span class="track-title" id="hud-track-title">Sin Reproducción</span>
+      <button id="btn-toggle-sound" class="btn-top" style="padding:2px 7px; font-size:10px;">🔊 MUTE</button>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex; gap:8px;">
+      <button class="btn-top accent" onclick="openSustentacionModal()">🎓 SUSTENTACIÓN</button>
+      <button class="btn-top" onclick="resetCTFProgress()" title="Reiniciar">🔄 REINICIAR</button>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <main id="main-workspace">
+    <!-- LEFT: 100% CLEAN & UNCLUTTERED VINTAGE ROCK BEDROOM PHOTOGRAPH -->
+    <div id="room-pane">
+      <img id="clean-room-image" src="assets/images/rock_bedroom_bg.jpg" alt="Vintage 80s Rock Bedroom" />
+      <div id="room-vignette"></div>
+
+      <!-- Fender Amp Interactive Sound Jewel Trigger -->
+      <div id="room-amp-clicker" onclick="testAmpFeedback()" title="Fender Amp (Amplificador a Válvulas)"></div>
+      <div id="amp-jewel-lamp"></div>
+    </div>
+
+    <!-- RIGHT: STRATEGIC STUDIO RACK (CRT KALI MONITOR + 5 VINYL SANCTUARIES) -->
+    <aside id="studio-rack-pane">
+      <!-- 1. HIGH-END PRO KALI LINUX TERMINAL -->
+      <div id="crt-monitor-section">
+        <div class="kali-terminal-window">
+          <!-- Terminal Titlebar with macOS/Linux Window Controls -->
+          <div class="terminal-titlebar">
+            <div class="terminal-window-controls">
+              <span class="term-dot red"></span>
+              <span class="term-dot yellow"></span>
+              <span class="term-dot green"></span>
+            </div>
+            <div class="terminal-title-text">root@kali: ~/The27Club_CTF</div>
+            <div class="term-status-pill">
+              <span class="status-pulse-dot"></span>
+              <span>DOCKER VULN</span>
+            </div>
+          </div>
+
+          <!-- Terminal Content Body -->
+          <div class="terminal-content-body">
+            <!-- Metadata Grid (Black-Box: Unsolved phases are masked) -->
+            <div class="target-specs-grid">
+              <div class="spec-card">
+                <span class="spec-label">VÍCTIMA / HOST</span>
+                <span class="spec-value accent-cyan" id="crt-target-ip">[ESCANEAR 192.168.56.0/24]</span>
+              </div>
+              <div class="spec-card">
+                <span class="spec-label">ESTÁNDAR MITRE / CWE</span>
+                <span class="spec-value accent-yellow" id="crt-cwe">[CLASIFICADO / PENDIENTE]</span>
+              </div>
+              <div class="spec-card full-width">
+                <span class="spec-label">VECTOR DE AUDITORÍA</span>
+                <span class="spec-value" id="crt-vector">[REQUIERE RECONOCIMIENTO ACTIVO]</span>
+              </div>
+            </div>
+
+            <!-- Tactical Clue Box (Hidden by default, unlocks for -25 PTS) -->
+            <div class="terminal-command-wrap" id="hint-panel-box">
+              <div class="cmd-header-row">
+                <span class="cmd-user-prompt">metodología<span class="at">@</span>auditoría<span class="path">:~$</span></span>
+                <span id="hint-status-badge" style="font-family:'Fira Code',monospace; font-size:9px; color:var(--text-muted);">PISTA BLOQUEADA</span>
+              </div>
+              <div id="hint-unlocked-text" style="display:none; font-family:'Fira Code',monospace; font-size:11px; color:#facc15; line-height:1.4;"></div>
+              <button class="btn-copy-cmd" id="btn-unlock-hint" onclick="requestTacticalHint()" style="background:rgba(234,179,8,0.15); border-color:#eab308; color:#fef08a; padding:6px 12px; font-weight:700; align-self:flex-start;">
+                💡 DESBLOQUEAR PISTA METODOLÓGICA (-25 PTS)
+              </button>
+            </div>
+
+            <!-- Flag Submission Console -->
+            <div class="terminal-injection-area">
+              <div class="injection-label-row">
+                <span>> INYECTAR BANDERA DESCUBIERTA:</span>
+                <span class="injection-format-hint">ESTÁNDAR: 27C{...}</span>
+              </div>
+              <div class="flag-input-group-pro">
+                <input type="text" id="flag-input" class="flag-input-pro" placeholder="27C{...}" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') submitFlag()">
+                <button class="btn-submit-pro" onclick="submitFlag()">
+                  <span>VALIDAR</span>
+                  <span>➜</span>
+                </button>
+              </div>
+              <div id="crt-feedback" class="terminal-feedback-pro"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. THE 5 VINYL SANCTUARIES SHOWCASE (PROGRESSIVE REVEAL ON FLAG DISCOVERY) -->
+      <div id="vinyl-showcase-section">
+        <div class="showcase-header">
+          <h2>🎵 DISCOTECA DEL CLUB DE LOS 27</h2>
+          <span class="count" id="showcase-counter">0 / 5 DESCUBIERTOS</span>
+        </div>
+
+        <!-- Dynamic Container: Cards appear as flags are captured -->
+        <div id="vinyl-cards-container" style="display:flex; flex-direction:column; gap:10px;">
+          <div id="vinyl-empty-placeholder" class="showcase-empty-state">
+            <span class="empty-icon">📻</span>
+            <span class="empty-title">DISCOTECA EN SILENCIO</span>
+            <span class="empty-desc">Las carátulas, canciones y credenciales se revelarán aquí a medida que descubras cada bandera en Kali Linux.</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- BOTTOM INTERACTIVE MACRO DIAPASÓN HIGHWAY -->
+  <footer id="bottom-macro-fretboard">
+    <div class="fret-bar-top-info">
+      <span class="brand">🎸 DIAPASÓN DE 27 TRASTES & SLIDE CROMADO (EL SLIDE AVANZA AL INYECTAR LA BANDERA REAL DE KALI)</span>
+      <span id="fret-status-lbl">PUNTO DE PARTIDA: TRASTE 0 (NUT)</span>
+    </div>
+    <div class="diapason-strip" id="diapason-strip">
+      <!-- 6 Real Strings -->
+      <div class="fret-string s1"></div>
+      <div class="fret-string s2"></div>
+      <div class="fret-string s3"></div>
+      <div class="fret-string s4"></div>
+      <div class="fret-string s5"></div>
+      <div class="fret-string s6"></div>
+
+      <!-- The Real Polished Chrome Slide Indicator -->
+      <div id="diapason-slide"></div>
+
+      <!-- 28 Frets (0 = Nut, 1 to 27) generated dynamically -->
+    </div>
+  </footer>
+
+  <!-- NOTIFICATION TOAST -->
+  <div id="rock-toast">
+    <div class="icon">⚡</div>
+    <div>
+      <div class="title" id="toast-title">¡FLAG CAPTURADA!</div>
+      <div class="desc" id="toast-desc">El Slide se desliza al Traste 6.</div>
+    </div>
+  </div>
+
+  <!-- SUSTENTACIÓN MODAL -->
+  <div id="modal-sustentacion">
+    <div class="modal-box">
+      <h2>🎓 FICHA TÉCNICA DE SUSTENTACIÓN ACADÉMICA</h2>
+      <div class="modal-grid">
+        <div class="modal-item">
+          <strong>Estudiante:</strong> Óscar Robayo (@rockbayo)
+        </div>
+        <div class="modal-item">
+          <strong>Materia:</strong> Línea I: Hacking Ético & Seg. Aplicaciones
+        </div>
+        <div class="modal-item">
+          <strong>Institución:</strong> Universidad de Cundinamarca
+        </div>
+        <div class="modal-item">
+          <strong>Infraestructura:</strong> Docker Linux (`27club_ctf`)
+        </div>
+        <div class="modal-item" style="grid-column: span 2;">
+          <strong>Vectores Explotados:</strong> Reconocimiento Nmap (CWE-200), PCAP DPI (CWE-311), Stego EOF (CWE-200), SQLi UNION (CWE-89), Stored XSS (CWE-79), SUID Escalation (CWE-250).
+        </div>
+      </div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:8px;">
+        <button class="btn-top accent" onclick="execute100PercentDemo()">⚡ EJECUTAR DEMOSTRACIÓN 100%</button>
+        <button class="btn-top" onclick="closeSustentacionModal()">CERRAR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETRO ROCK TV / FEEDBACK VIDEO MODAL -->
+  <div id="video-feedback-modal">
+    <div class="video-tv-housing">
+      <div class="video-tv-header">
+        <span class="video-tv-title" id="video-tv-title">> TRANSMISIÓN KALI ROCK TV</span>
+        <button class="btn-video-close" onclick="closeFeedbackVideo()">✕ CERRAR</button>
+      </div>
+      <div class="video-screen-frame">
+        <video id="feedback-video" src="assets/video/rock_feedback.mp4" preload="auto" playsinline></video>
+        <div class="video-scanlines"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUDIO ELEMENT (MASTER RECORDINGS) -->
+  <audio id="master-audio" preload="auto"></audio>
+
+  <!-- JAVASCRIPT MASTER LOGIC -->
+  <script>
+    const TOTAL_FRETS = 27;
+
+    // Milestones Data
+    const MILESTONES = {
+      0: {
+        fret: 3, name: "Reconocimiento de Red", phase: 0, points: 100,
+        title: "Fase 0: Detección de Host y Servicios (Nmap)",
+        trackTitle: "Acoustic Intro / Tuning",
+        audio: "assets/audio/hendrix.m4a",
+        vectorReal: "Barrido de Red & Enumeración de Cabeceras",
+        cweReal: "Descubrimiento de Red / CWE-200",
+        targetReal: "192.168.56.0/24 (Puerto 80 / 2222 / 1337)",
+        tacticalHint: "Ejecuta un escaneo de host con 'nmap -sn 192.168.56.0/24'. Luego inspecciona los banners y cabeceras de respuesta HTTP del puerto 80 con 'nmap -sV -sC' o 'curl -I http://IP/'."
+      },
+      1: {
+        fret: 6, name: "Jimi Hendrix", phase: 1, points: 150,
+        title: "Fase 1: Jimi Hendrix Experience",
+        trackTitle: "Purple Haze",
+        audio: "assets/audio/hendrix.m4a",
+        vectorReal: "PCAP Deep Packet Inspection / C&C Beacon",
+        cweReal: "Tráfico sin Cifrado Fuerte / CWE-311 (ROT13)",
+        targetReal: "192.168.56.1 (Puerto 80 HTTP)",
+        tacticalHint: "Se detectó tráfico de red anómalo. Captura paquetes con 'tshark' o 'tcpdump' en la interfaz de red local. Filtra las peticiones HTTP y analiza cabeceras User-Agent inusuales con cifrado de sustitución básica."
+      },
+      2: {
+        fret: 11, name: "Janis Joplin", phase: 2, points: 150,
+        title: "Fase 2: Janis Joplin Caravan",
+        trackTitle: "Cry Baby",
+        audio: "assets/audio/joplin.m4a",
+        vectorReal: "Esteganografía Web EOF (End of File)",
+        cweReal: "Fuga de Información en Ficheros / CWE-200",
+        targetReal: "http://192.168.56.1/cry_baby/janis.jpg",
+        tacticalHint: "Descarga las imágenes del aplicativo web y usa herramientas de análisis binario como 'strings' o 'binwalk'. ¡Cuidado con directorios sospechosos como /admin_trampa/ que contienen señuelos engañosos!"
+      },
+      3: {
+        fret: 16, name: "Jim Morrison", phase: 3, points: 200,
+        title: "Fase 3: The Doors Crypt / Vault",
+        trackTitle: "Light My Fire",
+        audio: "assets/audio/morrison.m4a",
+        vectorReal: "SQL Injection UNION Based",
+        cweReal: "Inyección SQL Clásica / CWE-89",
+        targetReal: "http://192.168.56.1/doors/?id=1",
+        tacticalHint: "Evalúa los parámetros GET de la página con caracteres especiales (') para provocar un error de sintaxis en la base de datos. Determina el número de columnas con 'ORDER BY' e inyecta 'UNION SELECT' en la tabla de bóveda genuina (doors_vault)."
+      },
+      4: {
+        fret: 21, name: "Amy Winehouse", phase: 4, points: 200,
+        title: "Fase 4: Camden Speakeasy & Jazz Club",
+        trackTitle: "Back To Black",
+        audio: "assets/audio/winehouse.m4a",
+        vectorReal: "Stored Cross-Site Scripting (XSS)",
+        cweReal: "Secuestro de Sesión de Usuario / CWE-79",
+        targetReal: "http://192.168.56.1/winehouse/",
+        tacticalHint: "El libro de visitas almacena entradas sin sanitización HTML. Inyecta un script malicioso en JavaScript que envíe 'document.cookie' a un listener abierto en tu Kali con 'nc -lvnp 8000'. Cuidado con cookies trampa de utilería."
+      },
+      5: {
+        fret: 27, name: "Kurt Cobain", phase: 5, points: 200, isRoot: true,
+        title: "Fase 5: Seattle Grunge Garage (Root)",
+        trackTitle: "Smells Like Teen Spirit",
+        audio: "assets/audio/cobain.m4a",
+        vectorReal: "SUID Binary Privilege Escalation",
+        cweReal: "Ejecución con Privilegios Indebidos / CWE-250",
+        targetReal: "SSH kurt@192.168.56.1:2222 (Pass: grunge27 / nirvana)",
+        tacticalHint: "Una vez dentro del sistema por SSH, busca ejecutables con bit SUID activo con 'find / -perm -4000 2>/dev/null'. Consulta GTFOBins para aprovechar el binario identificado y elevar privilegios a root (uid=0)."
+      }
+    };
+
+    // Client-side Cryptographic Hash Database (Matches provision_27club_phases.sh)
+    const CTF_HASH_DB = {
+      // Fase 0: Reconocimiento de Red Nmap (27C{nmap_sc4n_r0ck_h0st_d1sc0v3ry})
+      "86a2773f2ae4ef15ad5b2bec8a6f600c16320edf6d52960a707f8fa7014ab734": {
+        phase: 0, type: "flag", name: "Reconocimiento de Red", points: 100, nextPhase: 1,
+        msg: "¡OBJETIVO LOCALIZADO! Escaneo Nmap completado y cabeceras enumeradas exitosamente."
+      },
+      // SEÑUELO TROLL: Puerto 1337 Backdoor Trap (27C{tr0ll_b4ckd00r_p0rt_1337_lol})
+      "1fa4ecf3ac3f240b4b7c165216037ada0ea3982bdab5384ce2e8844985cedba3": {
+        phase: 0, type: "rabbit_hole", name: "Señuelo Troll Port 1337", penalty: 50,
+        msg: "RABBIT HOLE: Caíste en la trampa del puerto señuelo 1337 inspirado en la máquina Troll."
+      },
+      // Fase 1: Jimi Hendrix (27C{purpl3_h4z3_c0nd0r_n3t})
+      "0ddd44bc14f853bf20201ce47425db06ddda3f818628a5245c793a3b802cdf99": {
+        phase: 1, type: "flag", name: "Jimi Hendrix", points: 150, nextPhase: 2,
+        msg: "¡PERÍMETRO VULNERADO! Tráfico C&C interceptado y decodificado exitosamente."
+      },
+      // Fase 2: Janis Joplin (27C{p34rl_cry_b4by_s3cr3t_1970})
+      "baffb733b5a0e2f6d1a947a99e1642efbc2b763879e5a42bee825f0bd0719abe": {
+        phase: 2, type: "flag", name: "Janis Joplin", points: 150, nextPhase: 3,
+        msg: "¡ESTEGANOGRAFÍA RESUELTA! Artefacto EOF exfiltrado de la furgoneta."
+      },
+      // Decoy Janis: Señuelo en admin_trampa (27C{b4ckup_k3ys_v4ult_c4r4v4n})
+      "882b210e748e2529e8bb3578b57c449130090ec42cc9faae0e28a9682a4b79fd": {
+        phase: 2, type: "rabbit_hole", name: "Señuelo Clave de Respaldo", penalty: 50,
+        msg: "RABBIT HOLE: 'backup_keys.jpg' en /admin_trampa era un señuelo trampa."
+      },
+      // Fase 3: Jim Morrison (27C{l1ght_my_f1r3_c1p4_sqli})
+      "5ea96349723508473974c046a80bcf6a126908a16c1e8efa8a2331d3aecb6fcd": {
+        phase: 3, type: "flag", name: "Jim Morrison", points: 200, nextPhase: 4,
+        msg: "¡PUERTA DESBLOQUEADA! Inyección SQL UNION Based completada."
+      },
+      // Decoy Morrison: Señuelo en doors_trap (27C{th3_3nd_d00rs_m4st3r_v4ult})
+      "a436848a07d3dd5184c8b91a5f72c19df96d990519c91d88828f42c61331298c": {
+        phase: 3, type: "rabbit_hole", name: "Señuelo The End Vault", penalty: 50,
+        msg: "RABBIT HOLE: Inyectaste en la tabla señuelo doors_trap ('The End')."
+      },
+      // Fase 4: Amy Winehouse (27C{b4ck_t0_bl4ck_4dm1n_t0k3n})
+      "b4f8e02d6e43e9316646a630adf70ad67c3525e28a4e28b6ce31b818442cecc9": {
+        phase: 4, type: "flag", name: "Amy Winehouse", points: 200, nextPhase: 5,
+        msg: "¡SESIÓN SECUESTRADA! Cookie admintoken capturada mediante Stored XSS."
+      },
+      // Decoy Amy: Señuelo en cookie de prueba (27C{t3st_s3ss10n_d3c0y_c4md3n})
+      "9e53a70985b01ae84d165cd998dc4aa42f9f19cb8414741f7313fe2b45cd6823": {
+        phase: 4, type: "rabbit_hole", name: "Señuelo Token de Prueba", penalty: 50,
+        msg: "RABBIT HOLE: Capturaste la cookie test_decoy de utilería sin permisos de administración."
+      },
+      // Fase 5: Kurt Cobain (27C{sm3lls_l1k3_grung3_r00t_27})
+      "b38822a0daf3b52b8664f17a421724163c50098ed102e68278807df2169c931e": {
+        phase: 5, type: "flag", name: "Kurt Cobain", points: 200, isRoot: true,
+        msg: "¡TRONO ROOT CONQUISTADO! SUID find explotado con GTFOBins."
+      }
+    };
+
+    // State Variables
+    let currentFret = 0;
+    let activePhase = 0;
+    let score = 0;
+    let capturedFlagsCount = 0;
+    const completedPhases = new Set();
+    const unlockedHints = new Set();
+    let isSoundMuted = false;
+
+    // Web Audio API
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    // Realistic Steel Slide Glissando Sound Effect
+    function playSlideGlissando(startFret, endFret) {
+      if (isSoundMuted) return;
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        const duration = 0.72;
+
+        const baseFreq = 164.81;
+        const startFreq = baseFreq * Math.pow(2, startFret / 12);
+        const endFreq = baseFreq * Math.pow(2, endFret / 12);
+
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        osc1.type = "sawtooth";
+        osc2.type = "triangle";
+
+        osc1.frequency.setValueAtTime(startFreq, now);
+        osc1.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
+
+        osc2.frequency.setValueAtTime(startFreq * 1.5, now);
+        osc2.frequency.exponentialRampToValueAtTime(endFreq * 1.5, now + duration);
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = "bandpass";
+        filter.frequency.setValueAtTime(startFreq * 2.2, now);
+        filter.frequency.exponentialRampToValueAtTime(endFreq * 2.2, now + duration);
+        filter.Q.value = 6.0;
+
+        const masterGain = ctx.createGain();
+        masterGain.gain.setValueAtTime(0.0, now);
+        masterGain.gain.linearRampToValueAtTime(0.35, now + 0.05);
+        masterGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        osc1.connect(filter);
+        osc2.connect(filter);
+        filter.connect(masterGain);
+        masterGain.connect(ctx.destination);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + duration);
+        osc2.stop(now + duration);
+      } catch (e) {
+        console.warn("Audio Context error:", e);
+      }
+    }
+
+    // Broken String Snap Sound on error
+    function playBrokenStringSound() {
+      if (isSoundMuted) return;
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+
+        const jewel = document.getElementById("amp-jewel-lamp");
+        if (jewel) {
+          jewel.classList.add("snap-alert");
+          setTimeout(() => jewel.classList.remove("snap-alert"), 1200);
+        }
+
+        const snapOsc = ctx.createOscillator();
+        const snapGain = ctx.createGain();
+        snapOsc.type = "sawtooth";
+        snapOsc.frequency.setValueAtTime(1900, now);
+        snapOsc.frequency.exponentialRampToValueAtTime(140, now + 0.08);
+
+        snapGain.gain.setValueAtTime(0.65, now);
+        snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+        snapOsc.connect(snapGain);
+        snapGain.connect(ctx.destination);
+
+        const twangOsc = ctx.createOscillator();
+        const twangGain = ctx.createGain();
+        twangOsc.type = "triangle";
+        twangOsc.frequency.setValueAtTime(320, now + 0.04);
+        twangOsc.frequency.exponentialRampToValueAtTime(55, now + 0.7);
+
+        twangGain.gain.setValueAtTime(0.0, now);
+        twangGain.gain.setValueAtTime(0.5, now + 0.04);
+        twangGain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+
+        twangOsc.connect(twangGain);
+        twangGain.connect(ctx.destination);
+
+        snapOsc.start(now);
+        twangOsc.start(now + 0.04);
+        snapOsc.stop(now + 0.08);
+        twangOsc.stop(now + 0.75);
+      } catch (e) {
+        console.warn("Audio Context error:", e);
+      }
+    }
+
+    // Play Master Track
+    function playMasterTrack(audioSrc, title) {
+      if (isSoundMuted || !audioSrc) return;
+      const audio = document.getElementById("master-audio");
+      const trackTitleEl = document.getElementById("hud-track-title");
+      const eqEl = document.getElementById("audio-eq");
+
+      audio.src = audioSrc;
+      audio.volume = 0.85;
+      audio.play().then(() => {
+        if (trackTitleEl) trackTitleEl.textContent = title || "Reproduciendo";
+        if (eqEl) eqEl.classList.add("playing");
+      }).catch(err => {
+        console.warn("Audio play prevented:", err);
+      });
+
+      audio.onended = () => {
+        if (eqEl) eqEl.classList.remove("playing");
+      };
+    }
+
+    // =========================================================================
+    // VIDEO FEEDBACK CONTROLLER (RABBIT HOLE: 0-5s | FLAG: 14s+)
+    // =========================================================================
+    let videoStopHandler = null;
+
+    function playFeedbackVideo(type) {
+      const modal = document.getElementById("video-feedback-modal");
+      const video = document.getElementById("feedback-video");
+      const title = document.getElementById("video-tv-title");
+      if (!modal || !video) return;
+
+      if (videoStopHandler) {
+        video.removeEventListener("timeupdate", videoStopHandler);
+        videoStopHandler = null;
+      }
+
+      modal.classList.add("open");
+
+      if (type === "rabbit_hole") {
+        title.textContent = "> ⚠️ TRANSMISIÓN DE TRAMPA • RABBIT HOLE DETECTADO [0s - 5s]";
+        title.style.color = "var(--danger-rust)";
+        video.currentTime = 0.0;
+        video.play().catch(e => console.warn("Video playback:", e));
+
+        videoStopHandler = function() {
+          if (video.currentTime >= 5.0) {
+            video.pause();
+            video.removeEventListener("timeupdate", videoStopHandler);
+            videoStopHandler = null;
+            setTimeout(() => {
+              if (modal.classList.contains("open")) {
+                closeFeedbackVideo();
+              }
+            }, 800);
+          }
+        };
+        video.addEventListener("timeupdate", videoStopHandler);
+      } else if (type === "flag") {
+        title.textContent = "> ⚡ TRANSMISIÓN OFICIAL • BANDERA VERIFICADA [14s+]";
+        title.style.color = "var(--crt-green)";
+        video.currentTime = 14.0;
+        video.play().catch(e => console.warn("Video playback:", e));
+
+        videoStopHandler = function() {
+          if (video.ended) {
+            closeFeedbackVideo();
+          }
+        };
+        video.addEventListener("ended", videoStopHandler);
+      }
+    }
+
+    function closeFeedbackVideo() {
+      const modal = document.getElementById("video-feedback-modal");
+      const video = document.getElementById("feedback-video");
+      if (video) {
+        video.pause();
+        if (videoStopHandler) {
+          video.removeEventListener("timeupdate", videoStopHandler);
+          videoStopHandler = null;
+        }
+      }
+      if (modal) modal.classList.remove("open");
+    }
+
+
+    // =========================================================================
+    // EPIC VICTORY FINALE CONTROLLER & CONFETTI ENGINE
+    // =========================================================================
+    function triggerVictoryFinale() {
+      const modal = document.getElementById("victory-modal");
+      if (!modal) return;
+
+      // Update final score & grade
+      const scoreVal = document.getElementById("victory-final-score");
+      const gradeVal = document.getElementById("victory-final-grade");
+      if (scoreVal) scoreVal.textContent = `${score} / 1000 PTS`;
+      if (gradeVal) {
+        if (score >= 900) {
+          gradeVal.textContent = "CALIFICACIÓN: 5.0 / 5.0 (EXCELENCIA ACADÉMICA • RANGO ROOT GOD)";
+        } else if (score >= 750) {
+          gradeVal.textContent = "CALIFICACIÓN: 4.5 / 5.0 (SOBRESALIENTE • RANGO ROCK STAR)";
+        } else {
+          gradeVal.textContent = `CALIFICACIÓN: ${(score / 200).toFixed(1)} / 5.0 (APROBADO)`;
+        }
+      }
+
+      modal.classList.add("open");
+
+      // Play triumphant rock chord + cheering audio
+      playVictoryAudio();
+
+      // Launch Confetti
+      startConfetti();
+    }
+
+    function closeVictoryModal() {
+      const modal = document.getElementById("victory-modal");
+      if (modal) modal.classList.remove("open");
+      stopConfetti();
+    }
+
+    // Triumphant Chord & Concert Cheer Synthesizer
+    function playVictoryAudio() {
+      if (isSoundMuted) return;
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+
+        // Big Power Chord (E Major: E, B, E, G#, B, E)
+        const freqs = [82.41, 123.47, 164.81, 207.65, 246.94, 329.63];
+        freqs.forEach((f, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(f, now);
+
+          gain.gain.setValueAtTime(0.0, now);
+          gain.gain.linearRampToValueAtTime(0.18, now + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 3.5);
+
+          const filter = ctx.createBiquadFilter();
+          filter.type = "lowpass";
+          filter.frequency.setValueAtTime(1500, now);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(now + idx * 0.015);
+          osc.stop(now + 3.8);
+        });
+      } catch (e) {
+        console.warn("Victory audio:", e);
+      }
+    }
+
+    // Confetti Engine
+    let confettiAnimId = null;
+    function startConfetti() {
+      const canvas = document.getElementById("confetti-canvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const colors = ["#ffb703", "#fb8500", "#c5a059", "#ffffff", "#86efac", "#f4ece1"];
+      const particles = [];
+      for (let i = 0; i < 90; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -canvas.height,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          speedY: Math.random() * 3 + 2,
+          speedX: Math.random() * 2 - 1,
+          rot: Math.random() * 360,
+          rotSpeed: Math.random() * 4 - 2
+        });
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.y += p.speedY;
+          p.x += p.speedX;
+          p.rot += p.rotSpeed;
+          if (p.y > canvas.height) {
+            p.y = -10;
+            p.x = Math.random() * canvas.width;
+          }
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rot * Math.PI) / 180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+          ctx.restore();
+        });
+        confettiAnimId = requestAnimationFrame(render);
+      }
+      render();
+    }
+
+    function stopConfetti() {
+      if (confettiAnimId) {
+        cancelAnimationFrame(confettiAnimId);
+        confettiAnimId = null;
+      }
+      const canvas = document.getElementById("confetti-canvas");
+      if (canvas) {
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+
+    // Copy Kali Command to Clipboard
+    function copyKaliCommand() {
+      const cmdText = document.getElementById("crt-command")?.innerText;
+      if (!cmdText) return;
+      navigator.clipboard.writeText(cmdText).then(() => {
+        const btn = document.getElementById("btn-copy-cmd");
+        if (btn) {
+          btn.textContent = "✅ COPIADO!";
+          setTimeout(() => btn.textContent = "📋 COPIAR", 1800);
+        }
+      }).catch(err => console.warn("Clipboard error:", err));
+    }
+
+
+    // =========================================================================
+    // TACTICAL HINT SYSTEM (COST: -25 PTS) & BLACK-BOX SPECS UPDATER
+    // =========================================================================
+    function requestTacticalHint() {
+      if (unlockedHints.has(activePhase)) {
+        return; // Already unlocked for this phase
+      }
+
+      const m = MILESTONES[activePhase];
+      if (!m) return;
+
+      const confirmUnlock = confirm(`¿Deseas desbloquear la pista metodológica de la ${m.title}?\n\nPenalización académica: -25 PUNTOS en el marcador oficial.`);
+      if (!confirmUnlock) return;
+
+      // Apply penalty and mark unlocked
+      score = Math.max(0, score - 25);
+      unlockedHints.add(activePhase);
+      updateTelemetryUI();
+
+      renderHintUI(activePhase);
+      playBrokenStringSound(); // Subtle warning twang
+      showToast("💡 PISTA DESBLOQUEADA", `Se descontaron 25 PTS. Revisa la consola de auditoría.`);
+    }
+
+    function renderHintUI(phaseNum) {
+      const m = MILESTONES[phaseNum];
+      const hintText = document.getElementById("hint-unlocked-text");
+      const hintBtn = document.getElementById("btn-unlock-hint");
+      const hintBadge = document.getElementById("hint-status-badge");
+      if (!hintText || !hintBtn || !hintBadge || !m) return;
+
+      if (unlockedHints.has(phaseNum)) {
+        hintText.style.display = "block";
+        hintText.innerHTML = `> ${m.tacticalHint}`;
+        hintBtn.style.display = "none";
+        hintBadge.textContent = "PISTA ACTIVA (-25 PTS)";
+        hintBadge.style.color = "#facc15";
+      } else {
+        hintText.style.display = "none";
+        hintBtn.style.display = "inline-block";
+        hintBadge.textContent = "PISTA BLOQUEADA";
+        hintBadge.style.color = "var(--text-muted)";
+      }
+    }
+
+    function updateBlackBoxSpecs(phaseNum) {
+      const m = MILESTONES[phaseNum];
+      if (!m) return;
+
+      const targetEl = document.getElementById("crt-target-ip");
+      const cweEl = document.getElementById("crt-cwe");
+      const vectorEl = document.getElementById("crt-vector");
+
+      if (completedPhases.has(phaseNum)) {
+        // Solved: Reveal Full Forensic Specs
+        targetEl.textContent = m.targetReal;
+        cweEl.textContent = m.cweReal;
+        vectorEl.textContent = `✅ RESUELTO: ${m.vectorReal}`;
+        vectorEl.style.color = "#86efac";
+      } else {
+        // Unsolved: Black-Box Mask
+        targetEl.textContent = phaseNum === 0 ? "192.168.56.0/24 (Escanear)" : "[CLASIFICADO - AUDITAR]";
+        cweEl.textContent = "[NO IDENTIFICADO]";
+        vectorEl.textContent = "[REQUIERE RECONOCIMIENTO ACTIVO]";
+        vectorEl.style.color = "#e2e8f0";
+      }
+
+      renderHintUI(phaseNum);
+    }
+
+    // Move Slide to Fret on Diapasón
+    function moveSlideToFret(targetFret) {
+      const prevFret = currentFret;
+      currentFret = Math.max(0, Math.min(TOTAL_FRETS, targetFret));
+
+      const strip = document.getElementById("diapason-strip");
+      const slide = document.getElementById("diapason-slide");
+      if (!strip || !slide) return;
+
+      const items = strip.querySelectorAll(".fret-unit");
+      if (items[currentFret]) {
+        const itemCenter = items[currentFret].offsetLeft + items[currentFret].offsetWidth / 2;
+        slide.style.left = itemCenter + "px";
+      }
+
+      if (prevFret !== currentFret) {
+        playSlideGlissando(prevFret, currentFret);
+      }
+
+      // Update HUD
+      document.getElementById("hud-fret-pos").textContent = currentFret === 0 ? "TRASTE 0 (NUT)" : `TRASTE ${currentFret} / 27`;
+      document.getElementById("fret-status-lbl").textContent = currentFret === 0 ? "PUNTO DE PARTIDA: TRASTE 0 (NUT)" : `POSICIÓN ACTUAL: TRASTE ${currentFret} DE 27`;
+
+      items.forEach((item, idx) => {
+        item.classList.toggle("active-fret", idx === currentFret);
+      });
+    }
+
+    // SHA-256 Hash
+    async function sha256Hex(str) {
+      const buf = new TextEncoder().encode(str.trim());
+      const hashBuf = await crypto.subtle.digest("SHA-256", buf);
+      const hashArr = Array.from(new Uint8Array(hashBuf));
+      return hashArr.map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    // Submit Flag
+    async function submitFlag() {
+      const input = document.getElementById("flag-input");
+      const feedback = document.getElementById("crt-feedback");
+      if (!input || !feedback) return;
+
+      const rawVal = input.value.trim();
+      if (!rawVal) {
+        feedback.className = "terminal-feedback-pro error";
+        feedback.textContent = "> ERROR: CAMPO VACÍO. INGRESA LA BANDERA CAPTURADA EN KALI.";
+        playBrokenStringSound();
+        return;
+      }
+
+      const inputHash = await sha256Hex(rawVal);
+      const entry = CTF_HASH_DB[inputHash];
+
+      if (entry) {
+        if (entry.type === "rabbit_hole") {
+          score = Math.max(0, score - entry.penalty);
+          updateTelemetryUI();
+          feedback.className = "terminal-feedback-pro error";
+          feedback.innerHTML = `> ⚠️ ${entry.name.toUpperCase()}!<br>> ${entry.msg} (-${entry.penalty} PTS)`;
+          playBrokenStringSound();
+          showToast("⚠️ RABBIT HOLE ACTIVADO", entry.msg);
+          playFeedbackVideo("rabbit_hole");
+          return;
+        }
+
+        if (entry.type === "flag") {
+          if (completedPhases.has(entry.phase)) {
+            feedback.className = "terminal-feedback-pro error";
+            feedback.textContent = `> INFORMACIÓN: YA HABÍAS CAPTURADO LA FASE ${entry.phase} (${entry.name.toUpperCase()}).`;
+            return;
+          }
+
+          completedPhases.add(entry.phase);
+          capturedFlagsCount++;
+          score += entry.points;
+
+          const milestone = MILESTONES[entry.phase];
+          feedback.className = "terminal-feedback-pro success";
+          feedback.innerHTML = `> ✅ ¡ÉXITO! ${entry.msg}<br>> +${entry.points} PTS • CRIPTO SHA-256 VERIFICADA.`;
+
+          // 1. Slide glides to artist fret!
+          moveSlideToFret(milestone.fret);
+
+          // 2. REVEAL AND UNLOCK VINYL COVER FOR THIS SPECIFIC FLAG!
+          unlockVinylSlot(entry.phase);
+
+          // 3. Play Master Track
+          playMasterTrack(milestone.audio, `${milestone.name} - ${milestone.trackTitle}`);
+
+          // 4. Show Toast
+          showToast(`⚡ ¡FLAG FASE ${entry.phase} CAPTURADA!`, `Slide avanzando al Traste ${milestone.fret} (${milestone.name})`);
+          playFeedbackVideo("flag");
+
+          // 5. Mark Diapasón Frets
+          markDiapasonFrets(milestone.fret);
+
+          // 6. Advance next phase if available
+          if (entry.nextPhase && entry.nextPhase <= 5) {
+            selectPhase(entry.nextPhase);
+          }
+
+          updateTelemetryUI();
+          input.value = "";
+
+          // 7. CHECK VICTORY CONDITION (ALL 5 FLAGS CAPTURED!)
+          if (completedPhases.size === 6) {
+            setTimeout(() => {
+              triggerVictoryFinale();
+            }, 2200);
+          }
+        }
+      } else {
+        feedback.className = "terminal-feedback-pro error";
+        feedback.innerHTML = "> ❌ BANDERA INVÁLIDA. CUERDA ROTA (SNAP!). REVISA EN KALI.";
+        playBrokenStringSound();
+        showToast("❌ BANDERA INCORRECTA", "No coincide con ningún artefacto de la fase.");
+      }
+    }
+
+    // Progressive Vinyl Reveal: Only appears when corresponding Flag is Captured!
+    function unlockVinylSlot(phaseNum) {
+      const container = document.getElementById("vinyl-cards-container");
+      const placeholder = document.getElementById("vinyl-empty-placeholder");
+      if (placeholder) placeholder.style.display = "none";
+
+      const m = MILESTONES[phaseNum];
+      if (!m || document.getElementById(`slot-phase-${phaseNum}`)) return;
+
+      const card = document.createElement("div");
+      card.className = "sanctuary-slot-card unlocked anim-pop";
+      card.id = `slot-phase-${phaseNum}`;
+      card.onclick = () => selectPhase(phaseNum);
+
+      card.innerHTML = `
+        <div class="slot-jacket-art unlocked">
+          <img src="${m.albumCover || ('assets/images/' + (phaseNum === 1 ? 'hendrix' : phaseNum === 2 ? 'joplin' : phaseNum === 3 ? 'morrison' : phaseNum === 4 ? 'winehouse' : 'cobain') + '_album.jpg')}" alt="${m.name}">
+        </div>
+        <div class="slot-spinning-disc" style="display:block;"></div>
+        <div class="slot-info-box">
+          <div class="slot-title-row">
+            <span class="slot-artist-name">${phaseNum}. ${m.name}</span>
+            <span class="slot-traste-tag">TRASTE ${m.fret} • +${m.points} PTS</span>
+          </div>
+          <div class="slot-track-title">${m.trackTitle}</div>
+          <div class="slot-vector-cwe">${m.vector} • ${m.cwe}</div>
+        </div>
+      `;
+
+      container.appendChild(card);
+      document.getElementById("showcase-counter").textContent = `${completedPhases.size} / 6 BANDERAS`;
+    }
+
+    function markDiapasonFrets(fret) {
+      document.querySelectorAll(".fret-unit").forEach((item, idx) => {
+        if (idx <= fret) item.classList.add("unlocked-fret");
+      });
+    }
+
+    // Select Phase
+    function selectPhase(phaseNum) {
+      activePhase = phaseNum;
+      const m = MILESTONES[phaseNum];
+      if (!m) return;
+
+      // Update CRT Screen
+      document.getElementById("crt-target-ip").textContent = m.target;
+      document.getElementById("crt-vector").textContent = m.vector;
+      document.getElementById("crt-cwe").textContent = m.cwe;
+      updateBlackBoxSpecs(phaseNum);
+
+      // Update HUD
+      document.getElementById("hud-artist").textContent = `${phaseNum}. ${m.name.toUpperCase()}`;
+
+      // Highlight active revealed card if present
+      document.querySelectorAll(".sanctuary-slot-card").forEach(card => {
+        card.classList.toggle("active", card.id === `slot-phase-${phaseNum}`);
+      });
+    }
+
+    function updateTelemetryUI() {
+      document.getElementById("hud-score").textContent = `${score} PTS`;
+      document.getElementById("hud-flags").textContent = `${capturedFlagsCount} / 6`;
+    }
+
+    function showToast(title, desc) {
+      const toast = document.getElementById("rock-toast");
+      document.getElementById("toast-title").textContent = title;
+      document.getElementById("toast-desc").textContent = desc;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    function testAmpFeedback() {
+      playBrokenStringSound();
+      showToast("🎸 AMPLIFICADOR FENDER", "Válvulas encendidas. Cable conectado a la Stratocaster.");
+    }
+
+    function openSustentacionModal() {
+      document.getElementById("modal-sustentacion").classList.add("open");
+    }
+    function closeSustentacionModal() {
+      document.getElementById("modal-sustentacion").classList.remove("open");
+    }
+
+    async function execute100PercentDemo() {
+      closeSustentacionModal();
+      showToast("🎓 INICIANDO DEMOSTRACIÓN 100%", "Inyectando las 5 banderas del CTF...");
+
+      const demoFlags = [
+        "27C{nmap_sc4n_r0ck_h0st_d1sc0v3ry}",
+        "27C{purpl3_h4z3_c0nd0r_n3t}",
+        "27C{p34rl_cry_b4by_s3cr3t_1970}",
+        "27C{l1ght_my_f1r3_c1p4_sqli}",
+        "27C{b4ck_t0_bl4ck_4dm1n_t0k3n}",
+        "27C{sm3lls_l1k3_grung3_r00t_27}"
+      ];
+
+      for (let i = 0; i < demoFlags.length; i++) {
+        await new Promise(r => setTimeout(r, 1300));
+        document.getElementById("flag-input").value = demoFlags[i];
+        await submitFlag();
+      }
+    }
+
+    function resetCTFProgress() {
+      currentFret = 0;
+      activePhase = 0;
+      score = 0;
+      capturedFlagsCount = 0;
+      completedPhases.clear();
+      unlockedHints.clear();
+
+      moveSlideToFret(0);
+      selectPhase(0);
+      updateTelemetryUI();
+
+      const container = document.getElementById("vinyl-cards-container");
+      if (container) {
+        container.innerHTML = `
+          <div id="vinyl-empty-placeholder" class="showcase-empty-state">
+            <span class="empty-icon">📻</span>
+            <span class="empty-title">DISCOTECA EN SILENCIO</span>
+            <span class="empty-desc">Las carátulas, canciones y credenciales se revelarán aquí a medida que descubras cada bandera en Kali Linux.</span>
+          </div>
+        `;
+      }
+      document.getElementById("showcase-counter").textContent = "0 / 5 DESCUBIERTOS";
+
+      document.querySelectorAll(".fret-unit").forEach(item => {
+        item.classList.remove("unlocked-fret");
+      });
+
+      const audio = document.getElementById("master-audio");
+      audio.pause();
+      audio.currentTime = 0;
+      document.getElementById("audio-eq").classList.remove("playing");
+      document.getElementById("hud-track-title").textContent = "Sin Reproducción";
+
+      showToast("🔄 PROGRESO REINICIADO", "Slide en Traste 0. Discos bloqueados.");
+    }
+
+    // Build Diapasón Frets on load
+    function initDiapason() {
+      const strip = document.getElementById("diapason-strip");
+      strip.innerHTML = `
+        <div class="fret-string s1"></div>
+        <div class="fret-string s2"></div>
+        <div class="fret-string s3"></div>
+        <div class="fret-string s4"></div>
+        <div class="fret-string s5"></div>
+        <div class="fret-string s6"></div>
+        <div id="diapason-slide"></div>
+      `;
+
+      for (let i = 0; i <= TOTAL_FRETS; i++) {
+        const unit = document.createElement("div");
+        unit.className = `fret-unit ${i === 0 ? 'nut-fret' : ''}`;
+
+        const milestoneKey = Object.keys(MILESTONES).find(k => MILESTONES[k].fret === i);
+        if (milestoneKey) {
+          unit.classList.add("milestone-fret");
+          const star = document.createElement("span");
+          star.className = "milestone-star";
+          star.textContent = "⭐";
+          unit.appendChild(star);
+        }
+
+        const num = document.createElement("span");
+        num.className = "fret-num-text";
+        num.textContent = i === 0 ? "NUT" : i;
+        unit.appendChild(num);
+
+        unit.onclick = () => {
+          if (milestoneKey) {
+            selectPhase(parseInt(milestoneKey));
+          }
+        };
+
+        strip.appendChild(unit);
+      }
+
+      // Initial Slide placement
+      setTimeout(() => {
+        moveSlideToFret(0);
+        selectPhase(0);
+      }, 100);
+
+      // Sound toggle
+      document.getElementById("btn-toggle-sound").onclick = () => {
+        isSoundMuted = !isSoundMuted;
+        document.getElementById("btn-toggle-sound").textContent = isSoundMuted ? "🔇 UNMUTE" : "🔊 MUTE";
+        const audio = document.getElementById("master-audio");
+        if (isSoundMuted) audio.pause();
+      };
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      initDiapason();
+    });
+  </script>
+  <!-- EPIC VICTORY & FINAL SCORE MODAL -->
+  <div id="victory-modal">
+    <canvas id="confetti-canvas"></canvas>
+    <div class="victory-card">
+      <div class="victory-trophy-badge">🏆</div>
+      <div class="victory-header">
+        <h1>¡EL CLUB DE LOS 27 HA SIDO CONQUISTADO!</h1>
+        <div class="sub">Universidad de Cundinamarca • Hacking Ético & Seguridad de Aplicaciones</div>
+      </div>
+
+      <!-- Giant Score Box -->
+      <div class="giant-score-box">
+        <span class="giant-score-lbl">PUNTAJE FINAL OFICIAL</span>
+        <span class="giant-score-val" id="victory-final-score">1000 / 1000 PTS</span>
+        <span class="giant-score-grade" id="victory-final-grade">CALIFICACIÓN: 5.0 / 5.0 (EXCELENCIA ACADÉMICA)</span>
+      </div>
+
+      <!-- Academic Metadata -->
+      <div class="victory-academic-grid">
+        <div class="academic-stat-box">
+          <div class="lbl">Estudiante / Auditor</div>
+          <div class="val">Óscar Robayo (@rockbayo)</div>
+        </div>
+        <div class="academic-stat-box">
+          <div class="lbl">Estado del Objetivo</div>
+          <div class="val" style="color:#86efac;">ROOT UID 0 ALCANZADO (/root/flag.txt)</div>
+        </div>
+        <div class="academic-stat-box">
+          <div class="lbl">Infraestructura Auditada</div>
+          <div class="val">Docker Linux CTF (192.168.56.1)</div>
+        </div>
+        <div class="academic-stat-box">
+          <div class="lbl">Banderas Legítimas</div>
+          <div class="val" style="color:var(--amber-bright);">5 / 5 CAPTURADAS (100%)</div>
+        </div>
+      </div>
+
+      <!-- Table of Solved Phases -->
+      <table class="solved-phases-table">
+        <thead>
+          <tr>
+            <th>Fase</th>
+            <th>Artista</th>
+            <th>Vulnerabilidad / CWE</th>
+            <th>Traste</th>
+            <th style="text-align:right;">Puntaje</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>F0</td>
+            <td>Reconocimiento Nmap</td>
+            <td>Detección de Host & Cabeceras • CWE-200</td>
+            <td>Traste 3</td>
+            <td class="pts">+100 PTS</td>
+          </tr>
+          <tr>
+            <td>F1</td>
+            <td>Jimi Hendrix</td>
+            <td>PCAP DPI • CWE-311 (ROT13)</td>
+            <td>Traste 6</td>
+            <td class="pts">+150 PTS</td>
+          </tr>
+          <tr>
+            <td>F2</td>
+            <td>Janis Joplin</td>
+            <td>Esteganografía EOF • CWE-200</td>
+            <td>Traste 11</td>
+            <td class="pts">+200 PTS</td>
+          </tr>
+          <tr>
+            <td>F3</td>
+            <td>Jim Morrison</td>
+            <td>SQLi UNION Based • CWE-89</td>
+            <td>Traste 16</td>
+            <td class="pts">+250 PTS</td>
+          </tr>
+          <tr>
+            <td>F4</td>
+            <td>Amy Winehouse</td>
+            <td>Stored XSS Cookie • CWE-79</td>
+            <td>Traste 21</td>
+            <td class="pts">+200 PTS</td>
+          </tr>
+          <tr>
+            <td>F5</td>
+            <td>Kurt Cobain</td>
+            <td>SUID GTFOBins Root • CWE-250</td>
+            <td>Traste 27</td>
+            <td class="pts">+200 PTS</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Action Buttons -->
+      <div class="victory-actions">
+        <button class="btn-victory primary" onclick="window.print()">🖨️ IMPRIMIR / GUARDAR CONSTANCIA</button>
+        <button class="btn-victory secondary" onclick="closeVictoryModal()">🎸 REVISAR TABLERO</button>
+        <button class="btn-victory secondary" onclick="resetCTFProgress(); closeVictoryModal();">🔄 REINICIAR RETO</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
-

@@ -45,7 +45,7 @@ docker compose up -d --build
 *El servidor de la víctima se iniciará en el puerto `80` (accesible en `http://localhost/` o en la IP del host).*
 
 ### 3. Iniciar el Tablero de Juego
-Abre el archivo `dashboard_27club.html` en tu navegador. El tablero incluye:
+Abre el archivo `index.html (o tablero3d_27club.html)` en tu navegador. El tablero incluye:
 - Cronómetro regresivo oficial de 60:00 minutos con alertas sonoras.
 - Reproductor de audio y memorabilia icónica de las leyendas del rock.
 - Validador interactivo con verificación criptográfica SHA-256 (sin exposición de respuestas).
