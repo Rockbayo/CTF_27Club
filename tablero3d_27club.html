@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The 27 Club - Tablero 3D Mástil de Guitarra (Fretboard Highway)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Permanent+Marker&family=Rajdhani:wght@500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #06070a;
+      --neon-purple: #9d4edd;
+      --neon-magenta: #ff007f;
+      --neon-cyan: #00f0ff;
+      --neon-amber: #ffaa00;
+      --neon-red: #ff3333;
+      --neon-green: #00ff88;
+      --gold: #ffd700;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #101222 0%, #06070a 100%);
+      font-family: 'Rajdhani', sans-serif;
+      color: #fff;
+    }
+
+    #webgl-canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+      display: block;
+    }
+
+    /* TOP MASTER HUD */
+    #hud-top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 75px;
+      background: linear-gradient(180deg, rgba(8, 9, 15, 0.96), rgba(8, 9, 15, 0.6) 80%, transparent);
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 25px;
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid rgba(157, 78, 221, 0.4);
+      box-shadow: 0 0 25px rgba(157, 78, 221, 0.25);
+    }
+
+    .brand-title {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.6rem;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, #ff007f, #9d4edd, #00f0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
+    }
+    .brand-sub {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      color: var(--neon-cyan);
+    }
+
+    /* BOSS HEALTH BAR */
+    .hud-boss-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      min-width: 340px;
+    }
+    .boss-label-row {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: #d1c7e6;
+    }
+    .boss-track {
+      width: 100%;
+      height: 14px;
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid var(--neon-magenta);
+      border-radius: 7px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.3);
+      position: relative;
+    }
+    .boss-fill {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff0055, #ffaa00, #00ff88);
+      transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* CONTROLS RIGHT */
+    .hud-right-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .hud-chip {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hud-btn {
+      background: linear-gradient(135deg, var(--neon-purple), var(--neon-magenta));
+      border: none;
+      color: #fff;
+      font-family: 'Permanent Marker', cursive;
+      font-size: 0.88rem;
+      padding: 8px 18px;
+      border-radius: 22px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+    .hud-btn:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 25px rgba(255, 0, 127, 0.8);
+    }
+    .hud-btn-cyan {
+      background: rgba(0, 240, 255, 0.15);
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+    }
+    .hud-btn-cyan:hover {
+      background: var(--neon-cyan);
+      color: #000;
+    }
+
+    /* BOTTOM BOARDGAME DOCK (DICE & ACTIONS) */
+    #board-dock {
+      position: absolute;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: rgba(10, 12, 20, 0.92);
+      border: 2px solid rgba(157, 78, 221, 0.5);
+      border-radius: 40px;
+      padding: 10px 28px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(157, 78, 221, 0.3);
+    }
+
+    .fret-indicator {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: 'Fira Code', monospace;
+    }
+    .fret-indicator span:first-child {
+      font-size: 0.7rem;
+      color: var(--neon-cyan);
+    }
+    .fret-indicator strong {
+      font-size: 1.4rem;
+      color: var(--gold);
+      font-family: 'Permanent Marker', cursive;
+    }
+
+    .btn-dice {
+      background: linear-gradient(135deg, #ff007f, #9d4edd);
+      border: none;
+      color: #fff;
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.15rem;
+      padding: 10px 24px;
+      border-radius: 30px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-dice:hover {
+      transform: scale(1.08) rotate(-1deg);
+      box-shadow: 0 0 30px rgba(255, 0, 127, 0.9);
+    }
+    .btn-dice:active {
+      transform: scale(0.95);
+    }
+
+    .camera-modes {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-cam {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #d1c7e6;
+      border-radius: 16px;
+      padding: 6px 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-cam.active, .btn-cam:hover {
+      background: var(--neon-cyan);
+      color: #000;
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 10px var(--neon-cyan);
+    }
+
+    /* SANCTUARY EVENT CARD OVERLAY (HOLOGRAPHIC) */
+    #sanctuary-modal {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.95);
+      background: linear-gradient(145deg, rgba(18, 19, 32, 0.96), rgba(8, 9, 15, 0.98));
+      border: 2px solid var(--neon-cyan);
+      box-shadow: 0 0 50px rgba(0, 240, 255, 0.5), inset 0 0 30px rgba(0,0,0,0.8);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 600px;
+      width: 90%;
+      z-index: 50;
+      display: none;
+      backdrop-filter: blur(14px);
+      animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes modalPop {
+      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+    .modal-hero {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      padding-bottom: 15px;
+    }
+    .modal-hero img {
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      object-fit: cover;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
+    .modal-hero-text h3 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.6rem;
+      color: var(--gold);
+    }
+    .modal-hero-text span {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: var(--neon-cyan);
+    }
+    .modal-content {
+      font-family: 'Special Elite', cursive, sans-serif;
+      font-size: 1.05rem;
+      color: #fff;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .modal-tech-box {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px dashed var(--neon-cyan);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.82rem;
+      color: #00ff88;
+      margin-bottom: 18px;
+    }
+    .modal-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid var(--neon-purple);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'Fira Code', monospace;
+      color: #fff;
+      font-size: 0.95rem;
+      margin-bottom: 15px;
+      outline: none;
+    }
+    .modal-input:focus {
+      border-color: var(--neon-magenta);
+      box-shadow: 0 0 12px var(--neon-magenta);
+    }
+    .modal-btn-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    /* TROLL MODAL 3D */
+    #troll-trap-modal {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(145deg, #240a1c, #0e040c);
+      border: 3px solid var(--neon-magenta);
+      box-shadow: 0 0 60px rgba(255, 0, 127, 0.8);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 520px;
+      width: 90%;
+      text-align: center;
+      z-index: 60;
+      display: none;
+      animation: trollShake 0.4s ease-in-out;
+    }
+    @keyframes trollShake {
+      0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+      20% { transform: translate(-53%, -50%) rotate(-4deg); }
+      40% { transform: translate(-47%, -50%) rotate(4deg); }
+      60% { transform: translate(-52%, -50%) rotate(-2deg); }
+      80% { transform: translate(-48%, -50%) rotate(2deg); }
+    }
+    .troll-icon {
+      font-size: 4.5rem;
+      margin-bottom: 10px;
+    }
+    .troll-heading {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 2.2rem;
+      color: var(--neon-magenta);
+      margin-bottom: 10px;
+    }
+  </style>
+
+  <!-- Three.js + Controles Locales con CDN Fallback -->
+  <script src="assets/js/three.min.js"></script>
+  <script src="assets/js/OrbitControls.js"></script>
+  <script>
+    if (typeof THREE === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+      document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\/script>');
+    }
+  </script>
+</head>
+<body>
+
+  <!-- 3D Canvas -->
+  <canvas id="webgl-canvas"></canvas>
+
+  <!-- Top Master HUD -->
+  <header id="hud-top">
+    <div>
+      <div class="brand-title">THE 27 CLUB • TABLERO 3D</div>
+      <div class="brand-sub">Fretboard Highway • Autopista del Mástil Trastada</div>
+    </div>
+
+    <!-- Boss Health Bar -->
+    <div class="hud-boss-center">
+      <div class="boss-label-row">
+        <span>DAEMON BOSS: 27CLUB_SRV (192.168.56.1)</span>
+        <span id="hpLabel">100 / 100 HP</span>
+      </div>
+      <div class="boss-track">
+        <div class="boss-fill" id="hpFill"></div>
+      </div>
+    </div>
+
+    <!-- Score & Controls -->
+    <div class="hud-right-actions">
+      <div class="hud-chip">
+        <span>🏆 SCORE:</span>
+        <strong id="scoreDisplay" style="color: var(--gold);">0 / 1000 PTS</strong>
+      </div>
+      <button class="hud-btn hud-btn-cyan" onclick="resetFretboardGame()">
+        🔄 REINICIAR
+      </button>
+      <button class="hud-btn" onclick="activateSustentacionFretboard()">
+        🎓 SUSTENTACIÓN 100%
+      </button>
+      <a href="dashboard_27club.html" class="hud-btn" style="background:#222; border:1px solid #444;">
+        📄 DASHBOARD 2D
+      </a>
+    </div>
+  </header>
+
+  <!-- Bottom Boardgame Dock -->
+  <div id="board-dock">
+    <div class="fret-indicator">
+      <span>POSICIÓN ACTUAL</span>
+      <strong id="currentFretLabel">TRASTE 0 (INICIO)</strong>
+    </div>
+
+    <button class="btn-dice" id="btnRollDice" onclick="rollFretboardStep()">
+      <span>🎲</span>
+      <span id="btnRollText">AVANZAR EN EL MÁSTIL</span>
+    </button>
+
+    <div class="camera-modes">
+      <button class="btn-cam active" id="camIsometric" onclick="setCameraView('iso')">📐 Isométrica</button>
+      <button class="btn-cam" id="camFollow" onclick="setCameraView('follow')">🎸 Seguimiento</button>
+      <button class="btn-cam" id="camFree" onclick="setCameraView('free')">🛰️ Libre 360°</button>
+    </div>
+  </div>
+
+  <!-- Sanctuary Event Modal -->
+  <div id="sanctuary-modal">
+    <div class="modal-hero">
+      <img id="sanctuaryImg" src="assets/images/hendrix_photo.jpg" alt="Artista">
+      <div class="modal-hero-text">
+        <h3 id="sanctuaryTitle">Templo de Hendrix</h3>
+        <span id="sanctuarySubtitle">Traste 6 • Electric Church Studios</span>
+      </div>
+    </div>
+    <div class="modal-content" id="sanctuaryLore">
+      Lore del desafío...
+    </div>
+    <div class="modal-tech-box" id="sanctuaryHint">
+      Vulnerabilidad: ...
+    </div>
+    <input type="text" class="modal-input" id="sanctuaryInput" placeholder="Ingresa la bandera capturada (FLAG{...})...">
+    <div class="modal-btn-row">
+      <button class="hud-btn hud-btn-cyan" onclick="closeSanctuaryModal()">Explorar Mástil</button>
+      <button class="hud-btn" onclick="submitSanctuaryFlag()">⚡ Validar Bandera</button>
+    </div>
+  </div>
+
+  <!-- Troll Trap Modal -->
+  <div id="troll-trap-modal">
+    <div class="troll-icon">💀😈</div>
+    <div class="troll-heading">¡TRAMPILLA EN EL MÁSTIL!</div>
+    <p id="trollTrapDesc" style="color:#d1c7e6; font-size:1.05rem; line-height:1.5; margin-bottom:18px;">
+      Has pisado una casilla de Rabbit Hole. La púa cayó al vacío del mástil.
+    </p>
+    <div style="color: #ff3366; font-family:'Fira Code', monospace; font-weight:bold; margin-bottom:20px;">
+      ⚠️ PENALIZACIÓN TROLL: -50 PTS | LA PÚA RETROCEDE
+    </div>
+    <button class="hud-btn" onclick="closeTrollTrapModal()">
+      😅 ¡REPOSICIONAR PÚA Y CONTINUAR!
+    </button>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 🎸 THE 27 CLUB - 3D GUITAR FRETBOARD BOARDGAME ENGINE
+    // =========================================================================
+
+    let scene, camera, renderer, controls;
+    let cameraMode = 'iso'; // 'iso', 'follow', 'free'
+
+    let score = 0;
+    let bossHp = 100;
+    let currentFret = 0; // 0 to 27
+    let isMoving = false;
+    let completedSanctuaries = new Set();
+
+    // 3D Meshes
+    let guitarNeckMesh;
+    let puaMesh; // The player's glowing guitar pick pawn
+    let stringsMeshes = [];
+    let fretMarkers = [];
+    let sanctuaryMeshes = {};
+    let trapDoors = [];
+
+    // Fretboard Geometry Constants
+    const TOTAL_FRETS = 27;
+    const FRETBOARD_LENGTH = 75; // Total length in 3D units
+    const FRETBOARD_WIDTH = 5.2;
+
+    // Precalculate fret positions along the Z axis (0 at nut, -FRETBOARD_LENGTH at 27th fret)
+    const fretPositionsZ = [];
+    for (let i = 0; i <= TOTAL_FRETS; i++) {
+      // Exponential / geometric fret progression for true guitar realism
+      const pct = 1 - Math.pow(0.96, i * 1.35);
+      fretPositionsZ.push(-pct * FRETBOARD_LENGTH);
+    }
+
+    // Key Fret Milestones
+    const MILESTONES = {
+      6: {
+        phase: 1, name: "Jimi Hendrix", title: "Santuario de Jimi Hendrix",
+        sub: "Traste 6 • Electric Church Studios", points: 150,
+        img: "assets/images/hendrix_photo.jpg",
+        lore: "¡Bienvenido al primer santuario del mástil! En Londres 1967, Jimi ofuscó su baliza en el User-Agent con ROT13 dentro de jimi_hendrix.pcap.",
+        hint: "💡 CWE-311: Baliza C&C interceptada -> SYNT{gu1f_1f_w1z1_u3aqe1k_e0g13}",
+        defaultFlag: "FLAG{th1s_1s_j1m1_h3ndr1x_r0t13}"
+      },
+      11: {
+        phase: 2, name: "Janis Joplin", title: "Furgoneta de Janis Joplin",
+        sub: "Traste 11 • The Woodstock Caravan", points: 200,
+        img: "assets/images/joplin_photo.jpg",
+        lore: "¡Paz y amor en el traste 11! En la furgoneta hippie, Janis ocultó la bandera detrás del marcador JPEG EOF (FF D9) en /cry_baby/janis.jpg.",
+        hint: "💡 CWE-200: Esteganografía EOF -> Revisa strings janis.jpg tras FF D9",
+        defaultFlag: "FLAG{j4n1s_p0rt_0f_m0rr1s0n_st3g0}"
+      },
+      16: {
+        phase: 3, name: "Jim Morrison", title: "Cripta de Jim Morrison",
+        sub: "Traste 16 • Las 3 Puertas de la Percepción", points: 250,
+        img: "assets/images/morrison_photo.jpg",
+        lore: "Yo soy el Rey Lagarto. El portal en /doors/?id=1 es vulnerable a Inyección SQL UNION Based. Evita la tabla trampa doors_trap.",
+        hint: "💡 CWE-89: Inyección SQL UNION -> ' OR 1=1 -- para extraer la tabla",
+        defaultFlag: "FLAG{m0rr1s0n_d00rs_sql_1nj3ct10n}"
+      },
+      21: {
+        phase: 4, name: "Amy Winehouse", title: "Pub de Amy Winehouse",
+        sub: "Traste 21 • Camden Speakeasy & Jazz Club", points: 200,
+        img: "assets/images/winehouse_photo.jpg",
+        lore: "Me dijeron que protegiera mis cookies y dije: ¡No, No, No! La servilleta de Camden Bar expone el admintoken secuestrado por Stored XSS.",
+        hint: "💡 CWE-79: Stored XSS -> Exfiltración de cookie admintoken",
+        defaultFlag: "FLAG{4my_w1n3h0us3_st0r3d_xss_c00k13}"
+      },
+      27: {
+        phase: 5, name: "Kurt Cobain", title: "Trono Root de Kurt Cobain",
+        sub: "Traste 27 (Meta) • Seattle Grunge Garage", points: 200, isRoot: true,
+        img: "assets/images/cobain_photo.jpg",
+        lore: "¡Llegaste a la cima del mástil! Pisa el pedal BOSS DS-1 para ejecutar find con permisos sudo y quebrar la terminal root (UID 0).",
+        hint: "💡 CWE-250: GTFOBins -> sudo find . -exec /bin/bash -p \; -quit",
+        defaultFlag: "FLAG{kurt_c0b41n_grung3_r00t_27}"
+      }
+    };
+
+    // Trap Frets (Rabbit Holes)
+    const TRAP_FRETS = {
+      9: { name: "Rabbit Hole: /admin_trampa/ (Janis)", msg: "Caíste en la trampa del archivo falso backup_keys.jpg." },
+      14: { name: "Rabbit Hole: doors_trap (Morrison)", msg: "Inyectaste en la tabla trampa con el verso 'The End'." },
+      19: { name: "Rabbit Hole: test_decoy (Amy)", msg: "Capturaste la copa señuelo con la cookie de prueba sin permisos." }
+    };
+
+    // Cryptographic Hash Database
+    const CTF_HASH_DB = {
+      "5e92acd0d04435bfcd1301c88b1a6f10ff4e88ecca45213f1c89dc6649900aac": { phase: 1, name: "Jimi Hendrix", points: 150 },
+      "2699e5b569fb12cc9c9d22d5e5648e2d686e5f7dec6f2a525359697308156b9c": { phase: 2, name: "Janis Joplin", points: 200 },
+      "6dd18975083f09f1304ed1ed761656a54e4ed9622cf98002cf5e7ce409831977": { phase: 3, name: "Jim Morrison", points: 250 },
+      "46159a8ed4c6b0d4cf2c231c4de1944401e7bbb4a024418030de5e413a95627b": { phase: 4, name: "Amy Winehouse", points: 200 },
+      "2b37cf1f78087b52eba00aaefa0ae2abd833d64d542a2210f36bf26938639acd": { phase: 5, name: "Kurt Cobain", points: 200, isRoot: true }
+    };
+
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message.trim());
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // =========================================================================
+    // AUDIO SYNTHESIZERS (WEB AUDIO API)
+    // =========================================================================
+    function playGuitarStrum(freq) {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const base = freq || 220;
+        [base, base * 1.25, base * 1.5, base * 2].forEach((f, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(f, ctx.currentTime + idx * 0.04);
+          gain.gain.setValueAtTime(0.18, ctx.currentTime + idx * 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.04 + 0.8);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.04);
+          osc.stop(ctx.currentTime + idx * 0.04 + 0.8);
+        });
+      } catch(e) {}
+    }
+
+    function playCartoonSlide() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(450, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.6);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.6);
+      } catch(e) {}
+    }
+
+    function playSuccessChime() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(f, ctx.currentTime + i * 0.1);
+          gain.gain.setValueAtTime(0.2, ctx.currentTime + i * 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.1 + 0.5);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + i * 0.1);
+          osc.stop(ctx.currentTime + i * 0.1 + 0.5);
+        });
+      } catch(e) {}
+    }
+
+    // =========================================================================
+    // 3D SCENE INITIALIZATION
+    // =========================================================================
+    function init() {
+      const canvas = document.getElementById("webgl-canvas");
+
+      // Scene & Starfield Fog
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x06070a);
+      scene.fog = new THREE.FogExp2(0x06070a, 0.012);
+
+      // Camera
+      camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+      setCameraView('iso');
+
+      // Renderer
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+
+      // OrbitControls
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      // Lighting
+      setupSceneLighting();
+
+      // Build Guitar Fretboard & Universe
+      buildStarfield();
+      buildGuitarFretboard();
+      buildPlayerPua();
+      buildSanctuaryIslands();
+
+      window.addEventListener('resize', onWindowResize);
+      animate();
+    }
+
+    function setupSceneLighting() {
+      const ambientLight = new THREE.AmbientLight(0x28233a, 1.4);
+      scene.add(ambientLight);
+
+      // Main Spotlight along the fretboard
+      const mainSpot = new THREE.SpotLight(0x9d4edd, 2.5, 90, Math.PI / 3, 0.6);
+      mainSpot.position.set(10, 30, -30);
+      scene.add(mainSpot);
+
+      // Colored rim lights (Magenta & Cyan)
+      const rimPink = new THREE.PointLight(0xff007f, 2, 45);
+      rimPink.position.set(-15, 12, -20);
+      scene.add(rimPink);
+
+      const rimCyan = new THREE.PointLight(0x00f0ff, 2.2, 50);
+      rimCyan.position.set(15, 14, -50);
+      scene.add(rimCyan);
+    }
+
+    // Starfield Background
+    function buildStarfield() {
+      const starsGeo = new THREE.BufferGeometry();
+      const count = 1800;
+      const positions = new Float32Array(count * 3);
+      for (let i = 0; i < count * 3; i++) {
+        positions[i] = (Math.random() - 0.5) * 250;
+      }
+      starsGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      const starsMat = new THREE.PointsMaterial({ color: 0x8899cc, size: 0.7, transparent: true, opacity: 0.8 });
+      const starField = new THREE.Points(starsGeo, starsMat);
+      scene.add(starField);
+    }
+
+    // =========================================================================
+    // GUITAR FRETBOARD GEOMETRY & STRINGS
+    // =========================================================================
+    function buildGuitarFretboard() {
+      // 1. Dark Rosewood Fretboard Neck (Palisandro Oscuro)
+      const neckGeo = new THREE.BoxGeometry(FRETBOARD_WIDTH, 0.7, FRETBOARD_LENGTH + 6);
+      const neckMat = new THREE.MeshStandardMaterial({
+        color: 0x1f140e,
+        roughness: 0.45,
+        metalness: 0.15
+      });
+      guitarNeckMesh = new THREE.Mesh(neckGeo, neckMat);
+      guitarNeckMesh.position.set(0, 0, -FRETBOARD_LENGTH / 2);
+      guitarNeckMesh.receiveShadow = true;
+      scene.add(guitarNeckMesh);
+
+      // Maple Wood Binding (Bordes de arce claro en los costados)
+      const bindMat = new THREE.MeshStandardMaterial({ color: 0xedd5be, roughness: 0.3 });
+      const bindLeft = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.75, FRETBOARD_LENGTH + 6), bindMat);
+      bindLeft.position.set(-FRETBOARD_WIDTH / 2, 0, -FRETBOARD_LENGTH / 2);
+      scene.add(bindLeft);
+
+      const bindRight = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.75, FRETBOARD_LENGTH + 6), bindMat);
+      bindRight.position.set(FRETBOARD_WIDTH / 2, 0, -FRETBOARD_LENGTH / 2);
+      scene.add(bindRight);
+
+      // 2. Metal Frets (27 Trastes Plateados)
+      const fretMat = new THREE.MeshStandardMaterial({
+        color: 0xdde5ed,
+        metalness: 0.95,
+        roughness: 0.15
+      });
+
+      for (let i = 0; i <= TOTAL_FRETS; i++) {
+        const zPos = fretPositionsZ[i];
+        const fretGeo = new THREE.BoxGeometry(FRETBOARD_WIDTH - 0.2, 0.15, 0.12);
+        const fretMesh = new THREE.Mesh(fretGeo, fretMat);
+        fretMesh.position.set(0, 0.42, zPos);
+        scene.add(fretMesh);
+
+        // Fret Tile Click Box
+        const tileBoxGeo = new THREE.BoxGeometry(FRETBOARD_WIDTH - 0.4, 0.05, 1.4);
+        const isMilestone = !!MILESTONES[i];
+        const isTrap = !!TRAP_FRETS[i];
+
+        let tileColor = 0x221c2c;
+        if (isMilestone) tileColor = 0x5a2d82;
+        if (isTrap) tileColor = 0x551122;
+
+        const tileMat = new THREE.MeshStandardMaterial({
+          color: tileColor,
+          roughness: 0.6,
+          emissive: isMilestone ? 0x9d4edd : (isTrap ? 0xff0055 : 0x000000),
+          emissiveIntensity: isMilestone ? 0.3 : (isTrap ? 0.2 : 0)
+        });
+        const tileMesh = new THREE.Mesh(tileBoxGeo, tileMat);
+        tileMesh.position.set(0, 0.38, zPos + 0.6);
+        scene.add(tileMesh);
+
+        // Mother of Pearl Dot Inlays (Inlays de nácar en trastes 3, 5, 7, 9, 12, 15, 17, 19, 21, 24, 27)
+        if ([3, 5, 7, 9, 15, 17, 19, 21].includes(i)) {
+          createInlayDot(0, zPos + 0.6);
+        } else if (i === 12 || i === 24) {
+          createInlayDot(-1.2, zPos + 0.6);
+          createInlayDot(1.2, zPos + 0.6);
+        }
+      }
+
+      // 3. 6 Vibrating Guitar Strings (Cuerdas de Guitarra de Neón)
+      const stringSpacing = (FRETBOARD_WIDTH - 1.2) / 5;
+      const stringColors = [0x00f0ff, 0x00f0ff, 0xff007f, 0xff007f, 0xffaa00, 0xffaa00];
+      const thicknesses = [0.03, 0.035, 0.045, 0.06, 0.075, 0.09];
+
+      for (let s = 0; s < 6; s++) {
+        const xPos = - (FRETBOARD_WIDTH - 1.2) / 2 + s * stringSpacing;
+        const strGeo = new THREE.CylinderGeometry(thicknesses[s], thicknesses[s], FRETBOARD_LENGTH + 6, 8);
+        const strMat = new THREE.MeshBasicMaterial({ color: stringColors[s] });
+        const strMesh = new THREE.Mesh(strGeo, strMat);
+        strMesh.rotation.x = Math.PI / 2;
+        strMesh.position.set(xPos, 0.55, -FRETBOARD_LENGTH / 2);
+        scene.add(strMesh);
+        stringsMeshes.push({ mesh: strMesh, origX: xPos, seed: s });
+      }
+
+      // Clavijero Dorado en el Traste 27 (Headstock)
+      const headGeo = new THREE.BoxGeometry(7, 0.8, 10);
+      const headMat = new THREE.MeshStandardMaterial({ color: 0x111116, roughness: 0.3, metalness: 0.5 });
+      const headstock = new THREE.Mesh(headGeo, headMat);
+      headstock.position.set(0, 0, -FRETBOARD_LENGTH - 6);
+      scene.add(headstock);
+
+      // Golden Trophy Emblem on Headstock
+      const crownGeo = new THREE.CylinderGeometry(1.5, 1.2, 0.3, 16);
+      const crownMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.9, roughness: 0.2 });
+      const crown = new THREE.Mesh(crownGeo, crownMat);
+      crown.position.set(0, 0.5, -FRETBOARD_LENGTH - 6);
+      scene.add(crown);
+    }
+
+    function createInlayDot(x, z) {
+      const dotGeo = new THREE.CylinderGeometry(0.28, 0.28, 0.04, 16);
+      const dotMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const dot = new THREE.Mesh(dotGeo, dotMat);
+      dot.position.set(x, 0.41, z);
+      scene.add(dot);
+    }
+
+    // =========================================================================
+    // PLAYER PAWN: NEON GUITAR PICK (PÚA 3D LUMINOSA)
+    // =========================================================================
+    function buildPlayerPua() {
+      const puaGroup = new THREE.Group();
+
+      // Triangle Guitar Pick Geometry
+      const shape = new THREE.Shape();
+      shape.moveTo(0, 0.9);
+      shape.bezierCurveTo(0.7, 0.8, 0.9, 0.4, 0.8, -0.2);
+      shape.bezierCurveTo(0.7, -0.8, 0, -1.0, 0, -1.0);
+      shape.bezierCurveTo(0, -1.0, -0.7, -0.8, -0.8, -0.2);
+      shape.bezierCurveTo(-0.9, 0.4, -0.7, 0.8, 0, 0.9);
+
+      const extrudeSettings = { depth: 0.16, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.06, bevelThickness: 0.06 };
+      const puaGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+      const puaMat = new THREE.MeshStandardMaterial({
+        color: 0x00f0ff,
+        emissive: 0x0088cc,
+        emissiveIntensity: 0.6,
+        roughness: 0.2,
+        metalness: 0.4
+      });
+
+      const puaBody = new THREE.Mesh(puaGeo, puaMat);
+      puaBody.rotation.x = Math.PI / 2;
+      puaBody.scale.set(0.9, 0.9, 0.9);
+      puaGroup.add(puaBody);
+
+      // Point Light under the Pick
+      const pickLight = new THREE.PointLight(0x00f0ff, 2.2, 6);
+      pickLight.position.set(0, 0.2, 0);
+      puaGroup.add(pickLight);
+
+      puaMesh = puaGroup;
+      puaMesh.position.set(0, 1.2, fretPositionsZ[0] + 0.6);
+      scene.add(puaMesh);
+    }
+
+    // =========================================================================
+    // 5 FLOATING ROCK SANCTUARIES ALONG THE FRETBOARD
+    // =========================================================================
+    function buildSanctuaryIslands() {
+      // 1. Hendrix at Fret 6 (Left side)
+      createFloatingShrine(-7.5, fretPositionsZ[6], 0x9d4edd, "Jimi Hendrix", "assets/images/hendrix_photo.jpg");
+
+      // 2. Janis at Fret 11 (Right side)
+      createFloatingShrine(7.5, fretPositionsZ[11], 0xff007f, "Janis Joplin", "assets/images/joplin_photo.jpg");
+
+      // 3. Morrison at Fret 16 (Left side)
+      createFloatingShrine(-7.5, fretPositionsZ[16], 0x00f0ff, "Jim Morrison", "assets/images/morrison_photo.jpg");
+
+      // 4. Amy at Fret 21 (Right side)
+      createFloatingShrine(7.5, fretPositionsZ[21], 0xffaa00, "Amy Winehouse", "assets/images/winehouse_photo.jpg");
+
+      // 5. Kurt at Fret 27 (Headstock Center Altar)
+      createFloatingShrine(0, fretPositionsZ[27] - 6, 0xff3333, "Kurt Cobain", "assets/images/cobain_photo.jpg", true);
+    }
+
+    function createFloatingShrine(x, z, color, artistName, imgPath, isBoss) {
+      const group = new THREE.Group();
+      group.position.set(x, 0, z);
+
+      // Floating Pedestal Island
+      const islGeo = new THREE.CylinderGeometry(isBoss ? 4.5 : 3.2, isBoss ? 3.8 : 2.5, 1.2, 24);
+      const islMat = new THREE.MeshStandardMaterial({ color: 0x161726, roughness: 0.5, metalness: 0.3 });
+      const island = new THREE.Mesh(islGeo, islMat);
+      island.position.y = 0.5;
+      group.add(island);
+
+      // Glowing Neon Ring
+      const ringGeo = new THREE.TorusGeometry(isBoss ? 4.6 : 3.3, 0.08, 16, 64);
+      const ringMat = new THREE.MeshBasicMaterial({ color: color });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = Math.PI / 2;
+      ring.position.y = 1.1;
+      group.add(ring);
+
+      // Artist Banner Billboard
+      const loader = new THREE.TextureLoader();
+      loader.load(imgPath, (tex) => {
+        const banGeo = new THREE.PlaneGeometry(isBoss ? 4.5 : 3.2, isBoss ? 4.5 : 3.2);
+        const banMat = new THREE.MeshBasicMaterial({ map: tex });
+        const banner = new THREE.Mesh(banGeo, banMat);
+        banner.position.set(0, 3.5, 0);
+        if (x < 0) banner.rotation.y = Math.PI / 4;
+        else if (x > 0) banner.rotation.y = -Math.PI / 4;
+        group.add(banner);
+      });
+
+      // Point Light
+      const pLight = new THREE.PointLight(color, 2.5, 18);
+      pLight.position.set(0, 3, 0);
+      group.add(pLight);
+
+      scene.add(group);
+    }
+
+    // =========================================================================
+    // CAMERA MODES
+    // =========================================================================
+    function setCameraView(mode) {
+      cameraMode = mode;
+      document.querySelectorAll('.btn-cam').forEach(b => b.classList.remove('active'));
+
+      if (mode === 'iso') {
+        document.getElementById('camIsometric').classList.add('active');
+        updateCameraIso();
+      } else if (mode === 'follow') {
+        document.getElementById('camFollow').classList.add('active');
+        updateCameraFollow();
+      } else if (mode === 'free') {
+        document.getElementById('camFree').classList.add('active');
+        controls.enabled = true;
+      }
+    }
+
+    function updateCameraIso() {
+      if (!puaMesh) return;
+      controls.enabled = false;
+      const targetZ = puaMesh.position.z;
+      camera.position.set(16, 20, targetZ + 14);
+      camera.lookAt(0, 1.5, targetZ - 4);
+    }
+
+    function updateCameraFollow() {
+      if (!puaMesh) return;
+      controls.enabled = false;
+      const targetZ = puaMesh.position.z;
+      camera.position.set(0, 6, targetZ + 9);
+      camera.lookAt(0, 1.5, targetZ - 6);
+    }
+
+    // =========================================================================
+    // BOARDGAME MECHANICS & MOVEMENT ANIMATION
+    // =========================================================================
+    function rollFretboardStep() {
+      if (isMoving) return;
+
+      if (currentFret >= TOTAL_FRETS) {
+        alert("👑 ¡Ya has conquistado el Traste 27 (Root)! Usa el botón Reiniciar para volver a jugar.");
+        return;
+      }
+
+      // Determine next step: advance 1 to 3 frets or land on next milestone
+      let nextFret = currentFret + 1;
+      
+      // If close to a milestone, land right on it!
+      const nextMilestones = Object.keys(MILESTONES).map(Number).filter(f => f > currentFret);
+      if (nextMilestones.length > 0) {
+        const nextTarget = nextMilestones[0];
+        if (nextTarget - currentFret <= 2) {
+          nextFret = nextTarget;
+        } else {
+          nextFret = Math.min(nextTarget, currentFret + Math.floor(Math.random() * 2) + 1);
+        }
+      }
+
+      animatePuaJump(currentFret, nextFret);
+    }
+
+    function animatePuaJump(fromFret, toFret) {
+      isMoving = true;
+      const startZ = puaMesh.position.z;
+      const endZ = fretPositionsZ[toFret] + 0.6;
+      const duration = 750; // ms
+      const startTime = performance.now();
+
+      playGuitarStrum(180 + toFret * 12);
+
+      function stepJump(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(1, elapsed / duration);
+
+        // Parabolic arc for realistic board game jump
+        const height = Math.sin(progress * Math.PI) * 3.2;
+        puaMesh.position.y = 1.2 + height;
+        puaMesh.position.z = startZ + (endZ - startZ) * progress;
+
+        // Dynamic 360 flip
+        puaMesh.rotation.z = progress * Math.PI * 2;
+
+        if (cameraMode === 'iso') updateCameraIso();
+        else if (cameraMode === 'follow') updateCameraFollow();
+
+        if (progress < 1) {
+          requestAnimationFrame(stepJump);
+        } else {
+          puaMesh.position.y = 1.2;
+          puaMesh.position.z = endZ;
+          puaMesh.rotation.z = 0;
+          currentFret = toFret;
+          isMoving = false;
+          onLandOnFret(toFret);
+        }
+      }
+
+      requestAnimationFrame(stepJump);
+    }
+
+    function onLandOnFret(fret) {
+      const lbl = document.getElementById("currentFretLabel");
+      lbl.textContent = `TRASTE ${fret} / 27`;
+
+      // Check for Trap Fret (Rabbit Hole)
+      if (TRAP_FRETS[fret]) {
+        const trap = TRAP_FRETS[fret];
+        playCartoonSlide();
+        score = Math.max(0, score - 50);
+        updateScoreHUD();
+
+        document.getElementById("trollTrapDesc").innerHTML = `
+          <strong>${trap.name}</strong><br><br>
+          ${trap.msg}<br><br>
+          ¡La púa cayó por la trampilla del mástil y debe retroceder 2 trastes!
+        `;
+        document.getElementById("troll-trap-modal").style.display = "block";
+        return;
+      }
+
+      // Check for Milestone (Rock Sanctuary)
+      if (MILESTONES[fret]) {
+        openSanctuaryModal(MILESTONES[fret]);
+      } else {
+        // Simple step sound
+        playGuitarStrum(220 + fret * 8);
+      }
+    }
+
+    function closeTrollTrapModal() {
+      document.getElementById("troll-trap-modal").style.display = "none";
+      // Fallback jump back 1 or 2 frets
+      const fallbackFret = Math.max(0, currentFret - 2);
+      animatePuaJump(currentFret, fallbackFret);
+    }
+
+    // =========================================================================
+    // SANCTUARY CHALLENGE MODAL
+    // =========================================================================
+    function openSanctuaryModal(sanctuary) {
+      document.getElementById("sanctuaryImg").src = sanctuary.img;
+      document.getElementById("sanctuaryTitle").textContent = sanctuary.title;
+      document.getElementById("sanctuarySubtitle").textContent = sanctuary.sub;
+      document.getElementById("sanctuaryLore").textContent = sanctuary.lore;
+      document.getElementById("sanctuaryHint").textContent = sanctuary.hint;
+      document.getElementById("sanctuaryInput").value = sanctuary.defaultFlag || "";
+
+      document.getElementById("sanctuary-modal").style.display = "block";
+      playSuccessChime();
+    }
+
+    function closeSanctuaryModal() {
+      document.getElementById("sanctuary-modal").style.display = "none";
+    }
+
+    async function submitSanctuaryFlag() {
+      const inp = document.getElementById("sanctuaryInput").value.trim();
+      if (!inp) return;
+
+      const hash = await sha256(inp);
+      const entry = CTF_HASH_DB[hash];
+
+      if (entry) {
+        if (!completedSanctuaries.has(entry.phase)) {
+          completedSanctuaries.add(entry.phase);
+          score += entry.points;
+          bossHp = Math.max(0, bossHp - 20);
+          updateScoreHUD();
+          playSuccessChime();
+
+          alert(`🎉 ¡SANTUARIO CONQUISTADO EN EL MÁSTIL!\n\n${entry.name} ha sido superado (+${entry.points} PTS).\nDaño al Boss: -20 HP!`);
+          closeSanctuaryModal();
+
+          if (entry.isRoot || bossHp === 0) {
+            alert("👑 ¡CONQUISTA DEL TRASTE 27 (ROOT)!\n\n¡Has alcanzado la cima del mástil! La corona de root es tuya. 1000/1000 PTS.");
+          }
+        } else {
+          alert("Este santuario ya fue superado anteriormente.");
+        }
+      } else {
+        playCartoonSlide();
+        alert("❌ Bandera no reconocida. Revisa tus notas de auditoría.");
+      }
+    }
+
+    function updateScoreHUD() {
+      document.getElementById("scoreDisplay").textContent = `${score} / 1000 PTS`;
+      document.getElementById("hpLabel").textContent = `${bossHp} / 100 HP`;
+      document.getElementById("hpFill").style.width = `${bossHp}%`;
+    }
+
+    function resetFretboardGame() {
+      score = 0;
+      bossHp = 100;
+      currentFret = 0;
+      completedSanctuaries.clear();
+      updateScoreHUD();
+      document.getElementById("currentFretLabel").textContent = "TRASTE 0 (INICIO)";
+      if (puaMesh) {
+        puaMesh.position.set(0, 1.2, fretPositionsZ[0] + 0.6);
+      }
+      setCameraView('iso');
+      alert("🔄 Tablero 3D reiniciado desde el Traste 0. Boss al 100% HP.");
+    }
+
+    function activateSustentacionFretboard() {
+      score = 1000;
+      bossHp = 0;
+      completedSanctuaries.add(1); completedSanctuaries.add(2);
+      completedSanctuaries.add(3); completedSanctuaries.add(4);
+      completedSanctuaries.add(5);
+      updateScoreHUD();
+
+      // Jump pua directly to fret 27
+      animatePuaJump(currentFret, 27);
+      setTimeout(() => {
+        playSuccessChime();
+        alert("🎓 SUSTENTACIÓN 100% DEMOSTRADA\n\nTodas las 5 fases conquistadas a lo largo de los 27 trastes del mástil: 1000/1000 PTS.");
+      }, 900);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    // =========================================================================
+    // ANIMATION LOOP (STRING VIBRATION & LIGHT RAYS)
+    // =========================================================================
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const time = performance.now() * 0.003;
+
+      // Vibrating Guitar Strings
+      stringsMeshes.forEach(s => {
+        s.mesh.position.x = s.origX + Math.sin(time * 8 + s.seed) * 0.025;
+      });
+
+      // Subtle levitation bobbing for player's pua
+      if (puaMesh && !isMoving) {
+        puaMesh.position.y = 1.2 + Math.sin(time * 3) * 0.12;
+      }
+
+      if (controls && controls.enabled) {
+        controls.update();
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
