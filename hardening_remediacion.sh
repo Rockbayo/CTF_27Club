@@ -240,3 +240,4 @@ echo "========================================================================"
 echo "  ✅ PROCESO DE HARDENING COMPLETADO EXITOSAMENTE"
 echo "  Todas las brechas de seguridad del CTF han sido mitigadas formalmente."
 echo "========================================================================"
+

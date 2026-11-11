@@ -108,3 +108,4 @@ alert tcp any any -> $HOME_NET 22 ( \
     sid:2700008; rev:1; \
     metadata:author "Oscar Robayo", service ssh, cve "CWE-250"; \
 )
+

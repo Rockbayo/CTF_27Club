@@ -755,7 +755,302 @@
       font-family: 'Fira Code', monospace;
       font-size: 0.85rem;
     }
-  </style>
+  
+/* ========================================== */
+/* 👾 BOSS BATTLE / INTEGRITY BAR STYLES       */
+/* ========================================== */
+.boss-arena-panel {
+  max-width: 1400px;
+  margin: 12px auto 18px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, rgba(20, 10, 32, 0.95), rgba(10, 5, 20, 0.98));
+  border: 2px solid rgba(255, 0, 85, 0.5);
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(255, 0, 85, 0.25), inset 0 0 20px rgba(255, 0, 85, 0.1);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.boss-arena-panel::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%; width: 200%; height: 2px;
+  background: linear-gradient(90deg, transparent, #ff0055, #00f0ff, transparent);
+  animation: scanlineBoss 4s linear infinite;
+}
+
+@keyframes scanlineBoss {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(50%); }
+}
+
+.boss-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.boss-identity {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.boss-avatar-frame {
+  width: 48px;
+  height: 48px;
+  background: #11071a;
+  border: 2px solid #ff0055;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
+  animation: pulseSkull 2s infinite alternate ease-in-out;
+}
+
+@keyframes pulseSkull {
+  0% { transform: scale(1); filter: drop-shadow(0 0 5px #ff0055); }
+  100% { transform: scale(1.08); filter: drop-shadow(0 0 15px #ff0055); }
+}
+
+.boss-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.boss-name {
+  font-family: 'Rubik Glitch', 'Impact', sans-serif;
+  font-size: 1.25rem;
+  letter-spacing: 1px;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 0, 85, 0.7);
+}
+
+.boss-name code {
+  color: #00f0ff;
+  font-family: monospace;
+  font-size: 1rem;
+}
+
+.boss-threat-badge {
+  background: rgba(255, 0, 85, 0.2);
+  border: 1px solid #ff0055;
+  color: #ff0055;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.boss-status-text {
+  font-size: 0.82rem;
+  color: #a89bc2;
+  margin-top: 4px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.boss-hp-numeric {
+  font-family: 'Rubik Glitch', 'Impact', sans-serif;
+  font-size: 1.6rem;
+  color: #ffaa00;
+  text-shadow: 0 0 12px rgba(255, 170, 0, 0.7);
+  letter-spacing: 1.5px;
+}
+
+/* Barra de Vida */
+.boss-hp-bar-wrapper {
+  position: relative;
+  height: 26px;
+  background: #08030d;
+  border: 2px solid #33153b;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
+}
+
+.boss-hp-fill {
+  height: 100%;
+  width: 60%;
+  background: linear-gradient(90deg, #ff0055 0%, #ff5500 50%, #ffaa00 100%);
+  position: relative;
+  transition: width 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.7s ease;
+  box-shadow: 0 0 15px rgba(255, 0, 85, 0.6);
+}
+
+.boss-hp-glow {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; width: 20px;
+  background: #fff;
+  opacity: 0.4;
+  filter: blur(4px);
+  animation: glowPulse 1.2s infinite alternate;
+}
+
+@keyframes glowPulse {
+  0% { opacity: 0.2; }
+  100% { opacity: 0.7; }
+}
+
+.boss-hp-segments {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  pointer-events: none;
+}
+
+.hp-segment {
+  flex: 1;
+  border-right: 2px solid rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 1px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+  transition: all 0.3s;
+}
+
+.hp-segment.comp {
+  color: rgba(0, 255, 204, 0.9);
+  background: rgba(0, 255, 204, 0.08);
+}
+
+.boss-telemetry-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  font-family: 'Share Tech Mono', monospace;
+  color: #7d7296;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pulse-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #00f0ff;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #00f0ff;
+  margin-right: 6px;
+  animation: blinkDot 1s infinite alternate;
+}
+
+@keyframes blinkDot {
+  0% { opacity: 0.3; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.3); }
+}
+
+/* Efectos de combate */
+@keyframes screenShake {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  15% { transform: translate(-8px, 6px) rotate(-0.8deg); }
+  30% { transform: translate(8px, -6px) rotate(0.8deg); }
+  45% { transform: translate(-6px, 4px) rotate(-0.5deg); }
+  60% { transform: translate(6px, -4px) rotate(0.5deg); }
+  75% { transform: translate(-3px, 2px) rotate(-0.2deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.screen-shake {
+  animation: screenShake 0.45s ease-in-out;
+}
+
+.damage-number-pop {
+  position: absolute;
+  font-family: 'Rubik Glitch', 'Impact', sans-serif;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ff0055;
+  text-shadow: 0 0 10px #ff0055, 0 0 25px #ff0055, 2px 2px 0 #000;
+  pointer-events: none;
+  z-index: 10000;
+  animation: floatDamage 1.3s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+  text-align: center;
+}
+
+@keyframes floatDamage {
+  0% { opacity: 1; transform: translateY(0) scale(0.7); }
+  25% { transform: translateY(-35px) scale(1.3); }
+  70% { opacity: 0.95; transform: translateY(-70px) scale(1.1); }
+  100% { opacity: 0; transform: translateY(-110px) scale(0.9); }
+}
+
+.trap-shield-pop {
+  position: absolute;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: #00f0ff;
+  background: rgba(0, 240, 255, 0.2);
+  border: 2px solid #00f0ff;
+  border-radius: 6px;
+  padding: 8px 18px;
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.7);
+  pointer-events: none;
+  z-index: 10000;
+  animation: floatShield 1.6s ease-out forwards;
+  text-align: center;
+}
+
+@keyframes floatShield {
+  0% { opacity: 1; transform: scale(0.8) translateY(0); }
+  20% { transform: scale(1.15) translateY(-20px); }
+  75% { opacity: 0.95; transform: scale(1) translateY(-45px); }
+  100% { opacity: 0; transform: scale(0.9) translateY(-70px); }
+}
+
+/* Modal de Victoria Final */
+.victory-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(5, 2, 10, 0.92);
+  backdrop-filter: blur(10px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInModal 0.5s ease-out forwards;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.victory-modal-card {
+  max-width: 680px;
+  width: 90%;
+  background: linear-gradient(135deg, #1b0a2a, #0c0414);
+  border: 3px solid #00ffcc;
+  border-radius: 16px;
+  padding: 35px;
+  text-align: center;
+  box-shadow: 0 0 60px rgba(0, 255, 204, 0.4), inset 0 0 30px rgba(0, 255, 204, 0.1);
+  position: relative;
+  animation: scaleUpModal 0.6s cubic-bezier(0.2, 0.9, 0.2, 1.1);
+}
+
+@keyframes scaleUpModal {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+</style>
 </head>
 <body>
 
@@ -805,6 +1100,57 @@
       </button>
     </div>
   </header>
+
+  <!-- ========================================== -->
+  <!-- 👾 TARGET SYSTEM / BOSS BATTLE INTEGRITY HUD -->
+  <!-- ========================================== -->
+  <section class="boss-arena-panel" id="bossArena">
+    <div class="boss-header-bar">
+      <div class="boss-identity">
+        <div class="boss-avatar-frame" id="bossAvatar">
+          <span class="boss-skull">☠️</span>
+        </div>
+        <div class="boss-meta">
+          <div class="boss-title-row">
+            <span class="boss-name">TARGET DAEMON: <code>27CLUB_SRV (192.168.56.1)</code></span>
+            <span class="boss-threat-badge" id="bossThreatBadge">INTEGRIDAD: 60%</span>
+          </div>
+          <div class="boss-status-text" id="bossStatusText">
+            ESTADO: SISTEMA EN ALERTA • PERÍMETRO Y METADATOS VULNERADOS (FASE MORRISON EN CURSO)
+          </div>
+        </div>
+      </div>
+      <div class="boss-hp-numeric" id="bossHpNumeric">60 / 100 HP</div>
+    </div>
+
+    <!-- Health bar with 5 phase segments & energy glow -->
+    <div class="boss-hp-bar-wrapper">
+      <div class="boss-hp-fill" id="bossHpFill" style="width: 60%;">
+        <div class="boss-hp-glow"></div>
+      </div>
+      <div class="boss-hp-segments">
+        <div class="hp-segment comp" id="seg-1" title="Fase 1: Jimi Hendrix (-20 HP)"><span>HENDRIX</span></div>
+        <div class="hp-segment comp" id="seg-2" title="Fase 2: Janis Joplin (-20 HP)"><span>JOPLIN</span></div>
+        <div class="hp-segment" id="seg-3" title="Fase 3: Jim Morrison (-20 HP)"><span>MORRISON</span></div>
+        <div class="hp-segment" id="seg-4" title="Fase 4: Amy Winehouse (-20 HP)"><span>WINEHOUSE</span></div>
+        <div class="hp-segment" id="seg-5" title="Fase 5: Kurt Cobain (-20 HP)"><span>COBAIN</span></div>
+      </div>
+    </div>
+
+    <div class="boss-telemetry-strip" id="bossTelemetry">
+      <div class="telemetry-item">
+        <span class="pulse-dot"></span>
+        <span>OBJETIVO ACTIVO: <strong id="telemetryTarget" style="color: var(--neon-cyan);">CWE-89 (SQL Injection en /doors/?id=1)</strong></span>
+      </div>
+      <div class="telemetry-item">
+        <span style="color: var(--neon-yellow);">DEFENSA HEURÍSTICA:</span>
+        <span id="telemetryDefense">1 Rabbit Hole Detectado en Joplin (admin_trampa)</span>
+      </div>
+      <div class="telemetry-item log-text" id="telemetryLog">
+        [SYS] Esperando inyección SQL en el catálogo de The Doors...
+      </div>
+    </div>
+  </section>
 
   <!-- ROOM NAVIGATION BAR -->
   <nav class="rooms-nav">
@@ -1621,6 +1967,7 @@
       }
     };
 
+    
     async function submitFlag(phase) {
       const inputEl = document.getElementById(`input-flag-${phase}`);
       const val = inputEl ? inputEl.value.trim() : "";
@@ -1635,24 +1982,32 @@
 
       if (entry) {
         if (entry.type === "flag") {
-          if (entry.phase !== phase && !([3,4,5].includes(phase) && entry.phase === phase)) {
-            logEvent(`ℹ️ La bandera ingresada corresponde a otra fase (${entry.name}).`);
-          }
-          
           score += entry.points;
           updateScoreDisplay();
           playSuccessSound();
           triggerConfetti();
           logEvent(`🎯 ¡BANDERA CORRECTA EN FASE ${entry.phase}! ${entry.msg}`);
+
+          // IMPACTO EN BOSS BATTLE
+          if (!completedPhases.has(entry.phase)) {
+            completedPhases.add(entry.phase);
+            bossHp = Math.max(0, bossHp - 20);
+            updateBossUI();
+            triggerScreenShake();
+            spawnDamagePop("-20 HP!", `¡FASE ${entry.phase} ${entry.name.toUpperCase()} SUPERADA! (+${entry.points} PTS)`);
+            const seg = document.getElementById(`seg-${entry.phase}`);
+            if (seg) seg.classList.add('comp');
+          }
+
           alert(`🤘 ¡BANDERA CAPTURADA!\n\n${entry.msg}`);
 
           if (entry.phase === 3) {
-            document.getElementById("btn-room-winehouse").classList.remove("locked");
-            document.getElementById("btn-room-winehouse").removeAttribute("disabled");
+            const wBtn = document.getElementById("btn-room-winehouse");
+            if (wBtn) { wBtn.classList.remove("locked"); wBtn.removeAttribute("disabled"); }
             switchRoom("winehouse");
           } else if (entry.phase === 4) {
-            document.getElementById("btn-room-cobain").classList.remove("locked");
-            document.getElementById("btn-room-cobain").removeAttribute("disabled");
+            const cBtn = document.getElementById("btn-room-cobain");
+            if (cBtn) { cBtn.classList.remove("locked"); cBtn.removeAttribute("disabled"); }
             switchRoom("cobain");
           } else if (entry.phase === 5) {
             claimVictory();
@@ -1661,6 +2016,7 @@
           score = Math.max(0, score - entry.penalty);
           updateScoreDisplay();
           playErrorSound();
+          spawnShieldPop(`SEÑUELO DETECTADO: ${entry.name}`);
           logEvent(`🚨 ${entry.msg}`);
           alert(`⚠️ TRAMPA / SEÑUELO DETECTADO (RABBIT HOLE)\n\n${entry.msg}`);
         }
@@ -1671,4 +2027,158 @@
       }
     }
 
-    
+    // ==========================================
+    // 👾 BOSS BATTLE / INTEGRITY CONTROLLER
+    // ==========================================
+    let bossHp = 60; // Estado inicial: Hendrix (20) y Joplin (20) completados = 60 HP
+    const completedPhases = new Set([1, 2]);
+
+    function updateBossUI() {
+      const fillEl = document.getElementById("bossHpFill");
+      const numEl = document.getElementById("bossHpNumeric");
+      const badgeEl = document.getElementById("bossThreatBadge");
+      const textEl = document.getElementById("bossStatusText");
+      const telemetryTarget = document.getElementById("telemetryTarget");
+
+      if (fillEl) fillEl.style.width = bossHp + "%";
+      if (numEl) numEl.textContent = bossHp + " / 100 HP";
+
+      // Color de barra dinámico
+      if (fillEl) {
+        if (bossHp > 60) {
+          fillEl.style.background = "linear-gradient(90deg, #00ff88, #00f0ff)";
+        } else if (bossHp > 30) {
+          fillEl.style.background = "linear-gradient(90deg, #ff5500, #ffaa00)";
+        } else {
+          fillEl.style.background = "linear-gradient(90deg, #ff0055, #ff0000)";
+        }
+      }
+
+      // Estados temáticos
+      if (bossHp >= 80) {
+        badgeEl.textContent = "INTEGRIDAD: 80%";
+        textEl.textContent = "ESTADO: PERÍMETRO INTACTO • TRÁFICO C&C MONITOREADO";
+      } else if (bossHp >= 60) {
+        badgeEl.textContent = "INTEGRIDAD: 60%";
+        textEl.textContent = "ESTADO: PERÍMETRO Y METADATOS VULNERADOS • FASE MORRISON EN CURSO";
+        if (telemetryTarget) telemetryTarget.textContent = "CWE-89 (SQL Injection en /doors/?id=1)";
+      } else if (bossHp >= 40) {
+        badgeEl.textContent = "INTEGRIDAD: 40% (VULNERADO)";
+        textEl.textContent = "ESTADO: BASE DE DATOS COMPROMETIDA • FASE AMY WINEHOUSE EN CURSO";
+        if (telemetryTarget) telemetryTarget.textContent = "CWE-79 (Stored XSS en /winehouse/)";
+      } else if (bossHp >= 20) {
+        badgeEl.textContent = "INTEGRIDAD: 20% (CRÍTICO)";
+        textEl.textContent = "ESTADO: SESIÓN ADMINISTRATIVA SECUESTRADA • FASE KURT COBAIN EN CURSO";
+        if (telemetryTarget) telemetryTarget.textContent = "CWE-250 (SUID Privilege Escalation en /usr/bin/find)";
+      } else {
+        badgeEl.textContent = "INTEGRIDAD: 0% (COLAPSADO)";
+        badgeEl.style.background = "#ff0055";
+        badgeEl.style.color = "#fff";
+        textEl.textContent = "ESTADO: 💀 KERNEL PANIC • SERVIDOR COMPLETAMENTE DOMINADO (ROOT ACCESS)";
+        if (telemetryTarget) telemetryTarget.textContent = "SISTEMA CONQUISTADO (UID 0)";
+      }
+    }
+
+    function triggerScreenShake() {
+      document.body.classList.remove("screen-shake");
+      void document.body.offsetWidth; // forzar reflujo
+      document.body.classList.add("screen-shake");
+      setTimeout(() => document.body.classList.remove("screen-shake"), 460);
+    }
+
+    function spawnDamagePop(title, subtitle) {
+      const arena = document.getElementById("bossArena");
+      if (!arena) return;
+      const pop = document.createElement("div");
+      pop.className = "damage-number-pop";
+      pop.innerHTML = `<div>💥 ${title}</div><div style="font-size:0.85rem; color:#00f0ff; text-shadow:none; font-family:'Share Tech Mono', monospace;">${subtitle}</div>`;
+      const rect = arena.getBoundingClientRect();
+      pop.style.left = (rect.left + rect.width / 2 - 90) + "px";
+      pop.style.top = (rect.top + window.scrollY + 15) + "px";
+      document.body.appendChild(pop);
+      setTimeout(() => pop.remove(), 1300);
+    }
+
+    function spawnShieldPop(msg) {
+      const arena = document.getElementById("bossArena");
+      if (!arena) return;
+      const pop = document.createElement("div");
+      pop.className = "trap-shield-pop";
+      pop.innerHTML = `🛡️ ${msg}`;
+      const rect = arena.getBoundingClientRect();
+      pop.style.left = (rect.left + rect.width / 2 - 130) + "px";
+      pop.style.top = (rect.top + window.scrollY + 10) + "px";
+      document.body.appendChild(pop);
+      setTimeout(() => pop.remove(), 1600);
+    }
+
+    function claimVictory() {
+      bossHp = 0;
+      updateBossUI();
+      triggerScreenShake();
+      triggerConfetti();
+      playSuccessSound();
+
+      // Desplegar Modal Épico de Victoria
+      const modal = document.createElement("div");
+      modal.className = "victory-modal-overlay";
+      modal.id = "victoryModal";
+      modal.innerHTML = `
+        <div class="victory-modal-card">
+          <div style="font-size: 3.5rem; margin-bottom: 10px;">👑🎸⚡</div>
+          <h1 style="color: #00ffcc; font-family: 'Rubik Glitch', sans-serif; font-size: 2.2rem; margin-bottom: 8px;">
+            THE 27 CLUB CONQUISTADO
+          </h1>
+          <p style="color: #ffaa00; font-size: 1.1rem; font-weight: bold; margin-bottom: 15px;">
+            ¡COMPROMISO TOTAL DEL SISTEMA (ROOT UID 0 ALCANZADO)!
+          </p>
+          <p style="color: #d1c7e6; line-height: 1.6; font-size: 0.95rem; margin-bottom: 25px;">
+            Has vencido a las 5 leyendas del rock, superado la baliza C&C de Hendrix, la esteganografía de Janis,
+            la inyección SQL de Morrison, el robo de sesión de Amy y reclamado el trono de root de Kurt Cobain.
+          </p>
+          <div style="background: rgba(0,0,0,0.5); border: 1px dashed #00ffcc; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
+            <div style="color: #888; font-size: 0.8rem; margin-bottom: 5px;">PUNTAJE FINAL ALCANZADO:</div>
+            <div style="font-size: 2rem; color: #00ffcc; font-weight: bold;">1000 / 1000 PTS</div>
+            <div style="color: #00f0ff; font-size: 0.85rem; margin-top: 5px;">TIEMPO DE AUDITORÍA: SUPERADO CON ÉXITO</div>
+          </div>
+          <button class="btn-submit-flag" style="padding: 12px 30px; font-size: 1.1rem; border-radius: 8px;" onclick="document.getElementById('victoryModal').remove()">
+            🎸 CERRAR Y VER MEMORIAL
+          </button>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function activateSustentacionMode() {
+      // Modo demostración para el docente: desbloquea todo y tumba al Boss
+      completedPhases.add(1);
+      completedPhases.add(2);
+      completedPhases.add(3);
+      completedPhases.add(4);
+      completedPhases.add(5);
+
+      score = 1000;
+      updateScoreDisplay();
+
+      // Desbloquear botones de salas
+      ['winehouse', 'cobain'].forEach(r => {
+        const btn = document.getElementById('btn-room-' + r);
+        if (btn) {
+          btn.classList.remove('locked');
+          btn.removeAttribute('disabled');
+        }
+      });
+
+      // Marcar segmentos
+      for (let i = 1; i <= 5; i++) {
+        const seg = document.getElementById('seg-' + i);
+        if (seg) seg.classList.add('comp');
+      }
+
+      applyBossDamage(60, "-60 HP CRITICAL OVERLOAD", "SUSTENTACIÓN INSTITUCIONAL ACTIVADA");
+      claimVictory();
+    }
+
+  </script>
+</body>
+</html>
