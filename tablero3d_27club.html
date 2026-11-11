@@ -386,35 +386,131 @@
       transition: left 0.75s cubic-bezier(0.25, 1, 0.5, 1), top 0.75s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
-    /* 2. VINYLS HOTSPOTS ON THE BED */
-    .vinyl-hotspot {
+    /* 2. REAL 12" VINYL LP SLEEVE CARDS ON THE BED */
+    .vinyl-sleeve-card {
       position: absolute;
-      border-radius: 50%;
       cursor: pointer;
       pointer-events: auto;
-      transition: all 0.3s ease;
-      z-index: 15;
+      z-index: 18;
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease, filter 0.3s ease;
+      filter: drop-shadow(4px 10px 18px rgba(0,0,0,0.85));
     }
-    .vinyl-hotspot::before {
-      content: "";
+
+    .vinyl-sleeve-card:hover {
+      transform: scale(1.18) !important;
+      z-index: 60 !important;
+      filter: drop-shadow(6px 16px 28px rgba(0,0,0,0.95)) brightness(1.08);
+    }
+
+    .sleeve-jacket {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #110e0c;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .album-cover-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: filter 0.3s ease;
+    }
+
+    /* Cardboard Ring Wear (Vintage circle wear mark) */
+    .ring-wear-effect {
       position: absolute;
-      inset: -6px;
+      inset: 6%;
       border-radius: 50%;
-      border: 2px solid transparent;
-      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: inset 0 0 16px rgba(255, 255, 255, 0.12), 0 0 16px rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+      mix-blend-mode: overlay;
     }
-    .vinyl-hotspot:hover::before {
-      border-color: var(--amber-bright);
-      box-shadow: 0 0 15px rgba(255, 183, 3, 0.6);
+
+    /* Ribbon Label */
+    .sleeve-status-ribbon {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, rgba(10, 7, 5, 0.82) 0%, rgba(5, 3, 2, 0.96) 100%);
+      color: var(--brass-light);
+      font-family: 'Permanent Marker', cursive;
+      font-size: 9px;
+      padding: 3px 6px;
+      text-align: center;
+      border-top: 1px solid rgba(197, 160, 89, 0.4);
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 3px #000;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .vinyl-hotspot.active-phase::before {
-      border-color: var(--amber-bright);
-      box-shadow: 0 0 20px rgba(255, 183, 3, 0.85);
-      animation: pulseVinyl 1.8s infinite alternate ease-in-out;
+
+    /* The Vinyl Disc Peeking Out */
+    .vinyl-disc-peeking {
+      position: absolute;
+      top: 5%;
+      right: -20px;
+      width: 90%;
+      height: 90%;
+      border-radius: 50%;
+      background: radial-gradient(circle, #2a2a2a 18%, #111111 38%, #050505 55%, #181818 72%, #080808 100%);
+      box-shadow: 
+        0 4px 12px rgba(0,0,0,0.8),
+        inset 0 0 0 2px #222,
+        inset 0 0 0 5px #151515,
+        inset 0 0 0 8px #252525;
+      z-index: -1;
+      pointer-events: none;
+      transition: right 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    @keyframes pulseVinyl {
-      0% { transform: scale(1); opacity: 0.7; }
-      100% { transform: scale(1.08); opacity: 1; }
+
+    .disc-label {
+      width: 34%;
+      height: 34%;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(197, 160, 89, 0.6);
+      box-shadow: inset 0 0 4px #000;
+    }
+
+    /* Active Phase State */
+    .vinyl-sleeve-card.active-phase .sleeve-jacket {
+      border: 2px solid var(--amber-bright);
+      box-shadow: 0 0 25px rgba(255, 183, 3, 0.75), inset 0 0 15px rgba(255, 183, 3, 0.3);
+    }
+    .vinyl-sleeve-card.active-phase .sleeve-status-ribbon {
+      background: linear-gradient(180deg, var(--amber-bright) 0%, #b87a1d 100%);
+      color: #000;
+      font-weight: 700;
+    }
+    .vinyl-sleeve-card.active-phase .vinyl-disc-peeking {
+      right: -36px;
+    }
+
+    /* Completed Phase State (Flag Captured) */
+    .vinyl-sleeve-card.completed-phase .sleeve-jacket {
+      border: 2px solid var(--success-olive);
+      box-shadow: 0 0 20px rgba(88, 129, 87, 0.7);
+    }
+    .vinyl-sleeve-card.completed-phase .sleeve-status-ribbon {
+      background: linear-gradient(180deg, #588157 0%, #31572c 100%);
+      color: #fff;
+    }
+    .vinyl-sleeve-card.completed-phase .vinyl-disc-peeking {
+      right: -42px;
+      animation: spinVinyl 6s linear infinite;
     }
 
     /* 3. TURNTABLE HOTSPOT */
@@ -1055,15 +1151,66 @@
         <div id="slide-glow"></div>
       </div>
 
-      <!-- VINYLS HOTSPOTS ON THE BED (THE 5 SANCTUARIES) -->
-      <!-- Hendrix: Left vinyl on bed -->
-      <div class="vinyl-hotspot" id="vinyl-1" style="left:125px; top:460px; width:130px; height:80px;" onclick="selectPhase(1)" title="Fase 1: Jimi Hendrix"></div>
-      <!-- Joplin: Top bed pillow vinyl -->
-      <div class="vinyl-hotspot" id="vinyl-2" style="left:225px; top:335px; width:110px; height:75px;" onclick="selectPhase(2)" title="Fase 2: Janis Joplin"></div>
-      <!-- Morrison: Center quilt vinyl -->
-      <div class="vinyl-hotspot" id="vinyl-3" style="left:530px; top:405px; width:135px; height:90px;" onclick="selectPhase(3)" title="Fase 3: Jim Morrison"></div>
-      <!-- Winehouse: Lower right bed vinyl -->
-      <div class="vinyl-hotspot" id="vinyl-4" style="left:650px; top:460px; width:145px; height:85px;" onclick="selectPhase(4)" title="Fase 4: Amy Winehouse"></div>
+      <!-- REAL 12" VINYL SLEEVES & ALBUM COVERS ON THE BED (THE 5 SANCTUARIES) -->
+      <!-- 1. JIMI HENDRIX (Upper Left Bed near Headstock) -->
+      <div class="vinyl-sleeve-card active-phase" id="sleeve-phase-1" style="left: 65px; top: 18px; width: 130px; height: 130px; transform: rotate(-8deg);" onclick="selectPhase(1)" title="Fase 1: Jimi Hendrix - Are You Experienced">
+        <div class="vinyl-disc-peeking">
+          <div class="disc-label" style="background-image: url('assets/images/hendrix_album.jpg');"></div>
+        </div>
+        <div class="sleeve-jacket">
+          <img src="assets/images/hendrix_album.jpg" class="album-cover-img" alt="Jimi Hendrix">
+          <div class="ring-wear-effect"></div>
+          <div class="sleeve-status-ribbon">F1 • HENDRIX (TRASTE 6)</div>
+        </div>
+      </div>
+
+      <!-- 2. JANIS JOPLIN (Upper Bed Pillow / Left of Turntable) -->
+      <div class="vinyl-sleeve-card" id="sleeve-phase-2" style="left: 195px; top: 305px; width: 120px; height: 120px; transform: rotate(10deg);" onclick="selectPhase(2)" title="Fase 2: Janis Joplin - Pearl">
+        <div class="vinyl-disc-peeking">
+          <div class="disc-label" style="background-image: url('assets/images/joplin_album.jpg');"></div>
+        </div>
+        <div class="sleeve-jacket">
+          <img src="assets/images/joplin_album.jpg" class="album-cover-img" alt="Janis Joplin">
+          <div class="ring-wear-effect"></div>
+          <div class="sleeve-status-ribbon">F2 • JOPLIN (TRASTE 11)</div>
+        </div>
+      </div>
+
+      <!-- 3. JIM MORRISON (Upper Right Bed near Fender Amp) -->
+      <div class="vinyl-sleeve-card" id="sleeve-phase-3" style="left: 635px; top: 175px; width: 145px; height: 145px; transform: rotate(-14deg);" onclick="selectPhase(3)" title="Fase 3: Jim Morrison - The Doors">
+        <div class="vinyl-disc-peeking">
+          <div class="disc-label" style="background-image: url('assets/images/morrison_album.jpg');"></div>
+        </div>
+        <div class="sleeve-jacket">
+          <img src="assets/images/morrison_album.jpg" class="album-cover-img" alt="Jim Morrison">
+          <div class="ring-wear-effect"></div>
+          <div class="sleeve-status-ribbon">F3 • MORRISON (TRASTE 16)</div>
+        </div>
+      </div>
+
+      <!-- 4. AMY WINEHOUSE (Lower Center Bed Sleeve - Highlighted in User Screenshot) -->
+      <div class="vinyl-sleeve-card" id="sleeve-phase-4" style="left: 415px; top: 430px; width: 155px; height: 155px; transform: rotate(-16deg);" onclick="selectPhase(4)" title="Fase 4: Amy Winehouse - Back To Black">
+        <div class="vinyl-disc-peeking">
+          <div class="disc-label" style="background-image: url('assets/images/winehouse_album.jpg');"></div>
+        </div>
+        <div class="sleeve-jacket">
+          <img src="assets/images/winehouse_album.jpg" class="album-cover-img" alt="Amy Winehouse">
+          <div class="ring-wear-effect"></div>
+          <div class="sleeve-status-ribbon">F4 • WINEHOUSE (TRASTE 21)</div>
+        </div>
+      </div>
+
+      <!-- 5. KURT COBAIN (Turntable / Nightstand) -->
+      <div class="vinyl-sleeve-card" id="sleeve-phase-5" style="left: 360px; top: 120px; width: 110px; height: 110px; transform: rotate(4deg);" onclick="selectPhase(5)" title="Fase 5: Kurt Cobain - Nevermind">
+        <div class="vinyl-disc-peeking">
+          <div class="disc-label" style="background-image: url('assets/images/cobain_album.jpg');"></div>
+        </div>
+        <div class="sleeve-jacket">
+          <img src="assets/images/cobain_album.jpg" class="album-cover-img" alt="Kurt Cobain">
+          <div class="ring-wear-effect"></div>
+          <div class="sleeve-status-ribbon">F5 • COBAIN (ROOT - T27)</div>
+        </div>
+      </div>
 
       <!-- TURNTABLE HOTSPOT ON DRESSER (KURT COBAIN FASE 5) -->
       <div id="turntable-hotspot" onclick="selectPhase(5)" title="Fase 5: Kurt Cobain (Tocadiscos)"></div>
@@ -1730,6 +1877,15 @@
 
       // Update HUD
       document.getElementById("hud-artist").textContent = `${m.name.toUpperCase()} (FASE ${phaseNum})`;
+
+      // Update Real Vinyl Sleeves on Bed
+      for (let p = 1; p <= 5; p++) {
+        const sleeve = document.getElementById(`sleeve-phase-${p}`);
+        if (sleeve) {
+          sleeve.classList.toggle("active-phase", p === phaseNum);
+          sleeve.classList.toggle("completed-phase", completedPhases.has(p));
+        }
+      }
     }
 
     function updateTelemetryUI() {
@@ -1795,7 +1951,14 @@
       selectPhase(1);
       updateTelemetryUI();
 
-      document.querySelectorAll(".vinyl-hotspot").forEach(v => v.classList.remove("active-phase"));
+      for (let p = 1; p <= 5; p++) {
+        const s = document.getElementById(`sleeve-phase-${p}`);
+        if (s) {
+          s.classList.remove("active-phase", "completed-phase");
+        }
+      }
+      const s1 = document.getElementById("sleeve-phase-1");
+      if (s1) s1.classList.add("active-phase");
       document.querySelectorAll(".fret-hotspot").forEach(f => f.classList.remove("unlocked"));
       document.querySelectorAll(".fret-strip-item").forEach(f => f.classList.remove("unlocked-fret"));
 
