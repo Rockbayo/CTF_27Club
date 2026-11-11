@@ -870,6 +870,213 @@
       pointer-events: none;
       z-index: 10;
     }
+
+    /* EPIC VICTORY FINALE MODAL */
+    #victory-modal {
+      position: absolute;
+      inset: 0;
+      background: rgba(5, 3, 2, 0.94);
+      backdrop-filter: blur(12px);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    #victory-modal.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    #confetti-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 501;
+    }
+
+    .victory-card {
+      position: relative;
+      width: 720px;
+      max-width: 94%;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: linear-gradient(180deg, #1c130c 0%, #0d0906 100%);
+      border: 3px solid var(--amber-bright);
+      border-radius: 12px;
+      box-shadow: 0 0 60px rgba(255, 183, 3, 0.6), 0 0 100px rgba(0,0,0,0.95);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      z-index: 505;
+      gap: 16px;
+    }
+    .victory-card::-webkit-scrollbar { width: 6px; }
+    .victory-card::-webkit-scrollbar-thumb { background: var(--brass-gold); border-radius: 3px; }
+
+    .victory-trophy-badge {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffe066 10%, #d4a373 40%, #111 80%);
+      border: 3px solid var(--amber-bright);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      box-shadow: 0 0 30px rgba(255, 183, 3, 0.8);
+      animation: victoryPulse 2s infinite alternate ease-in-out;
+    }
+    @keyframes victoryPulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 20px rgba(255, 183, 3, 0.6); }
+      100% { transform: scale(1.08); box-shadow: 0 0 45px rgba(255, 183, 3, 0.95); }
+    }
+
+    .victory-header h1 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 28px;
+      color: var(--amber-bright);
+      text-shadow: 0 0 15px rgba(255, 183, 3, 0.5);
+      letter-spacing: 1px;
+      line-height: 1.1;
+    }
+    .victory-header .sub {
+      font-size: 13px;
+      color: var(--aged-paper);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    /* Giant Score Display */
+    .giant-score-box {
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid var(--brass-gold);
+      border-radius: 8px;
+      padding: 12px 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    }
+    .giant-score-lbl {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .giant-score-val {
+      font-family: 'Fira Code', monospace;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--amber-bright);
+      text-shadow: 0 0 20px rgba(255, 183, 3, 0.8);
+      line-height: 1.1;
+    }
+    .giant-score-grade {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 14px;
+      color: #86efac;
+      margin-top: 2px;
+    }
+
+    /* Academic Proof Grid */
+    .victory-academic-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      text-align: left;
+    }
+    .academic-stat-box {
+      background: rgba(10, 7, 5, 0.7);
+      border-left: 3px solid var(--brass-gold);
+      padding: 8px 12px;
+      border-radius: 4px;
+    }
+    .academic-stat-box .lbl {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .academic-stat-box .val {
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      color: var(--aged-paper);
+      margin-top: 2px;
+    }
+
+    /* Solved Phases List */
+    .solved-phases-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+    .solved-phases-table th {
+      background: rgba(197, 160, 89, 0.18);
+      color: var(--brass-light);
+      padding: 6px 8px;
+      text-align: left;
+      font-weight: 700;
+      border-bottom: 1px solid var(--brass-gold);
+    }
+    .solved-phases-table td {
+      padding: 6px 8px;
+      border-bottom: 1px solid rgba(197, 160, 89, 0.15);
+      color: var(--aged-paper);
+    }
+    .solved-phases-table td.pts {
+      color: var(--amber-bright);
+      font-weight: 700;
+      text-align: right;
+    }
+
+    /* Victory Action Buttons */
+    .victory-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .btn-victory {
+      padding: 10px 22px;
+      border-radius: 6px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-victory.primary {
+      background: linear-gradient(180deg, var(--amber-bright) 0%, #b87a1d 100%);
+      border: none;
+      color: #000;
+      box-shadow: 0 0 20px rgba(255, 183, 3, 0.5);
+    }
+    .btn-victory.primary:hover {
+      box-shadow: 0 0 30px rgba(255, 183, 3, 0.9);
+      transform: translateY(-2px);
+    }
+    .btn-victory.secondary {
+      background: transparent;
+      border: 1px solid var(--brass-gold);
+      color: var(--brass-light);
+    }
+    .btn-victory.secondary:hover {
+      background: var(--brass-gold);
+      color: #000;
+    }
   </style>
 </head>
 <body>
@@ -1448,6 +1655,137 @@
       if (modal) modal.classList.remove("open");
     }
 
+
+    // =========================================================================
+    // EPIC VICTORY FINALE CONTROLLER & CONFETTI ENGINE
+    // =========================================================================
+    function triggerVictoryFinale() {
+      const modal = document.getElementById("victory-modal");
+      if (!modal) return;
+
+      // Update final score & grade
+      const scoreVal = document.getElementById("victory-final-score");
+      const gradeVal = document.getElementById("victory-final-grade");
+      if (scoreVal) scoreVal.textContent = `${score} / 1000 PTS`;
+      if (gradeVal) {
+        if (score >= 900) {
+          gradeVal.textContent = "CALIFICACIÓN: 5.0 / 5.0 (EXCELENCIA ACADÉMICA • RANGO ROOT GOD)";
+        } else if (score >= 750) {
+          gradeVal.textContent = "CALIFICACIÓN: 4.5 / 5.0 (SOBRESALIENTE • RANGO ROCK STAR)";
+        } else {
+          gradeVal.textContent = `CALIFICACIÓN: ${(score / 200).toFixed(1)} / 5.0 (APROBADO)`;
+        }
+      }
+
+      modal.classList.add("open");
+
+      // Play triumphant rock chord + cheering audio
+      playVictoryAudio();
+
+      // Launch Confetti
+      startConfetti();
+    }
+
+    function closeVictoryModal() {
+      const modal = document.getElementById("victory-modal");
+      if (modal) modal.classList.remove("open");
+      stopConfetti();
+    }
+
+    // Triumphant Chord & Concert Cheer Synthesizer
+    function playVictoryAudio() {
+      if (isSoundMuted) return;
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+
+        // Big Power Chord (E Major: E, B, E, G#, B, E)
+        const freqs = [82.41, 123.47, 164.81, 207.65, 246.94, 329.63];
+        freqs.forEach((f, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(f, now);
+
+          gain.gain.setValueAtTime(0.0, now);
+          gain.gain.linearRampToValueAtTime(0.18, now + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 3.5);
+
+          const filter = ctx.createBiquadFilter();
+          filter.type = "lowpass";
+          filter.frequency.setValueAtTime(1500, now);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(now + idx * 0.015);
+          osc.stop(now + 3.8);
+        });
+      } catch (e) {
+        console.warn("Victory audio:", e);
+      }
+    }
+
+    // Confetti Engine
+    let confettiAnimId = null;
+    function startConfetti() {
+      const canvas = document.getElementById("confetti-canvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const colors = ["#ffb703", "#fb8500", "#c5a059", "#ffffff", "#86efac", "#f4ece1"];
+      const particles = [];
+      for (let i = 0; i < 90; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -canvas.height,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          speedY: Math.random() * 3 + 2,
+          speedX: Math.random() * 2 - 1,
+          rot: Math.random() * 360,
+          rotSpeed: Math.random() * 4 - 2
+        });
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.y += p.speedY;
+          p.x += p.speedX;
+          p.rot += p.rotSpeed;
+          if (p.y > canvas.height) {
+            p.y = -10;
+            p.x = Math.random() * canvas.width;
+          }
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rot * Math.PI) / 180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+          ctx.restore();
+        });
+        confettiAnimId = requestAnimationFrame(render);
+      }
+      render();
+    }
+
+    function stopConfetti() {
+      if (confettiAnimId) {
+        cancelAnimationFrame(confettiAnimId);
+        confettiAnimId = null;
+      }
+      const canvas = document.getElementById("confetti-canvas");
+      if (canvas) {
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
     // Move Slide to Fret on Diapasón
     function moveSlideToFret(targetFret) {
       const prevFret = currentFret;
@@ -1551,6 +1889,13 @@
 
           updateTelemetryUI();
           input.value = "";
+
+          // 7. CHECK VICTORY CONDITION (ALL 5 FLAGS CAPTURED!)
+          if (completedPhases.size === 5) {
+            setTimeout(() => {
+              triggerVictoryFinale();
+            }, 2200);
+          }
         }
       } else {
         feedback.className = "crt-feedback-msg error";
@@ -1740,5 +2085,100 @@
       initDiapason();
     });
   </script>
+  <!-- EPIC VICTORY & FINAL SCORE MODAL -->
+  <div id="victory-modal">
+    <canvas id="confetti-canvas"></canvas>
+    <div class="victory-card">
+      <div class="victory-trophy-badge">🏆</div>
+      <div class="victory-header">
+        <h1>¡EL CLUB DE LOS 27 HA SIDO CONQUISTADO!</h1>
+        <div class="sub">Universidad de Cundinamarca • Hacking Ético & Seguridad de Aplicaciones</div>
+      </div>
+
+      <!-- Giant Score Box -->
+      <div class="giant-score-box">
+        <span class="giant-score-lbl">PUNTAJE FINAL OFICIAL</span>
+        <span class="giant-score-val" id="victory-final-score">1000 / 1000 PTS</span>
+        <span class="giant-score-grade" id="victory-final-grade">CALIFICACIÓN: 5.0 / 5.0 (EXCELENCIA ACADÉMICA)</span>
+      </div>
+
+      <!-- Academic Metadata -->
+      <div class="victory-academic-grid">
+        <div class="academic-stat-box">
+          <div class="lbl">Estudiante / Auditor</div>
+          <div class="val">Óscar Robayo (@rockbayo)</div>
+        </div>
+        <div class="academic-stat-box">
+          <div class="lbl">Estado del Objetivo</div>
+          <div class="val" style="color:#86efac;">ROOT UID 0 ALCANZADO (/root/flag.txt)</div>
+        </div>
+        <div class="academic-stat-box">
+          <div class="lbl">Infraestructura Auditada</div>
+          <div class="val">Docker Linux CTF (192.168.56.1)</div>
+        </div>
+        <div class="academic-stat-box">
+          <div class="lbl">Banderas Legítimas</div>
+          <div class="val" style="color:var(--amber-bright);">5 / 5 CAPTURADAS (100%)</div>
+        </div>
+      </div>
+
+      <!-- Table of Solved Phases -->
+      <table class="solved-phases-table">
+        <thead>
+          <tr>
+            <th>Fase</th>
+            <th>Artista</th>
+            <th>Vulnerabilidad / CWE</th>
+            <th>Traste</th>
+            <th style="text-align:right;">Puntaje</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>F1</td>
+            <td>Jimi Hendrix</td>
+            <td>PCAP DPI • CWE-311 (ROT13)</td>
+            <td>Traste 6</td>
+            <td class="pts">+150 PTS</td>
+          </tr>
+          <tr>
+            <td>F2</td>
+            <td>Janis Joplin</td>
+            <td>Esteganografía EOF • CWE-200</td>
+            <td>Traste 11</td>
+            <td class="pts">+200 PTS</td>
+          </tr>
+          <tr>
+            <td>F3</td>
+            <td>Jim Morrison</td>
+            <td>SQLi UNION Based • CWE-89</td>
+            <td>Traste 16</td>
+            <td class="pts">+250 PTS</td>
+          </tr>
+          <tr>
+            <td>F4</td>
+            <td>Amy Winehouse</td>
+            <td>Stored XSS Cookie • CWE-79</td>
+            <td>Traste 21</td>
+            <td class="pts">+200 PTS</td>
+          </tr>
+          <tr>
+            <td>F5</td>
+            <td>Kurt Cobain</td>
+            <td>SUID GTFOBins Root • CWE-250</td>
+            <td>Traste 27</td>
+            <td class="pts">+200 PTS</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Action Buttons -->
+      <div class="victory-actions">
+        <button class="btn-victory primary" onclick="window.print()">🖨️ IMPRIMIR / GUARDAR CONSTANCIA</button>
+        <button class="btn-victory secondary" onclick="closeVictoryModal()">🎸 REVISAR TABLERO</button>
+        <button class="btn-victory secondary" onclick="resetCTFProgress(); closeVictoryModal();">🔄 REINICIAR RETO</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
