@@ -1439,14 +1439,14 @@
       </div>
 
       <div class="gate-instructions">
-        <strong>[!] REQUISITO DE AUDITORÍA OBLIGATORIO:</strong><br>
-        El acceso directo está bloqueado. El auditor debe ejecutar un barrido de red con Nmap (<code>nmap -sn 192.168.56.0/24</code>) desde Kali Linux para aislar la dirección IP asignada a la máquina virtual <strong>27club_ctf</strong> e ingresarla para vincular el tablero.
+        <strong>[!] IDENTIFICACIÓN DE OBJETIVO REQUERIDA:</strong><br>
+        El entorno está bloqueado por seguridad. Antes de comenzar, debes localizar e identificar la dirección IP del objetivo dentro del segmento de red asignado para la práctica.
       </div>
 
       <div class="gate-input-wrap">
-        <input type="text" id="gate-target-ip-input" class="gate-host-input" placeholder="IP OBJETIVO (Ej: 192.168.56.1)" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') unlockTargetGate()">
+        <input type="text" id="gate-target-ip-input" class="gate-host-input" placeholder="DIRECCIÓN IP DEL OBJETIVO" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') unlockTargetGate()">
         <button class="btn-gate-unlock" onclick="unlockTargetGate()">
-          <span>VINCULAR HOST</span>
+          <span>VINCULAR OBJETIVO</span>
           <span>🔓</span>
         </button>
       </div>
@@ -1697,13 +1697,13 @@
     const MILESTONES = {
       0: {
         fret: 3, name: "Reconocimiento de Red", phase: 0, points: 100,
-        title: "Fase 0: Detección de Host y Servicios (Nmap)",
+        title: "Fase 0: Detección de Host y Servicios",
         trackTitle: "Acoustic Intro / Tuning",
         audio: "assets/audio/hendrix.m4a",
         vectorReal: "Barrido de Red & Enumeración de Cabeceras",
         cweReal: "Descubrimiento de Red / CWE-200",
-        targetReal: "192.168.56.0/24 (Puerto 80 / 2222 / 1337)",
-        tacticalHint: "Ejecuta un escaneo de host con 'nmap -sn 192.168.56.0/24'. Luego inspecciona los banners y cabeceras de respuesta HTTP del puerto 80 con 'nmap -sV -sC' o 'curl -I http://IP/'."
+        targetReal: "Segmento Local (Puerto 80 / 2222 / 1337)",
+        tacticalHint: "El servidor web entrega información técnica en sus mensajes de respuesta que no es visible navegando de forma convencional."
       },
       1: {
         fret: 6, name: "Jimi Hendrix", phase: 1, points: 150,
@@ -1712,8 +1712,8 @@
         audio: "assets/audio/hendrix.m4a",
         vectorReal: "PCAP Deep Packet Inspection / C&C Beacon",
         cweReal: "Tráfico sin Cifrado Fuerte / CWE-311 (ROT13)",
-        targetReal: "192.168.56.1 (Puerto 80 HTTP)",
-        tacticalHint: "Se detectó tráfico de red anómalo. Captura paquetes con 'tshark' o 'tcpdump' en la interfaz de red local. Filtra las peticiones HTTP y analiza cabeceras User-Agent inusuales con cifrado de sustitución básica."
+        targetReal: "Tráfico Web HTTP",
+        tacticalHint: "La guitarra emite un pulso periódico en el aire. Analiza las conversaciones que viajan por el cable de red."
       },
       2: {
         fret: 11, name: "Janis Joplin", phase: 2, points: 150,
@@ -1722,8 +1722,8 @@
         audio: "assets/audio/joplin.m4a",
         vectorReal: "Esteganografía Web EOF (End of File)",
         cweReal: "Fuga de Información en Ficheros / CWE-200",
-        targetReal: "http://192.168.56.1/cry_baby/janis.jpg",
-        tacticalHint: "Descarga las imágenes del aplicativo web y usa herramientas de análisis binario como 'strings' o 'binwalk'. ¡Cuidado con directorios sospechosos como /admin_trampa/ que contienen señuelos engañosos!"
+        targetReal: "Recurso Gráfico Web",
+        tacticalHint: "A veces los archivos multimedia esconden datos en zonas donde los visores de imagen ya no suelen mirar."
       },
       3: {
         fret: 16, name: "Jim Morrison", phase: 3, points: 200,
@@ -1732,8 +1732,8 @@
         audio: "assets/audio/morrison.m4a",
         vectorReal: "SQL Injection UNION Based",
         cweReal: "Inyección SQL Clásica / CWE-89",
-        targetReal: "http://192.168.56.1/doors/?id=1",
-        tacticalHint: "Evalúa los parámetros GET de la página con caracteres especiales (') para provocar un error de sintaxis en la base de datos. Determina el número de columnas con 'ORDER BY' e inyecta 'UNION SELECT' en la tabla de bóveda genuina (doors_vault)."
+        targetReal: "Módulo Dinámico de Base de Datos",
+        tacticalHint: "Las puertas se abren cuando fuerzas a la aplicación a procesar peticiones con sintaxis imprevista."
       },
       4: {
         fret: 21, name: "Amy Winehouse", phase: 4, points: 200,
@@ -1742,8 +1742,8 @@
         audio: "assets/audio/winehouse.m4a",
         vectorReal: "Stored Cross-Site Scripting (XSS)",
         cweReal: "Secuestro de Sesión de Usuario / CWE-79",
-        targetReal: "http://192.168.56.1/winehouse/",
-        tacticalHint: "El libro de visitas almacena entradas sin sanitización HTML. Inyecta un script malicioso en JavaScript que envíe 'document.cookie' a un listener abierto en tu Kali con 'nc -lvnp 8000'. Cuidado con cookies trampa de utilería."
+        targetReal: "Libro de Visitas / Entrada de Usuarios",
+        tacticalHint: "El libro del club acepta todo lo que escribe el visitante. Intenta que el navegador del lector ejecute instrucciones por ti."
       },
       5: {
         fret: 27, name: "Kurt Cobain", phase: 5, points: 200, isRoot: true,
@@ -1752,8 +1752,8 @@
         audio: "assets/audio/cobain.m4a",
         vectorReal: "SUID Binary Privilege Escalation",
         cweReal: "Ejecución con Privilegios Indebidos / CWE-250",
-        targetReal: "SSH kurt@192.168.56.1:2222 (Pass: grunge27 / nirvana)",
-        tacticalHint: "Una vez dentro del sistema por SSH, busca ejecutables con bit SUID activo con 'find / -perm -4000 2>/dev/null'. Consulta GTFOBins para aprovechar el binario identificado y elevar privilegios a root (uid=0)."
+        targetReal: "Servicio SSH / Sistema Operativo",
+        tacticalHint: "En el sistema operativo hay programas configurados para actuar con la autoridad del administrador supremo."
       }
     };
 
@@ -2273,7 +2273,7 @@
       const val = input.value.trim();
       if (!val) {
         feedback.className = "gate-feedback-msg error";
-        feedback.textContent = "❌ ERROR: Ingresa la IP descubierta con Nmap en el segmento local.";
+        feedback.textContent = "❌ ERROR: Ingresa la dirección IP del objetivo identificado.";
         playBrokenStringSound();
         return;
       }
@@ -2301,7 +2301,7 @@
         }, 600);
       } else {
         feedback.className = "gate-feedback-msg error";
-        feedback.textContent = `❌ IP inválida (${val}). Debe pertenecer al segmento de auditoría 192.168.56.0/24.`;
+        feedback.textContent = `❌ Objetivo no reconocido (${val}). Verifica tu escaneo en el segmento de red.`;
         playBrokenStringSound();
       }
     }
