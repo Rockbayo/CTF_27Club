@@ -784,6 +784,92 @@
       font-size: 12px;
     }
     .modal-item strong { color: var(--brass-light); }
+
+    /* RETRO ROCK TV / FEEDBACK VIDEO MODAL */
+    #video-feedback-modal {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 250;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    #video-feedback-modal.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    .video-tv-housing {
+      width: 680px;
+      max-width: 92%;
+      background: linear-gradient(180deg, #1f1610 0%, #0c0805 100%);
+      border: 3px solid var(--brass-gold);
+      border-radius: 10px;
+      box-shadow: 0 0 50px rgba(0,0,0,0.95), 0 0 30px rgba(197, 160, 89, 0.4);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .video-tv-header {
+      padding: 10px 16px;
+      background: #0a0705;
+      border-bottom: 2px solid rgba(197, 160, 89, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .video-tv-title {
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+      color: var(--amber-bright);
+      letter-spacing: 1px;
+    }
+    .btn-video-close {
+      background: transparent;
+      border: 1px solid var(--brass-gold);
+      color: var(--brass-light);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-video-close:hover {
+      background: var(--brass-gold);
+      color: #000;
+    }
+
+    .video-screen-frame {
+      position: relative;
+      width: 100%;
+      background: #000;
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #feedback-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .video-scanlines {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+      background-size: 100% 3px;
+      pointer-events: none;
+      z-index: 10;
+    }
   </style>
 </head>
 <body>
@@ -1047,6 +1133,20 @@
     </div>
   </div>
 
+  <!-- RETRO ROCK TV / FEEDBACK VIDEO MODAL -->
+  <div id="video-feedback-modal">
+    <div class="video-tv-housing">
+      <div class="video-tv-header">
+        <span class="video-tv-title" id="video-tv-title">> TRANSMISIÓN KALI ROCK TV</span>
+        <button class="btn-video-close" onclick="closeFeedbackVideo()">✕ CERRAR</button>
+      </div>
+      <div class="video-screen-frame">
+        <video id="feedback-video" src="assets/video/rock_feedback.mp4" preload="auto" playsinline></video>
+        <div class="video-scanlines"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- AUDIO ELEMENT (MASTER RECORDINGS) -->
   <audio id="master-audio" preload="auto"></audio>
 
@@ -1283,6 +1383,71 @@
       };
     }
 
+    // =========================================================================
+    // VIDEO FEEDBACK CONTROLLER (RABBIT HOLE: 0-5s | FLAG: 14s+)
+    // =========================================================================
+    let videoStopHandler = null;
+
+    function playFeedbackVideo(type) {
+      const modal = document.getElementById("video-feedback-modal");
+      const video = document.getElementById("feedback-video");
+      const title = document.getElementById("video-tv-title");
+      if (!modal || !video) return;
+
+      if (videoStopHandler) {
+        video.removeEventListener("timeupdate", videoStopHandler);
+        videoStopHandler = null;
+      }
+
+      modal.classList.add("open");
+
+      if (type === "rabbit_hole") {
+        title.textContent = "> ⚠️ TRANSMISIÓN DE TRAMPA • RABBIT HOLE DETECTADO [0s - 5s]";
+        title.style.color = "var(--danger-rust)";
+        video.currentTime = 0.0;
+        video.play().catch(e => console.warn("Video playback:", e));
+
+        videoStopHandler = function() {
+          if (video.currentTime >= 5.0) {
+            video.pause();
+            video.removeEventListener("timeupdate", videoStopHandler);
+            videoStopHandler = null;
+            setTimeout(() => {
+              if (modal.classList.contains("open")) {
+                closeFeedbackVideo();
+              }
+            }, 800);
+          }
+        };
+        video.addEventListener("timeupdate", videoStopHandler);
+      } else if (type === "flag") {
+        title.textContent = "> ⚡ TRANSMISIÓN OFICIAL • BANDERA VERIFICADA [14s+]";
+        title.style.color = "var(--crt-green)";
+        video.currentTime = 14.0;
+        video.play().catch(e => console.warn("Video playback:", e));
+
+        videoStopHandler = function() {
+          if (video.ended) {
+            closeFeedbackVideo();
+          }
+        };
+        video.addEventListener("ended", videoStopHandler);
+      }
+    }
+
+    function closeFeedbackVideo() {
+      const modal = document.getElementById("video-feedback-modal");
+      const video = document.getElementById("feedback-video");
+      if (video) {
+        video.pause();
+        if (videoStopHandler) {
+          video.removeEventListener("timeupdate", videoStopHandler);
+          videoStopHandler = null;
+        }
+      }
+      if (modal) modal.classList.remove("open");
+    }
+
     // Move Slide to Fret on Diapasón
     function moveSlideToFret(targetFret) {
       const prevFret = currentFret;
@@ -1344,6 +1509,7 @@
           feedback.innerHTML = `> ⚠️ ${entry.name.toUpperCase()}!<br>> ${entry.msg} (-${entry.penalty} PTS)`;
           playBrokenStringSound();
           showToast("⚠️ RABBIT HOLE ACTIVADO", entry.msg);
+          playFeedbackVideo("rabbit_hole");
           return;
         }
 
@@ -1373,6 +1539,7 @@
 
           // 4. Show Toast
           showToast(`⚡ ¡FLAG FASE ${entry.phase} CAPTURADA!`, `Slide avanzando al Traste ${milestone.fret} (${milestone.name})`);
+          playFeedbackVideo("flag");
 
           // 5. Mark Diapasón Frets
           markDiapasonFrets(milestone.fret);
