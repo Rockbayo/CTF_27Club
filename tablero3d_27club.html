@@ -269,141 +269,254 @@
       z-index: 20;
     }
 
-    /* 1. STRATEGIC CRT KALI MONITOR */
+    /* 1. HIGH-END PRO KALI LINUX TERMINAL */
     #crt-monitor-section {
       padding: 14px;
-      background: #0f0a07;
+      background: #0d0a07;
       border-bottom: 2px solid rgba(197, 160, 89, 0.35);
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .crt-monitor-housing {
-      background: #040804;
-      border: 3px solid #2d382d;
+    .kali-terminal-window {
+      background: #0f1318;
+      border: 1px solid rgba(197, 160, 89, 0.35);
       border-radius: 8px;
-      padding: 12px;
-      position: relative;
       overflow: hidden;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.9), 0 4px 15px rgba(0,0,0,0.7);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85), 0 0 1px rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
     }
-    /* CRT Scanlines */
-    .crt-monitor-housing::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.45) 50%);
-      background-size: 100% 3px;
-      pointer-events: none;
-      z-index: 5;
-    }
-    .crt-header-line {
+
+    /* Terminal Window Header (macOS/Linux Dots + Kali Dragon Title) */
+    .terminal-titlebar {
+      height: 32px;
+      background: #181d24;
+      border-bottom: 1px solid #242c37;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px dashed rgba(51, 255, 51, 0.4);
-      padding-bottom: 4px;
-      margin-bottom: 8px;
+      padding: 0 12px;
     }
-    .crt-title {
-      font-family: 'VT323', monospace;
-      font-size: 18px;
-      color: var(--crt-green);
-      text-shadow: 0 0 6px var(--crt-green);
-      letter-spacing: 1px;
+    .terminal-window-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .crt-live-badge {
+    .term-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .term-dot.red { background: #ff5f56; }
+    .term-dot.yellow { background: #ffbd2e; }
+    .term-dot.green { background: #27c93f; }
+
+    .terminal-title-text {
       font-family: 'Fira Code', monospace;
-      font-size: 10px;
-      color: #000;
-      background: var(--crt-green);
-      padding: 1px 5px;
-      border-radius: 2px;
-      font-weight: 700;
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 500;
+      letter-spacing: 0.3px;
     }
 
-    .crt-body {
+    .term-status-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: #86efac;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      padding: 1px 7px;
+      border-radius: 12px;
+    }
+    .status-pulse-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 6px #22c55e;
+      animation: pulseGreen 1.5s infinite;
+    }
+    @keyframes pulseGreen { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    /* Terminal Body Content */
+    .terminal-content-body {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #0b0f14;
+    }
+
+    /* Structured Metadata Badges */
+    .target-specs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .spec-card {
+      background: #131922;
+      border: 1px solid #1f2937;
+      border-radius: 5px;
+      padding: 6px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .spec-card.full-width {
+      grid-column: span 2;
+    }
+    .spec-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #64748b;
+      font-weight: 700;
+    }
+    .spec-value {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: #e2e8f0;
+      font-weight: 600;
+      word-break: break-all;
+    }
+    .spec-value.accent-yellow { color: #facc15; }
+    .spec-value.accent-cyan { color: #38bdf8; }
+
+    /* Kali Linux Interactive Code Box */
+    .terminal-command-wrap {
+      background: #070a0e;
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+      padding: 8px 10px;
       display: flex;
       flex-direction: column;
       gap: 6px;
-      font-family: 'VT323', monospace;
-      font-size: 15px;
-      color: var(--crt-green);
-      text-shadow: 0 0 4px var(--crt-glow);
-      line-height: 1.2;
     }
-    .crt-row {
+    .cmd-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cmd-user-prompt {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .cmd-user-prompt .at { color: #64748b; }
+    .cmd-user-prompt .path { color: #a78bfa; }
+    
+    .btn-copy-cmd {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      font-family: 'Fira Code', monospace;
+      font-size: 9px;
+      padding: 2px 7px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-copy-cmd:hover {
+      background: var(--brass-gold);
+      color: #000;
+      border-color: var(--amber-bright);
+    }
+
+    .cmd-code-line {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: #a3e635;
+      line-height: 1.35;
+      word-break: break-all;
+    }
+
+    /* Flag Submission Console */
+    .terminal-injection-area {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .injection-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: #94a3b8;
+    }
+    .injection-format-hint {
+      color: var(--amber-warm);
+      font-size: 9px;
+    }
+
+    .flag-input-group-pro {
       display: flex;
       gap: 8px;
     }
-    .crt-lbl { color: #88ff88; min-width: 80px; }
-    .crt-val { color: #ffffff; }
-    .crt-val.code { color: #ffeb3b; font-family: 'Fira Code', monospace; font-size: 10px; }
-
-    /* Flag Input in CRT Terminal */
-    .crt-flag-form {
-      margin-top: 6px;
-      border-top: 1px dashed rgba(51, 255, 51, 0.35);
-      padding-top: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .flag-terminal-input-wrap {
-      display: flex;
-      gap: 6px;
-    }
-    .flag-terminal-input {
+    .flag-input-pro {
       flex: 1;
-      background: #000;
-      border: 1px solid var(--crt-green);
-      color: var(--crt-green);
+      background: #070a0e;
+      border: 1px solid #334155;
+      color: #f8fafc;
       font-family: 'Fira Code', monospace;
       font-size: 12px;
-      padding: 6px 8px;
-      border-radius: 4px;
+      padding: 8px 12px;
+      border-radius: 5px;
       outline: none;
-      box-shadow: inset 0 0 6px rgba(51, 255, 51, 0.2);
+      transition: all 0.25s ease;
     }
-    .flag-terminal-input:focus {
-      box-shadow: 0 0 10px var(--crt-green);
+    .flag-input-pro:focus {
+      border-color: var(--amber-bright);
+      box-shadow: 0 0 12px rgba(255, 183, 3, 0.35);
+      background: #0a0e14;
     }
-    .btn-crt-submit {
-      background: var(--crt-green);
-      color: #000;
+    .btn-submit-pro {
+      background: linear-gradient(180deg, var(--amber-bright) 0%, #b87a1d 100%);
       border: none;
-      font-family: 'VT323', monospace;
-      font-size: 18px;
+      color: #000;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
       font-weight: 700;
-      padding: 0 14px;
-      border-radius: 4px;
+      letter-spacing: 0.8px;
+      padding: 0 16px;
+      border-radius: 5px;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
-    .btn-crt-submit:hover {
-      background: #ffffff;
-      box-shadow: 0 0 12px #ffffff;
+    .btn-submit-pro:hover {
+      box-shadow: 0 0 15px rgba(255, 183, 3, 0.6);
+      transform: translateY(-1px);
     }
 
-    .crt-feedback-msg {
+    .terminal-feedback-pro {
       font-family: 'Fira Code', monospace;
-      font-size: 10px;
-      padding: 4px 6px;
-      border-radius: 3px;
+      font-size: 11px;
+      padding: 8px 12px;
+      border-radius: 4px;
       display: none;
-      line-height: 1.2;
+      line-height: 1.35;
+      margin-top: 4px;
     }
-    .crt-feedback-msg.success {
+    .terminal-feedback-pro.success {
       display: block;
-      background: rgba(88, 129, 87, 0.3);
-      border: 1px solid var(--success-olive);
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.4);
       color: #86efac;
     }
-    .crt-feedback-msg.error {
+    .terminal-feedback-pro.error {
       display: block;
-      background: rgba(158, 42, 43, 0.3);
-      border: 1px solid var(--danger-rust);
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
       color: #fca5a5;
     }
 
@@ -1187,43 +1300,65 @@
 
     <!-- RIGHT: STRATEGIC STUDIO RACK (CRT KALI MONITOR + 5 VINYL SANCTUARIES) -->
     <aside id="studio-rack-pane">
-      <!-- 1. STRATEGIC CRT KALI MONITOR -->
+      <!-- 1. HIGH-END PRO KALI LINUX TERMINAL -->
       <div id="crt-monitor-section">
-        <div class="crt-monitor-housing">
-          <div class="crt-header-line">
-            <span class="crt-title">> KALI LINUX TERMINAL [DOCKER]</span>
-            <span class="crt-live-badge">ONLINE</span>
-          </div>
-
-          <div class="crt-body">
-            <div class="crt-row">
-              <span class="crt-lbl">TARGET:</span>
-              <span class="crt-val" id="crt-target-ip">192.168.56.1 (Puerto 80 HTTP)</span>
+        <div class="kali-terminal-window">
+          <!-- Terminal Titlebar with macOS/Linux Window Controls -->
+          <div class="terminal-titlebar">
+            <div class="terminal-window-controls">
+              <span class="term-dot red"></span>
+              <span class="term-dot yellow"></span>
+              <span class="term-dot green"></span>
             </div>
-            <div class="crt-row">
-              <span class="crt-lbl">VECTOR:</span>
-              <span class="crt-val" id="crt-vector">PCAP DPI / User-Agent Header</span>
-            </div>
-            <div class="crt-row">
-              <span class="crt-lbl">ESTÁNDAR:</span>
-              <span class="crt-val" id="crt-cwe">ROT13 / CWE-311</span>
-            </div>
-            <div class="crt-row" style="flex-direction:column; gap:2px; margin-top:2px;">
-              <span class="crt-lbl">COMANDO KALI:</span>
-              <span class="crt-val code" id="crt-command">tshark -r jimi_hendrix.pcap -Y "http.request" -T fields -e http.user_agent | tr 'A-Za-z' 'N-ZA-Mn-za-m'</span>
+            <div class="terminal-title-text">root@kali: ~/The27Club_CTF</div>
+            <div class="term-status-pill">
+              <span class="status-pulse-dot"></span>
+              <span>DOCKER VULN</span>
             </div>
           </div>
 
-          <!-- Flag Input Form -->
-          <div class="crt-flag-form">
-            <div style="font-family:'VT323',monospace; font-size:16px; color:#88ff88;">
-              > INYECTAR BANDERA CAPTURADA EN KALI:
+          <!-- Terminal Content Body -->
+          <div class="terminal-content-body">
+            <!-- Metadata Grid -->
+            <div class="target-specs-grid">
+              <div class="spec-card">
+                <span class="spec-label">VÍCTIMA / HOST</span>
+                <span class="spec-value accent-cyan" id="crt-target-ip">192.168.56.1 (Puerto 80)</span>
+              </div>
+              <div class="spec-card">
+                <span class="spec-label">ESTÁNDAR MITRE / CWE</span>
+                <span class="spec-value accent-yellow" id="crt-cwe">CWE-311 (ROT13)</span>
+              </div>
+              <div class="spec-card full-width">
+                <span class="spec-label">VECTOR DE EXPLOTACIÓN</span>
+                <span class="spec-value" id="crt-vector">PCAP Deep Packet Inspection / User-Agent</span>
+              </div>
             </div>
-            <div class="flag-terminal-input-wrap">
-              <input type="text" id="flag-input" class="flag-terminal-input" placeholder="27C{...}" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') submitFlag()">
-              <button class="btn-crt-submit" onclick="submitFlag()">VALIDAR</button>
+
+            <!-- Kali Linux Code Console with Copy Button -->
+            <div class="terminal-command-wrap">
+              <div class="cmd-header-row">
+                <span class="cmd-user-prompt">kali<span class="at">@</span>ctf-box<span class="path">:~$</span></span>
+                <button class="btn-copy-cmd" onclick="copyKaliCommand()" id="btn-copy-cmd">📋 COPIAR</button>
+              </div>
+              <div class="cmd-code-line" id="crt-command">tshark -r jimi_hendrix.pcap -Y "http.request" -T fields -e http.user_agent | tr 'A-Za-z' 'N-ZA-Mn-za-m'</div>
             </div>
-            <div id="crt-feedback" class="crt-feedback-msg"></div>
+
+            <!-- Flag Submission Console -->
+            <div class="terminal-injection-area">
+              <div class="injection-label-row">
+                <span>> INYECTAR BANDERA DESCUBIERTA:</span>
+                <span class="injection-format-hint">ESTÁNDAR: 27C{...}</span>
+              </div>
+              <div class="flag-input-group-pro">
+                <input type="text" id="flag-input" class="flag-input-pro" placeholder="27C{...}" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') submitFlag()">
+                <button class="btn-submit-pro" onclick="submitFlag()">
+                  <span>VALIDAR</span>
+                  <span>➜</span>
+                </button>
+              </div>
+              <div id="crt-feedback" class="terminal-feedback-pro"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -1752,6 +1887,20 @@
       }
     }
 
+
+    // Copy Kali Command to Clipboard
+    function copyKaliCommand() {
+      const cmdText = document.getElementById("crt-command")?.innerText;
+      if (!cmdText) return;
+      navigator.clipboard.writeText(cmdText).then(() => {
+        const btn = document.getElementById("btn-copy-cmd");
+        if (btn) {
+          btn.textContent = "✅ COPIADO!";
+          setTimeout(() => btn.textContent = "📋 COPIAR", 1800);
+        }
+      }).catch(err => console.warn("Clipboard error:", err));
+    }
+
     // Move Slide to Fret on Diapasón
     function moveSlideToFret(targetFret) {
       const prevFret = currentFret;
@@ -1796,7 +1945,7 @@
 
       const rawVal = input.value.trim();
       if (!rawVal) {
-        feedback.className = "crt-feedback-msg error";
+        feedback.className = "terminal-feedback-pro error";
         feedback.textContent = "> ERROR: CAMPO VACÍO. INGRESA LA BANDERA CAPTURADA EN KALI.";
         playBrokenStringSound();
         return;
@@ -1809,7 +1958,7 @@
         if (entry.type === "rabbit_hole") {
           score = Math.max(0, score - entry.penalty);
           updateTelemetryUI();
-          feedback.className = "crt-feedback-msg error";
+          feedback.className = "terminal-feedback-pro error";
           feedback.innerHTML = `> ⚠️ ${entry.name.toUpperCase()}!<br>> ${entry.msg} (-${entry.penalty} PTS)`;
           playBrokenStringSound();
           showToast("⚠️ RABBIT HOLE ACTIVADO", entry.msg);
@@ -1819,7 +1968,7 @@
 
         if (entry.type === "flag") {
           if (completedPhases.has(entry.phase)) {
-            feedback.className = "crt-feedback-msg error";
+            feedback.className = "terminal-feedback-pro error";
             feedback.textContent = `> INFORMACIÓN: YA HABÍAS CAPTURADO LA FASE ${entry.phase} (${entry.name.toUpperCase()}).`;
             return;
           }
@@ -1829,7 +1978,7 @@
           score += entry.points;
 
           const milestone = MILESTONES[entry.phase];
-          feedback.className = "crt-feedback-msg success";
+          feedback.className = "terminal-feedback-pro success";
           feedback.innerHTML = `> ✅ ¡ÉXITO! ${entry.msg}<br>> +${entry.points} PTS • CRIPTO SHA-256 VERIFICADA.`;
 
           // 1. Slide glides to artist fret!
@@ -1864,7 +2013,7 @@
           }
         }
       } else {
-        feedback.className = "crt-feedback-msg error";
+        feedback.className = "terminal-feedback-pro error";
         feedback.innerHTML = "> ❌ BANDERA INVÁLIDA. CUERDA ROTA (SNAP!). REVISA EN KALI.";
         playBrokenStringSound();
         showToast("❌ BANDERA INCORRECTA", "No coincide con ningún artefacto de la fase.");
