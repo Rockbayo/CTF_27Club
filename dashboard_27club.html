@@ -1050,6 +1050,29 @@
   to { transform: scale(1); opacity: 1; }
 }
 
+
+.btn-reset-game {
+  background: rgba(255, 170, 0, 0.15);
+  border: 1px solid #ffaa00;
+  color: #ffaa00;
+  padding: 8px 16px;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: bold;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-reset-game:hover {
+  background: #ffaa00;
+  color: #000;
+  box-shadow: 0 0 15px rgba(255, 170, 0, 0.6);
+  transform: translateY(-1px);
+}
+
 </style>
 </head>
 <body>
@@ -1095,7 +1118,10 @@
         <div class="val" style="color: var(--neon-red);" id="penaltyDisplay">0</div>
       </div>
 
-      <button class="btn-submit-flag" style="padding: 8px 18px; font-size: 0.85rem;" onclick="activateSustentacionMode()">
+      <button class="btn-reset-game" onclick="resetGame()" title="Reiniciar temporizador, Boss y banderas">
+        🔄 REINICIAR
+      </button>
+      <button class="btn-submit-flag" style="padding: 8px 18px; font-size: 0.85rem;" onclick="activateSustentacionMode()" title="Demostración al docente (100% Superado)">
         🎓 SUSTENTACIÓN 100%
       </button>
     </div>
@@ -2264,6 +2290,68 @@
         </div>
       `;
       document.body.appendChild(modal);
+    }
+
+    
+    function resetGame(fullReset = false) {
+      if (timerInterval) clearInterval(timerInterval);
+      timeLeft = 60 * 60;
+
+      if (fullReset) {
+        score = 0;
+        bossHp = 100;
+        completedPhases.clear();
+        for (let i = 1; i <= 5; i++) {
+          const seg = document.getElementById('seg-' + i);
+          if (seg) seg.classList.remove('comp');
+        }
+        ['nav-winehouse', 'nav-cobain'].forEach(id => {
+          const btn = document.getElementById(id);
+          if (btn) {
+            btn.classList.add('locked');
+            btn.classList.remove('completed');
+            btn.setAttribute('disabled', 'true');
+          }
+        });
+      } else {
+        // Estado base del informe (Fases 1 y 2 completadas, Morrison en curso)
+        score = 350;
+        bossHp = 60;
+        completedPhases.clear();
+        completedPhases.add(1);
+        completedPhases.add(2);
+
+        for (let i = 1; i <= 5; i++) {
+          const seg = document.getElementById('seg-' + i);
+          if (seg) {
+            if (i <= 2) seg.classList.add('comp');
+            else seg.classList.remove('comp');
+          }
+        }
+
+        const wBtn = document.getElementById('nav-winehouse');
+        if (wBtn) { wBtn.classList.add('locked'); wBtn.classList.remove('completed'); wBtn.setAttribute('disabled', 'true'); }
+        const cBtn = document.getElementById('nav-cobain');
+        if (cBtn) { cBtn.classList.add('locked'); cBtn.classList.remove('completed'); cBtn.setAttribute('disabled', 'true'); }
+      }
+
+      penaltyCount = 0;
+      updateScoreDisplay();
+      updateBossUI();
+      startTimer();
+
+      // Limpiar campos de texto de banderas
+      for (let i = 1; i <= 5; i++) {
+        const inp = document.getElementById(`input-flag-${i}`);
+        if (inp) inp.value = "";
+      }
+
+      // Quitar modal de victoria si está abierto
+      const modal = document.getElementById('victoryModal');
+      if (modal) modal.remove();
+
+      switchRoom('central');
+      logEvent("🔄 Tablero reiniciado con éxito. Cronómetro restaurado a 60:00.");
     }
 
     function activateSustentacionMode() {
