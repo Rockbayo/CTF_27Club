@@ -884,7 +884,7 @@
               > INYECTAR BANDERA CAPTURADA EN KALI:
             </div>
             <div class="flag-terminal-input-wrap">
-              <input type="text" id="flag-input" class="flag-terminal-input" placeholder="FLAG{...}" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') submitFlag()">
+              <input type="text" id="flag-input" class="flag-terminal-input" placeholder="27C{...}" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') submitFlag()">
               <button class="btn-crt-submit" onclick="submitFlag()">VALIDAR</button>
             </div>
             <div id="crt-feedback" class="crt-feedback-msg"></div>
@@ -1105,35 +1105,43 @@
 
     // Client-side Cryptographic Hash Database (Matches provision_27club_phases.sh)
     const CTF_HASH_DB = {
-      "5e92acd0d04435bfcd1301c88b1a6f10ff4e88ecca45213f1c89dc6649900aac": {
+      // Fase 1: Jimi Hendrix (27C{purpl3_h4z3_c0nd0r_n3t})
+      "0ddd44bc14f853bf20201ce47425db06ddda3f818628a5245c793a3b802cdf99": {
         phase: 1, type: "flag", name: "Jimi Hendrix", points: 150, nextPhase: 2,
-        msg: "¡PERÍMETRO VULNERADO! Tráfico C&C interceptado y decodificado."
+        msg: "¡PERÍMETRO VULNERADO! Tráfico C&C interceptado y decodificado exitosamente."
       },
-      "2699e5b569fb12cc9c9d22d5e5648e2d686e5f7dec6f2a525359697308156b9c": {
+      // Fase 2: Janis Joplin (27C{p34rl_cry_b4by_s3cr3t_1970})
+      "baffb733b5a0e2f6d1a947a99e1642efbc2b763879e5a42bee825f0bd0719abe": {
         phase: 2, type: "flag", name: "Janis Joplin", points: 200, nextPhase: 3,
         msg: "¡ESTEGANOGRAFÍA RESUELTA! Artefacto EOF exfiltrado de la furgoneta."
       },
-      "ac70e2355bcd937a13a5e94ab9a91d1105432b23179b735c9eb3a8f8a7d61128": {
-        phase: 2, type: "rabbit_hole", name: "Señuelo Janis (admin_trampa)", penalty: 50,
+      // Decoy Janis: Señuelo en admin_trampa (27C{b4ckup_k3ys_v4ult_c4r4v4n})
+      "882b210e748e2529e8bb3578b57c449130090ec42cc9faae0e28a9682a4b79fd": {
+        phase: 2, type: "rabbit_hole", name: "Señuelo Clave de Respaldo", penalty: 50,
         msg: "RABBIT HOLE: 'backup_keys.jpg' en /admin_trampa era un señuelo trampa."
       },
-      "6dd18975083f09f1304ed1ed761656a54e4ed9622cf98002cf5e7ce409831977": {
+      // Fase 3: Jim Morrison (27C{l1ght_my_f1r3_c1p4_sqli})
+      "5ea96349723508473974c046a80bcf6a126908a16c1e8efa8a2331d3aecb6fcd": {
         phase: 3, type: "flag", name: "Jim Morrison", points: 250, nextPhase: 4,
         msg: "¡PUERTA DESBLOQUEADA! Inyección SQL UNION Based completada."
       },
-      "a6eb5292b5d1f527c6159f355a0c7c2151b168fcd7a77b84038ebdc1663c04c7": {
-        phase: 3, type: "rabbit_hole", name: "Señuelo Morrison (doors_trap)", penalty: 50,
+      // Decoy Morrison: Señuelo en doors_trap (27C{th3_3nd_d00rs_m4st3r_v4ult})
+      "a436848a07d3dd5184c8b91a5f72c19df96d990519c91d88828f42c61331298c": {
+        phase: 3, type: "rabbit_hole", name: "Señuelo The End Vault", penalty: 50,
         msg: "RABBIT HOLE: Inyectaste en la tabla señuelo doors_trap ('The End')."
       },
-      "46159a8ed4c6b0d4cf2c231c4de1944401e7bbb4a024418030de5e413a95627b": {
+      // Fase 4: Amy Winehouse (27C{b4ck_t0_bl4ck_4dm1n_t0k3n})
+      "b4f8e02d6e43e9316646a630adf70ad67c3525e28a4e28b6ce31b818442cecc9": {
         phase: 4, type: "flag", name: "Amy Winehouse", points: 200, nextPhase: 5,
         msg: "¡SESIÓN SECUESTRADA! Cookie admintoken capturada mediante Stored XSS."
       },
-      "4cd17cce16b711c5aa74a038120d40480fdb8d2202ba7fe70b56b40f4cd21a9d": {
-        phase: 4, type: "rabbit_hole", name: "Señuelo Amy (Cookie de prueba)", penalty: 50,
-        msg: "RABBIT HOLE: Capturaste la cookie test_decoy de utilería sin permisos."
+      // Decoy Amy: Señuelo en cookie de prueba (27C{t3st_s3ss10n_d3c0y_c4md3n})
+      "9e53a70985b01ae84d165cd998dc4aa42f9f19cb8414741f7313fe2b45cd6823": {
+        phase: 4, type: "rabbit_hole", name: "Señuelo Token de Prueba", penalty: 50,
+        msg: "RABBIT HOLE: Capturaste la cookie test_decoy de utilería sin permisos de administración."
       },
-      "2b37cf1f78087b52eba00aaefa0ae2abd833d64d542a2210f36bf26938639acd": {
+      // Fase 5: Kurt Cobain (27C{sm3lls_l1k3_grung3_r00t_27})
+      "b38822a0daf3b52b8664f17a421724163c50098ed102e68278807df2169c931e": {
         phase: 5, type: "flag", name: "Kurt Cobain", points: 200, isRoot: true,
         msg: "¡TRONO ROOT CONQUISTADO! SUID find explotado con GTFOBins."
       }
@@ -1457,11 +1465,11 @@
       showToast("🎓 INICIANDO DEMOSTRACIÓN 100%", "Inyectando las 5 banderas del CTF...");
 
       const demoFlags = [
-        "FLAG{Purple_Haze_Network}",
-        "FLAG{Cry_Baby_Hidden_Data}",
-        "FLAG{Light_My_Fire_SQLi}",
-        "FLAG{Back_To_Black_XSS}",
-        "FLAG{Smells_Like_Root_Spirit}"
+        "27C{purpl3_h4z3_c0nd0r_n3t}",
+        "27C{p34rl_cry_b4by_s3cr3t_1970}",
+        "27C{l1ght_my_f1r3_c1p4_sqli}",
+        "27C{b4ck_t0_bl4ck_4dm1n_t0k3n}",
+        "27C{sm3lls_l1k3_grung3_r00t_27}"
       ];
 
       for (let i = 0; i < demoFlags.length; i++) {

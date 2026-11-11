@@ -7,13 +7,13 @@
 set -e
 
 # Decodificación dinámica de artefactos protegidos del laboratorio (anti-spoiler)
-F_JOPLIN=$(echo "RkxBR3tDcnlfQmFieV9IaWRkZW5fRGF0YX0=" | base64 -d)
-R_JOPLIN=$(echo "UkFCQklUX0hPTEV7U2lndWVfQnVzY2FuZG9fSmFuaXNfU2VfUmllX0RlX1RpfQ==" | base64 -d)
-F_MORRISON=$(echo "RkxBR3tMaWdodF9NeV9GaXJlX1NRTGl9" | base64 -d)
-R_MORRISON=$(echo "UkFCQklUX0hPTEV7VGhlX0VuZF9Jc19Ob3RfSGVyZX0=" | base64 -d)
-F_AMY=$(echo "RkxBR3tCYWNrX1RvX0JsYWNrX1hTU30=" | base64 -d)
-R_AMY=$(echo "UkFCQklUX0hPTEV7UmVoYWJfV2FzX0FfTGllfQ==" | base64 -d)
-F_KURT=$(echo "RkxBR3tTbWVsbHNfTGlrZV9Sb290X1NwaXJpdH0=" | base64 -d)
+F_JOPLIN=$(echo "MjdDe3AzNHJsX2NyeV9iNGJ5X3MzY3IzdF8xOTcwfQ==" | base64 -d)
+R_JOPLIN=$(echo "MjdDe2I0Y2t1cF9rM3lzX3Y0dWx0X2M0cjR2NG59" | base64 -d)
+F_MORRISON=$(echo "MjdDe2wxZ2h0X215X2YxcjNfYzFwNF9zcWxpfQ==" | base64 -d)
+R_MORRISON=$(echo "MjdDe3RoM18zbmRfZDAwcnNfbTRzdDNyX3Y0dWx0fQ==" | base64 -d)
+F_AMY=$(echo "MjdDe2I0Y2tfdDBfYmw0Y2tfNGRtMW5fdDBrM259" | base64 -d)
+R_AMY=$(echo "MjdDe3Qzc3RfczNzczEwbl9kM2MweV9jNG1kM259" | base64 -d)
+F_KURT=$(echo "MjdDe3NtM2xsc19sMWszX2dydW5nM19yMDB0XzI3fQ==" | base64 -d)
 
 echo "[*] ========================================================"
 echo "[*] INICIANDO DESPLIEGUE INSTITUCIONAL 'THE 27 CLUB CTF'"
@@ -39,7 +39,7 @@ fi
 # ------------------------------------------------------------------------------
 # FASE 1: JIMI HENDRIX (BALIZA FORENSE HTTP)
 # ------------------------------------------------------------------------------
-nohup bash -c 'while true; do curl -s -A "SYNT{Checyr_Unmr_Argjbex}" http://127.0.0.1/ > /dev/null 2>&1; sleep 15; done' >/dev/null 2>&1 &
+nohup bash -c 'while true; do curl -s -A "27P{checy3_u4m3_p0aq0e_a3g}" http://127.0.0.1/ > /dev/null 2>&1; sleep 15; done' >/dev/null 2>&1 &
 
 # ------------------------------------------------------------------------------
 # FASE 2: JANIS JOPLIN (INYECCIÓN DINÁMICA DE ESTEGANOGRAFÍA EOF)
