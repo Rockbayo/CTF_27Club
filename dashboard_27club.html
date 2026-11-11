@@ -1762,10 +1762,16 @@
 
   <!-- LÓGICA DE CONTROL MULTIMEDIA Y JUEGO -->
   <script>
+    // ==========================================
+    // 🎸 THE 27 CLUB CTF - MASTER SCRIPT ENGINE
+    // ==========================================
+
     let score = 350;
-    let penalties = 0;
-    let timeLeft = 60 * 60;
+    let penaltyCount = 0;
+    let timeLeft = 60 * 60; // 60 minutos
     let timerInterval = null;
+    let bossHp = 60; // Hendrix (20) y Joplin (20) superados
+    const completedPhases = new Set([1, 2]);
 
     const MUSIC_CATALOG = {
       hendrix: {
@@ -1816,7 +1822,6 @@
       const now = Date.now() / 150;
 
       for (let i = 0; i < bars; i++) {
-        // Generar altura rítmica simulada realista para la música
         const h = Math.abs(Math.sin(now + i * 0.8)) * 22 + 4;
         const x = i * (barWidth + gap) + 2;
         const y = canvas.height - h;
@@ -1836,48 +1841,59 @@
       if (!data) return;
 
       currentArtistKey = artistKey;
-      document.getElementById("jukeboxTrack").textContent = data.title;
-      document.getElementById("jukeboxArtist").textContent = data.artist;
+      const tEl = document.getElementById("jukeboxTrack");
+      const aEl = document.getElementById("jukeboxArtist");
+      if (tEl) tEl.textContent = data.title;
+      if (aEl) aEl.textContent = data.artist;
 
-      player.src = data.audioSrc;
-      player.play().then(() => {
-        document.getElementById("btnPlayPause").textContent = "⏸";
-        masterTurntable.classList.add("spinning");
-        const vinylOut = document.getElementById("vinyl-" + artistKey);
-        if (vinylOut) vinylOut.classList.add("spinning");
-        isVisualizing = true;
-        drawVisualizer();
-      }).catch(e => {
-        console.log("Audio playback waiting for interaction:", e);
-      });
+      if (player) {
+        player.src = data.audioSrc;
+        player.play().then(() => {
+          const btn = document.getElementById("btnPlayPause");
+          if (btn) btn.textContent = "⏸";
+          if (masterTurntable) masterTurntable.classList.add("spinning");
+          const vinylOut = document.getElementById("vinyl-" + artistKey);
+          if (vinylOut) vinylOut.classList.add("spinning");
+          isVisualizing = true;
+          drawVisualizer();
+        }).catch(e => {
+          console.log("Audio playback waiting for user interaction:", e);
+        });
+      }
     }
 
     function togglePlayback() {
+      if (!player) return;
       if (player.paused) {
         if (!player.src || player.src === "") {
           playArtistTrack(currentArtistKey);
         } else {
           player.play();
-          document.getElementById("btnPlayPause").textContent = "⏸";
-          masterTurntable.classList.add("spinning");
+          const btn = document.getElementById("btnPlayPause");
+          if (btn) btn.textContent = "⏸";
+          if (masterTurntable) masterTurntable.classList.add("spinning");
           isVisualizing = true;
           drawVisualizer();
         }
       } else {
         player.pause();
-        document.getElementById("btnPlayPause").textContent = "▶";
-        masterTurntable.classList.remove("spinning");
+        const btn = document.getElementById("btnPlayPause");
+        if (btn) btn.textContent = "▶";
+        if (masterTurntable) masterTurntable.classList.remove("spinning");
         document.querySelectorAll(".vinyl-disc-out").forEach(v => v.classList.remove("spinning"));
         isVisualizing = false;
       }
     }
 
-    player.onended = function() {
-      document.getElementById("btnPlayPause").textContent = "▶";
-      masterTurntable.classList.remove("spinning");
-      document.querySelectorAll(".vinyl-disc-out").forEach(v => v.classList.remove("spinning"));
-      isVisualizing = false;
-    };
+    if (player) {
+      player.onended = function() {
+        const btn = document.getElementById("btnPlayPause");
+        if (btn) btn.textContent = "▶";
+        if (masterTurntable) masterTurntable.classList.remove("spinning");
+        document.querySelectorAll(".vinyl-disc-out").forEach(v => v.classList.remove("spinning"));
+        isVisualizing = false;
+      };
+    }
 
     function switchRoom(roomId) {
       document.querySelectorAll(".room-view").forEach(v => v.classList.remove("active"));
@@ -1893,17 +1909,35 @@
       }
     }
 
+    // Cronómetro Regresivo de 60:00 Minutos
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          const tDisp = document.getElementById("timerDisplay");
+          if (tDisp) {
+            tDisp.textContent = "00:00";
+            tDisp.style.color = "#ff0055";
+          }
+          logEvent("⏱️ ¡TIEMPO AGOTADO! Se cumplieron los 60 minutos reglamentarios.");
+          return;
+        }
+        timeLeft--;
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        const str = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        const tDisp = document.getElementById("timerDisplay");
+        if (tDisp) tDisp.textContent = str;
+      }, 1000);
+    }
+
     async function sha256(message) {
       const msgBuffer = new TextEncoder().encode(message.trim());
       const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
-
-    let score = 350;
-    let penaltyCount = 0;
-    let bossHp = 60; // Hendrix (20) y Joplin (20) superados
-    const completedPhases = new Set([1, 2]);
 
     const CTF_HASH_DB = {
       // Morrison Flag
@@ -1989,45 +2023,45 @@
 
     function playSuccessSound() {
       try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctxS = new AudioCtx();
         const notes = [164.81, 196.00, 220.00, 261.63, 329.63];
         notes.forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
+          const osc = ctxS.createOscillator();
+          const gain = ctxS.createGain();
           osc.type = "sawtooth";
           osc.frequency.value = freq;
-          gain.gain.setValueAtTime(0.12, ctx.currentTime + idx * 0.08);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.08 + 0.45);
+          gain.gain.setValueAtTime(0.12, ctxS.currentTime + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctxS.currentTime + idx * 0.08 + 0.45);
           osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(ctx.currentTime + idx * 0.08);
-          osc.stop(ctx.currentTime + idx * 0.08 + 0.5);
+          gain.connect(ctxS.destination);
+          osc.start(ctxS.currentTime + idx * 0.08);
+          osc.stop(ctxS.currentTime + idx * 0.08 + 0.5);
         });
       } catch(e) { console.log(e); }
     }
 
     function playErrorSound() {
       try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctxE = new AudioCtx();
+        const osc = ctxE.createOscillator();
+        const gain = ctxE.createGain();
         osc.type = "square";
-        osc.frequency.setValueAtTime(140, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 0.35);
-        gain.gain.setValueAtTime(0.2, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+        osc.frequency.setValueAtTime(140, ctxE.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(45, ctxE.currentTime + 0.35);
+        gain.gain.setValueAtTime(0.2, ctxE.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctxE.currentTime + 0.35);
         osc.connect(gain);
-        gain.connect(ctx.destination);
+        gain.connect(ctxE.destination);
         osc.start();
-        osc.stop(ctx.currentTime + 0.38);
+        osc.stop(ctxE.currentTime + 0.38);
       } catch(e) {}
     }
 
     function triggerConfetti() {
-      if (typeof confetti === "function") {
-        confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } });
-        return;
-      }
       const colors = ["#00ffcc", "#ff0055", "#ffaa00", "#00f0ff", "#ffffff"];
       for (let i = 0; i < 35; i++) {
         const p = document.createElement("div");
@@ -2265,6 +2299,15 @@
       claimVictory();
       logEvent("🎓 Modo Sustentación Institucional activado: 1000/1000 PTS.");
     }
+
+    // Inicialización automática
+    window.addEventListener("DOMContentLoaded", () => {
+      startTimer();
+      updateScoreDisplay();
+      updateBossUI();
+      logEvent("⚡ Plataforma CTF 'The 27 Club' inicializada. Conectado a 192.168.56.1.");
+    });
+
   </script>
 </body>
 </html>
