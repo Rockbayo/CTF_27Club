@@ -1594,11 +1594,11 @@
         </div>
       </div>
 
-      <!-- 2. THE 5 VINYL SANCTUARIES SHOWCASE (PROGRESSIVE REVEAL ON FLAG DISCOVERY) -->
+      <!-- 2. THE 6 VINYL SANCTUARIES SHOWCASE (PROGRESSIVE REVEAL ON FLAG DISCOVERY) -->
       <div id="vinyl-showcase-section">
         <div class="showcase-header">
           <h2>🎵 DISCOTECA DEL CLUB DE LOS 27</h2>
-          <span class="count" id="showcase-counter">0 / 5 DESCUBIERTOS</span>
+          <span class="count" id="showcase-counter">0 / 6 DESCUBIERTOS</span>
         </div>
 
         <!-- Dynamic Container: Cards appear as flags are captured -->
@@ -1696,10 +1696,11 @@
     // Milestones Data
     const MILESTONES = {
       0: {
-        fret: 3, name: "Reconocimiento de Red", phase: 0, points: 100,
-        title: "Fase 0: Detección de Host y Servicios",
-        trackTitle: "Acoustic Intro / Tuning",
-        audio: "assets/audio/hendrix.m4a",
+        fret: 3, name: "Robert Johnson", phase: 0, points: 100,
+        title: "Fase 0: Detección de Host y Servicios (Robert Johnson)",
+        trackTitle: "Cross Road Blues",
+        audio: "assets/audio/robert_johnson.mp3",
+        albumCover: "assets/images/johnson_album.jpg",
         vectorReal: "Barrido de Red & Enumeración de Cabeceras",
         cweReal: "Descubrimiento de Red / CWE-200",
         targetReal: "Segmento Local (Puerto 80 / 2222 / 1337)",
@@ -1761,7 +1762,7 @@
     const CTF_HASH_DB = {
       // Fase 0: Reconocimiento de Red Nmap (27C{nmap_sc4n_r0ck_h0st_d1sc0v3ry})
       "86a2773f2ae4ef15ad5b2bec8a6f600c16320edf6d52960a707f8fa7014ab734": {
-        phase: 0, type: "flag", name: "Reconocimiento de Red", points: 100, nextPhase: 1,
+        phase: 0, type: "flag", name: "Robert Johnson (Recon)", points: 100, nextPhase: 1,
         msg: "¡OBJETIVO LOCALIZADO! Escaneo Nmap completado y cabeceras enumeradas exitosamente."
       },
       // SEÑUELO TROLL: Puerto 1337 Backdoor Trap (27C{tr0ll_b4ckd00r_p0rt_1337_lol})
@@ -2441,7 +2442,7 @@
 
       card.innerHTML = `
         <div class="slot-jacket-art unlocked">
-          <img src="${m.albumCover || ('assets/images/' + (phaseNum === 1 ? 'hendrix' : phaseNum === 2 ? 'joplin' : phaseNum === 3 ? 'morrison' : phaseNum === 4 ? 'winehouse' : 'cobain') + '_album.jpg')}" alt="${m.name}">
+          <img src="${m.albumCover || ('assets/images/' + (phaseNum === 0 ? 'johnson' : phaseNum === 1 ? 'hendrix' : phaseNum === 2 ? 'joplin' : phaseNum === 3 ? 'morrison' : phaseNum === 4 ? 'winehouse' : 'cobain') + '_album.jpg')}" alt="${m.name}">
         </div>
         <div class="slot-spinning-disc" style="display:block;"></div>
         <div class="slot-info-box">
@@ -2450,7 +2451,7 @@
             <span class="slot-traste-tag">TRASTE ${m.fret} • +${m.points} PTS</span>
           </div>
           <div class="slot-track-title">${m.trackTitle}</div>
-          <div class="slot-vector-cwe">${m.vector} • ${m.cwe}</div>
+          <div class="slot-vector-cwe">${m.vectorReal} • ${m.cweReal}</div>
         </div>
       `;
 
@@ -2470,10 +2471,7 @@
       const m = MILESTONES[phaseNum];
       if (!m) return;
 
-      // Update CRT Screen
-      document.getElementById("crt-target-ip").textContent = m.target;
-      document.getElementById("crt-vector").textContent = m.vector;
-      document.getElementById("crt-cwe").textContent = m.cwe;
+      // Update CRT Screen with Black-Box rules (Masked until solved)
       updateBlackBoxSpecs(phaseNum);
 
       // Update HUD
@@ -2512,7 +2510,7 @@
 
     async function execute100PercentDemo() {
       closeSustentacionModal();
-      showToast("🎓 INICIANDO DEMOSTRACIÓN 100%", "Inyectando las 5 banderas del CTF...");
+      showToast("🎓 INICIANDO DEMOSTRACIÓN 100%", "Inyectando las 6 banderas del CTF...");
 
       const demoFlags = [
         "27C{nmap_sc4n_r0ck_h0st_d1sc0v3ry}",
@@ -2552,7 +2550,7 @@
           </div>
         `;
       }
-      document.getElementById("showcase-counter").textContent = "0 / 5 DESCUBIERTOS";
+      document.getElementById("showcase-counter").textContent = "0 / 6 DESCUBIERTOS";
 
       document.querySelectorAll(".fret-unit").forEach(item => {
         item.classList.remove("unlocked-fret");
@@ -2660,7 +2658,7 @@
         </div>
         <div class="academic-stat-box">
           <div class="lbl">Banderas Legítimas</div>
-          <div class="val" style="color:var(--amber-bright);">5 / 5 CAPTURADAS (100%)</div>
+          <div class="val" style="color:var(--amber-bright);">6 / 6 CAPTURADAS (100%)</div>
         </div>
       </div>
 
@@ -2678,8 +2676,8 @@
         <tbody>
           <tr>
             <td>F0</td>
-            <td>Reconocimiento Nmap</td>
-            <td>Detección de Host & Cabeceras • CWE-200</td>
+            <td>Robert Johnson</td>
+            <td>Barrido Nmap & Cabeceras HTTP • CWE-200</td>
             <td>Traste 3</td>
             <td class="pts">+100 PTS</td>
           </tr>
@@ -2695,14 +2693,14 @@
             <td>Janis Joplin</td>
             <td>Esteganografía EOF • CWE-200</td>
             <td>Traste 11</td>
-            <td class="pts">+200 PTS</td>
+            <td class="pts">+150 PTS</td>
           </tr>
           <tr>
             <td>F3</td>
             <td>Jim Morrison</td>
             <td>SQLi UNION Based • CWE-89</td>
             <td>Traste 16</td>
-            <td class="pts">+250 PTS</td>
+            <td class="pts">+200 PTS</td>
           </tr>
           <tr>
             <td>F4</td>
