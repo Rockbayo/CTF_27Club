@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The 27 Club 3D Experience - Santuario Inmersivo & CTF Walkthrough</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Permanent+Marker&family=Rajdhani:wght@500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #07070b;
+      --neon-purple: #9d4edd;
+      --neon-magenta: #ff007f;
+      --neon-cyan: #00f0ff;
+      --neon-amber: #ffaa00;
+      --neon-red: #ff3333;
+      --neon-green: #00ff88;
+      --gold: #ffd700;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-dark);
+      font-family: 'Rajdhani', sans-serif;
+      color: #fff;
+    }
+
+    #webgl-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      display: block;
+    }
+
+    /* TOP HUD */
+    #hud-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: linear-gradient(180deg, rgba(8, 9, 15, 0.95), rgba(8, 9, 15, 0.6) 80%, transparent);
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 25px;
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(157, 78, 221, 0.3);
+    }
+
+    .hud-brand {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .hud-title {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, #ff007f, #9d4edd, #00f0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
+    }
+    .hud-sub {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      color: var(--neon-cyan);
+    }
+
+    /* BOSS HEALTH BAR */
+    .hud-boss {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      min-width: 320px;
+    }
+    .boss-name-row {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: #d1c7e6;
+    }
+    .boss-hp-track {
+      width: 100%;
+      height: 14px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 0, 127, 0.6);
+      border-radius: 7px;
+      overflow: hidden;
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.3);
+      position: relative;
+    }
+    .boss-hp-fill {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff0055, #ffaa00, #00ff88);
+      transition: width 0.4s ease-out;
+    }
+
+    /* HUD STATS & BUTTONS */
+    .hud-stats {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .hud-badge {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hud-btn {
+      background: linear-gradient(135deg, var(--neon-purple), var(--neon-magenta));
+      border: none;
+      color: #fff;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 7px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .hud-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(255, 0, 127, 0.8);
+    }
+    .hud-btn-alt {
+      background: rgba(0, 240, 255, 0.15);
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.25);
+    }
+    .hud-btn-alt:hover {
+      background: var(--neon-cyan);
+      color: #000;
+    }
+
+    /* QUICK TELEPORT BAR (BOTTOM) */
+    #teleport-bar {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      gap: 10px;
+      background: rgba(10, 11, 18, 0.85);
+      padding: 8px 16px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+    .tele-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #d1c7e6;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-family: 'Permanent Marker', cursive;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tele-btn:hover, .tele-btn.active {
+      background: linear-gradient(135deg, var(--neon-purple), var(--neon-magenta));
+      color: #fff;
+      border-color: var(--neon-magenta);
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* CROSSHAIR & INTERACTION PROMPT */
+    #crosshair {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #crosshair::before {
+      content: '';
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--neon-cyan);
+      box-shadow: 0 0 8px var(--neon-cyan);
+    }
+    #crosshair.targeted::before {
+      background: var(--neon-magenta);
+      transform: scale(2);
+      box-shadow: 0 0 12px var(--neon-magenta);
+    }
+
+    #interaction-prompt {
+      position: absolute;
+      top: 56%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 11, 18, 0.9);
+      border: 1px solid var(--neon-cyan);
+      border-radius: 20px;
+      padding: 6px 18px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.82rem;
+      color: #fff;
+      pointer-events: none;
+      z-index: 10;
+      display: none;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+      animation: pulsePrompt 1s infinite alternate;
+    }
+    @keyframes pulsePrompt {
+      0% { transform: translateX(-50%) scale(0.98); }
+      100% { transform: translateX(-50%) scale(1.02); }
+    }
+
+    /* INSTRUCTIONS OVERLAY (FIRST TIME FPS CLICK) */
+    #instructions-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .inst-box {
+      background: linear-gradient(145deg, #181928, #0e0f19);
+      border: 2px solid var(--neon-purple);
+      box-shadow: 0 0 50px rgba(157, 78, 221, 0.6);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
+      text-align: center;
+    }
+    .inst-box h2 {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 2.2rem;
+      color: var(--gold);
+      margin-bottom: 15px;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
+    .inst-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin: 25px 0;
+      text-align: left;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+    }
+    .inst-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 10px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .inst-item span { color: var(--neon-cyan); font-weight: bold; }
+    .inst-start-btn {
+      background: linear-gradient(90deg, #ff007f, #9d4edd);
+      color: #fff;
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.25rem;
+      padding: 12px 36px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(255, 0, 127, 0.6);
+    }
+
+    /* HOLOGRAPHIC HACKING MODAL (IN-GAME TERMINAL) */
+    #holo-modal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(145deg, rgba(16, 17, 28, 0.95), rgba(8, 9, 15, 0.98));
+      border: 2px solid var(--neon-cyan);
+      box-shadow: 0 0 50px rgba(0, 240, 255, 0.4), inset 0 0 30px rgba(0,0,0,0.8);
+      border-radius: 18px;
+      padding: 28px;
+      max-width: 580px;
+      width: 90%;
+      z-index: 30;
+      display: none;
+      backdrop-filter: blur(12px);
+    }
+    .holo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      padding-bottom: 10px;
+    }
+    .holo-title {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 1.4rem;
+      color: var(--neon-cyan);
+    }
+    .holo-close {
+      background: transparent;
+      border: none;
+      color: #aaa;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .holo-close:hover { color: #fff; }
+    .holo-body {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: #d1c7e6;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .holo-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--neon-cyan);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'Fira Code', monospace;
+      color: #00ff88;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      outline: none;
+    }
+    .holo-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    /* TROLL MODAL 3D */
+    #troll-3d-modal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(145deg, #220818, #0e040c);
+      border: 3px solid var(--neon-magenta);
+      box-shadow: 0 0 60px rgba(255, 0, 127, 0.8);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      z-index: 40;
+      display: none;
+      animation: trollShake 0.4s ease-in-out;
+    }
+    @keyframes trollShake {
+      0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+      20% { transform: translate(-52%, -50%) rotate(-3deg); }
+      40% { transform: translate(-48%, -50%) rotate(3deg); }
+      60% { transform: translate(-52%, -50%) rotate(-2deg); }
+      80% { transform: translate(-48%, -50%) rotate(2deg); }
+    }
+    .troll-3d-title {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 2.2rem;
+      color: var(--neon-magenta);
+      text-shadow: 0 0 15px var(--neon-magenta);
+      margin: 10px 0;
+    }
+  </style>
+
+  <!-- Three.js + Controles Locales con CDN Fallback -->
+  <script src="assets/js/three.min.js"></script>
+  <script src="assets/js/PointerLockControls.js"></script>
+  <script src="assets/js/OrbitControls.js"></script>
+  <script>
+    if (typeof THREE === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+      document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"><\/script>');
+      document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\/script>');
+    }
+  </script>
+</head>
+<body>
+
+  <!-- 3D Canvas -->
+  <canvas id="webgl-canvas"></canvas>
+
+  <!-- Top Master HUD -->
+  <header id="hud-top">
+    <div class="hud-brand">
+      <div>
+        <div class="hud-title">THE 27 CLUB • 3D WORLD</div>
+        <div class="hud-sub">Santuario Tridimensional & Memorial del Rock • 192.168.56.1</div>
+      </div>
+    </div>
+
+    <!-- Boss Health Bar -->
+    <div class="hud-boss">
+      <div class="boss-name-row">
+        <span>TARGET: 27CLUB_SRV (DOCKER ROOT)</span>
+        <span id="bossHpText">100 / 100 HP</span>
+      </div>
+      <div class="boss-hp-track">
+        <div class="boss-hp-fill" id="bossHpFill"></div>
+      </div>
+    </div>
+
+    <!-- Stats & Actions -->
+    <div class="hud-stats">
+      <div class="hud-badge">
+        <span>🏆 SCORE:</span>
+        <strong id="scoreVal" style="color: var(--gold);">0 / 1000 PTS</strong>
+      </div>
+      <button class="hud-btn hud-btn-alt" onclick="switchControlMode()" id="btnControlMode">
+        🛰️ Modo: Primera Persona
+      </button>
+      <button class="hud-btn" onclick="activateSustentacion3D()">
+        🎓 Sustentación 100%
+      </button>
+      <a href="dashboard_27club.html" class="hud-btn" style="background:#222; border:1px solid #444;">
+        📄 Volver al 2D
+      </a>
+    </div>
+  </header>
+
+  <!-- Crosshair & Interaction Prompt -->
+  <div id="crosshair"></div>
+  <div id="interaction-prompt">Presiona [E] o Clic para interactuar</div>
+
+  <!-- Teleport Bar (Bottom) -->
+  <nav id="teleport-bar">
+    <button class="tele-btn active" onclick="teleportTo('central')">🏛️ Hall Central</button>
+    <button class="tele-btn" onclick="teleportTo('hendrix')">🎸 1. Hendrix</button>
+    <button class="tele-btn" onclick="teleportTo('joplin')">🌸 2. Janis</button>
+    <button class="tele-btn" onclick="teleportTo('morrison')">🦎 3. Morrison</button>
+    <button class="tele-btn" onclick="teleportTo('winehouse')">🎙️ 4. Amy</button>
+    <button class="tele-btn" onclick="teleportTo('cobain')">⚡ 5. Kurt</button>
+  </nav>
+
+  <!-- Instructions Overlay -->
+  <div id="instructions-overlay" onclick="startFPS()">
+    <div class="inst-box">
+      <h2>ENTRAR AL SANTUARIO 3D</h2>
+      <p style="color:#d1c7e6; font-size:1rem; margin-bottom:15px;">
+        Explora las 5 salas temáticas de las leyendas del Club 27 en un entorno tridimensional interactivo.
+      </p>
+      <div class="inst-grid">
+        <div class="inst-item"><span>W, A, S, D</span> : Caminar / Desplazarse</div>
+        <div class="inst-item"><span>RATÓN</span> : Mirar alrededor (360°)</div>
+        <div class="inst-item"><span>CLIC / [E]</span> : Interactuar con objetos 3D</div>
+        <div class="inst-item"><span>BARRA ESPACIO</span> : Salto / Impulso</div>
+      </div>
+      <button class="inst-start-btn">▶ INICIAR RECORRIDO 3D</button>
+    </div>
+  </div>
+
+  <!-- Holographic Hacking Modal -->
+  <div id="holo-modal">
+    <div class="holo-header">
+      <div class="holo-title" id="holoTitle">BÓVEDA DE HACKING</div>
+      <button class="holo-close" onclick="closeHoloModal()">&times;</button>
+    </div>
+    <div class="holo-body" id="holoBody">
+      Información de la vulnerabilidad...
+    </div>
+    <input type="text" class="holo-input" id="holoInput" placeholder="Ingresa la bandera capturada (FLAG{...})...">
+    <div class="holo-actions">
+      <button class="hud-btn hud-btn-alt" onclick="closeHoloModal()">Cancelar</button>
+      <button class="hud-btn" onclick="submitHoloFlag()">Validar Flag</button>
+    </div>
+  </div>
+
+  <!-- Troll Modal 3D -->
+  <div id="troll-3d-modal">
+    <div style="font-size: 4rem;">👑😈</div>
+    <div class="troll-3d-title">¡TROOOOOOOLL!</div>
+    <p id="troll3dMsg" style="color: #fff; font-size: 1.05rem; line-height: 1.5; margin-bottom: 20px;">
+      ¡Has caído en la trampa del Rey del 27!
+    </p>
+    <div style="color: #ff3366; font-family: 'Fira Code', monospace; font-weight: bold; margin-bottom: 20px;">
+      ⚠️ PENALIZACIÓN TROLL: -50 PTS
+    </div>
+    <button class="hud-btn" onclick="document.getElementById('troll-3d-modal').style.display='none'">
+      😅 ¡ENTENDIDO, VOLVER A LA SALA!
+    </button>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 🌐 THE 27 CLUB - 3D WORLD ENGINE (THREE.JS + WEBGL)
+    // =========================================================================
+
+    let scene, camera, renderer;
+    let fpsControls, orbitControls;
+    let isFPS = true;
+    let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
+    let velocity = new THREE.Vector3();
+    let direction = new THREE.Vector3();
+    let prevTime = performance.now();
+
+    let score = 0;
+    let bossHp = 100;
+    const completedPhases = new Set();
+    let activeInteractable = null;
+    const interactables = [];
+
+    // Animated objects
+    let centralVinylMesh;
+    let jimiRadioNeedle;
+    let janisLidReal, janisLidTrap;
+    let morrisonDoorSlab;
+    let kurtStompSwitch, kurtLedPointLight;
+    let floatingRunes = [];
+
+    // Hash Database for Cryptographic Verification
+    const CTF_HASH_DB = {
+      "5e92acd0d04435bfcd1301c88b1a6f10ff4e88ecca45213f1c89dc6649900aac": {
+        phase: 1, type: "flag", name: "Jimi Hendrix", points: 150, nextRoom: "joplin",
+        msg: "¡PERÍMETRO VULNERADO! Tráfico C&C analizado y User-Agent descifrado (+150 pts)."
+      },
+      "2699e5b569fb12cc9c9d22d5e5648e2d686e5f7dec6f2a525359697308156b9c": {
+        phase: 2, type: "flag", name: "Janis Joplin", points: 200, nextRoom: "morrison",
+        msg: "¡ESTEGANOGRAFÍA RESUELTA! Artefacto EOF exfiltrado exitosamente (+200 pts)."
+      },
+      "ac70e2355bcd937a13a5e94ab9a91d1105432b23179b735c9eb3a8f8a7d61128": {
+        phase: 2, type: "rabbit_hole", name: "Señuelo Janis (admin_trampa)", penalty: 50,
+        msg: "RABBIT HOLE: backup_keys.jpg era un falso positivo (-50 pts)."
+      },
+      "6dd18975083f09f1304ed1ed761656a54e4ed9622cf98002cf5e7ce409831977": {
+        phase: 3, type: "flag", name: "Jim Morrison", points: 250, nextRoom: "winehouse",
+        msg: "¡PUERTA DESBLOQUEADA! Inyección SQL UNION Based exitosa (+250 pts)."
+      },
+      "a6eb5292b5d1f527c6159f355a0c7c2151b168fcd7a77b84038ebdc1663c04c7": {
+        phase: 3, type: "rabbit_hole", name: "Señuelo Morrison (doors_trap)", penalty: 50,
+        msg: "RABBIT HOLE: Inyectaste en la tabla trampa doors_trap (-50 pts)."
+      },
+      "46159a8ed4c6b0d4cf2c231c4de1944401e7bbb4a024418030de5e413a95627b": {
+        phase: 4, type: "flag", name: "Amy Winehouse", points: 200, nextRoom: "cobain",
+        msg: "¡SESIÓN EXFILTRADA! Robo de cookie admintoken mediante Stored XSS (+200 pts)."
+      },
+      "4cd17cce16b711c5aa74a038120d40480fdb8d2202ba7fe70b56b40f4cd21a9d": {
+        phase: 4, type: "rabbit_hole", name: "Señuelo Amy (Cookie de prueba)", penalty: 50,
+        msg: "RABBIT HOLE: Capturaste la cookie test_decoy (-50 pts)."
+      },
+      "2b37cf1f78087b52eba00aaefa0ae2abd833d64d542a2210f36bf26938639acd": {
+        phase: 5, type: "flag", name: "Kurt Cobain", points: 200, isRoot: true,
+        msg: "¡TRONO ROOT CONQUISTADO! SUID find explotado con GTFOBins (+200 pts)."
+      }
+    };
+
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message.trim());
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // =========================================================================
+    // AUDIO SYNTHESIZERS (WEB AUDIO API)
+    // =========================================================================
+    function playAudioTone(freq, type, dur) {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type || "sine";
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (dur || 0.2));
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + (dur || 0.2));
+      } catch(e) {}
+    }
+
+    function playGrungeDistortion() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        [82.4, 123.5, 164.8, 246.9].forEach(f => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(f, ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(f * 0.98, ctx.currentTime + 1.2);
+          gain.gain.setValueAtTime(0.25, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.2);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 1.2);
+        });
+      } catch(e) {}
+    }
+
+    function playTrollSound() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        [360, 340, 320, 270].forEach((f, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(f, ctx.currentTime + idx * 0.2);
+          osc.frequency.linearRampToValueAtTime(f - 30, ctx.currentTime + idx * 0.2 + 0.18);
+          gain.gain.setValueAtTime(0.2, ctx.currentTime + idx * 0.2);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + idx * 0.2 + 0.18);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.2);
+          osc.stop(ctx.currentTime + idx * 0.2 + 0.18);
+        });
+      } catch(e) {}
+    }
+
+    // =========================================================================
+    // INITIALIZATION & SCENE SETUP
+    // =========================================================================
+    function init() {
+      const canvas = document.getElementById("webgl-canvas");
+
+      // 1. Scene & Fog
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x07070b);
+      scene.fog = new THREE.FogExp2(0x07070b, 0.016);
+
+      // 2. Camera
+      camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 1.7, 0);
+
+      // 3. Renderer
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+      // 4. Controls
+      fpsControls = new THREE.PointerLockControls(camera, document.body);
+      orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+      orbitControls.enableDamping = true;
+      orbitControls.dampingFactor = 0.05;
+      orbitControls.maxPolarAngle = Math.PI / 2 + 0.05;
+      orbitControls.enabled = false;
+
+      // 5. Lighting
+      setupLighting();
+
+      // 6. World Architecture
+      buildCentralHall();
+      buildHendrixChamber();
+      buildJanisChamber();
+      buildMorrisonChamber();
+      buildWinehouseChamber();
+      buildCobainChamber();
+
+      // 7. Event Listeners
+      window.addEventListener('resize', onWindowResize);
+      document.addEventListener('keydown', onKeyDown);
+      document.addEventListener('keyup', onKeyUp);
+      document.addEventListener('click', onSceneClick);
+
+      animate();
+    }
+
+    // =========================================================================
+    // LIGHTING SYSTEM
+    // =========================================================================
+    function setupLighting() {
+      const ambientLight = new THREE.AmbientLight(0x221c33, 1.2);
+      scene.add(ambientLight);
+
+      // Central Chandelier Point Light (Magenta / Cyan)
+      const centralLight = new THREE.PointLight(0xff007f, 2.5, 30);
+      centralLight.position.set(0, 7, 0);
+      centralLight.castShadow = true;
+      scene.add(centralLight);
+
+      const centralLightCyan = new THREE.PointLight(0x00f0ff, 1.8, 25);
+      centralLightCyan.position.set(0, 3, 0);
+      scene.add(centralLightCyan);
+    }
+
+    // =========================================================================
+    // 3D WORLD ARCHITECTURE
+    // =========================================================================
+
+    // Floor with reflective dark tiles
+    function buildCentralHall() {
+      // Main Floor
+      const floorGeo = new THREE.PlaneGeometry(100, 100);
+      const floorMat = new THREE.MeshStandardMaterial({
+        color: 0x0c0e17,
+        roughness: 0.25,
+        metalness: 0.75
+      });
+      const floor = new THREE.Mesh(floorGeo, floorMat);
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      scene.add(floor);
+
+      // Floor Grid Overlay
+      const grid = new THREE.GridHelper(100, 50, 0x9d4edd, 0x1b1429);
+      grid.position.y = 0.01;
+      scene.add(grid);
+
+      // Ceiling
+      const ceilGeo = new THREE.PlaneGeometry(100, 100);
+      const ceilMat = new THREE.MeshStandardMaterial({ color: 0x05060a, roughness: 0.9 });
+      const ceil = new THREE.Mesh(ceilGeo, ceilMat);
+      ceil.rotation.x = Math.PI / 2;
+      ceil.position.y = 9;
+      scene.add(ceil);
+
+      // Central Golden Pedestal
+      const pedGeo = new THREE.CylinderGeometry(2.5, 3, 0.8, 32);
+      const pedMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.85, roughness: 0.2 });
+      const ped = new THREE.Mesh(pedGeo, pedMat);
+      ped.position.set(0, 0.4, 0);
+      ped.receiveShadow = true;
+      scene.add(ped);
+
+      // Giant Rotating 3D Vinyl Record
+      const vinylGeo = new THREE.CylinderGeometry(1.8, 1.8, 0.05, 32);
+      const vinylMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.3, metalness: 0.9 });
+      centralVinylMesh = new THREE.Mesh(vinylGeo, vinylMat);
+      centralVinylMesh.position.set(0, 1.2, 0);
+      scene.add(centralVinylMesh);
+
+      // Vinyl Central Label (Neon Pink)
+      const labelGeo = new THREE.CylinderGeometry(0.65, 0.65, 0.06, 32);
+      const labelMat = new THREE.MeshStandardMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 0.6 });
+      const label = new THREE.Mesh(labelGeo, labelMat);
+      label.position.set(0, 1.21, 0);
+      scene.add(label);
+
+      // Neon Particle Ring above Vinyl
+      const ringGeo = new THREE.TorusGeometry(2.8, 0.04, 16, 100);
+      const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = Math.PI / 2;
+      ring.position.set(0, 2.2, 0);
+      scene.add(ring);
+    }
+
+    // Helper to create a portal archway
+    function createChamberPortal(angle, color, title, artistKey) {
+      const radius = 22;
+      const x = Math.sin(angle) * radius;
+      const z = -Math.cos(angle) * radius;
+
+      const group = new THREE.Group();
+      group.position.set(x, 0, z);
+      group.rotation.y = angle + Math.PI;
+
+      // Neon Archway Pillars
+      const pillarGeo = new THREE.BoxGeometry(0.6, 6, 0.6);
+      const archMat = new THREE.MeshStandardMaterial({ color: 0x151624, roughness: 0.4 });
+      const neonMat = new THREE.MeshBasicMaterial({ color: color });
+
+      const pLeft = new THREE.Mesh(pillarGeo, archMat);
+      pLeft.position.set(-2.5, 3, 0);
+      group.add(pLeft);
+
+      const pRight = new THREE.Mesh(pillarGeo, archMat);
+      pRight.position.set(2.5, 3, 0);
+      group.add(pRight);
+
+      const lintelGeo = new THREE.BoxGeometry(5.6, 0.6, 0.6);
+      const lintel = new THREE.Mesh(lintelGeo, archMat);
+      lintel.position.set(0, 6, 0);
+      group.add(lintel);
+
+      // Glowing Neon Trim
+      const trimGeo = new THREE.BoxGeometry(5.2, 0.1, 0.7);
+      const trim = new THREE.Mesh(trimGeo, neonMat);
+      trim.position.set(0, 5.7, 0);
+      group.add(trim);
+
+      // Point Light casting chamber glow
+      const chamberLight = new THREE.PointLight(color, 2, 18);
+      chamberLight.position.set(0, 4, 3);
+      group.add(chamberLight);
+
+      scene.add(group);
+      return group;
+    }
+
+    // CHAMBER 1: JIMI HENDRIX (ELECTRIC CHURCH) - 0 rad
+    function buildHendrixChamber() {
+      createChamberPortal(0, 0x9d4edd, "JIMI HENDRIX", "hendrix");
+
+      const zDepth = -32;
+      // Purple spotlight
+      const spot = new THREE.SpotLight(0x9d4edd, 3, 25, Math.PI / 4, 0.5);
+      spot.position.set(0, 8, zDepth);
+      spot.target.position.set(0, 0, zDepth);
+      scene.add(spot);
+      scene.add(spot.target);
+
+      // 3D Radio Tuner Table
+      const tableGeo = new THREE.BoxGeometry(4, 1.2, 2);
+      const tableMat = new THREE.MeshStandardMaterial({ color: 0x3d2314, roughness: 0.7 });
+      const table = new THREE.Mesh(tableGeo, tableMat);
+      table.position.set(0, 0.6, zDepth);
+      scene.add(table);
+
+      // 3D Radio Box
+      const radioGeo = new THREE.BoxGeometry(2.2, 1.1, 1);
+      const radioMat = new THREE.MeshStandardMaterial({ color: 0x5c3a1e, roughness: 0.5 });
+      const radio = new THREE.Mesh(radioGeo, radioMat);
+      radio.position.set(0, 1.75, zDepth);
+      radio.userData = {
+        name: "Radio Woodstock (ROT13 C&C)",
+        phase: 1,
+        desc: "Sintonizador analógico de Woodstock. Intercepta la baliza en la cabecera HTTP User-Agent cifrada en ROT13.",
+        action: () => openHoloModal(1, "🎸 Radio Woodstock • Baliza Hendrix", "SYNT{gu1f_1f_w1z1_u3aqe1k_e0g13}")
+      };
+      scene.add(radio);
+      interactables.push(radio);
+
+      // Radio Dial Needle
+      const needleGeo = new THREE.BoxGeometry(0.04, 0.6, 0.05);
+      const needleMat = new THREE.MeshBasicMaterial({ color: 0xff3333 });
+      jimiRadioNeedle = new THREE.Mesh(needleGeo, needleMat);
+      jimiRadioNeedle.position.set(0, 1.75, zDepth + 0.52);
+      scene.add(jimiRadioNeedle);
+
+      // Floating Poster
+      createPosterMesh(0, 4.5, zDepth - 1.5, 0, "assets/images/hendrix_photo.jpg", 3, 3);
+    }
+
+    // CHAMBER 2: JANIS JOPLIN (WOODSTOCK CARAVAN) - 1.25 rad
+    function buildJanisChamber() {
+      const angle = (2 * Math.PI / 5) * 1;
+      createChamberPortal(angle, 0xff007f, "JANIS JOPLIN", "joplin");
+
+      const dist = 32;
+      const cx = Math.sin(angle) * dist;
+      const cz = -Math.cos(angle) * dist;
+
+      // Pink Light
+      const spot = new THREE.PointLight(0xff007f, 2.5, 20);
+      spot.position.set(cx, 6, cz);
+      scene.add(spot);
+
+      // 3D Chest 1: Genuino (/cry_baby/)
+      const chestBaseGeo = new THREE.BoxGeometry(1.6, 0.8, 1.1);
+      const chestMatReal = new THREE.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.6, metalness: 0.3 });
+      const chestReal = new THREE.Mesh(chestBaseGeo, chestMatReal);
+      chestReal.position.set(cx - 1.8, 0.4, cz);
+      chestReal.userData = {
+        name: "Cofre Genuino (/cry_baby/janis.jpg)",
+        phase: 2,
+        desc: "Cofre hippie con la fotografía original. Oculta la bandera tras el marcador EOF (FF D9).",
+        action: () => {
+          playAudioTone(587.33, "sine", 0.4);
+          if (janisLidReal) janisLidReal.rotation.x = -Math.PI / 2.2;
+          openHoloModal(2, "🌸 Cofre Genuino • Janis Joplin", "FLAG{j4n1s_p0rt_0f_m0rr1s0n_st3g0}");
+        }
+      };
+      scene.add(chestReal);
+      interactables.push(chestReal);
+
+      // Chest 1 Lid
+      const lidGeo = new THREE.BoxGeometry(1.65, 0.25, 1.15);
+      janisLidReal = new THREE.Mesh(lidGeo, new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.7 }));
+      janisLidReal.position.set(cx - 1.8, 0.9, cz);
+      scene.add(janisLidReal);
+
+      // 3D Chest 2: Trampa (/admin_trampa/)
+      const chestMatTrap = new THREE.MeshStandardMaterial({ color: 0x221122, roughness: 0.3 });
+      const chestTrap = new THREE.Mesh(chestBaseGeo, chestMatTrap);
+      chestTrap.position.set(cx + 1.8, 0.4, cz);
+      chestTrap.userData = {
+        name: "Cofre Señuelo (/admin_trampa/)",
+        action: () => {
+          playTrollSound();
+          if (janisLidTrap) janisLidTrap.rotation.x = -Math.PI / 2.2;
+          triggerTroll3D("¡CAÍSTE EN EL SEÑUELO DE JANIS!", "Abriste el cofre trampa de /admin_trampa/. El archivo backup_keys.jpg era un falso positivo.");
+        }
+      };
+      scene.add(chestTrap);
+      interactables.push(chestTrap);
+
+      // Chest 2 Lid
+      janisLidTrap = new THREE.Mesh(lidGeo, new THREE.MeshStandardMaterial({ color: 0xff0055, emissive: 0x440011 }));
+      janisLidTrap.position.set(cx + 1.8, 0.9, cz);
+      scene.add(janisLidTrap);
+
+      createPosterMesh(cx, 4.5, cz, angle, "assets/images/joplin_photo.jpg", 3, 3);
+    }
+
+    // CHAMBER 3: JIM MORRISON (THE DOORS CRYPT) - 2.51 rad
+    function buildMorrisonChamber() {
+      const angle = (2 * Math.PI / 5) * 2;
+      createChamberPortal(angle, 0x00f0ff, "JIM MORRISON", "morrison");
+
+      const dist = 32;
+      const cx = Math.sin(angle) * dist;
+      const cz = -Math.cos(angle) * dist;
+
+      // Cyan Mystic Lighting
+      const light = new THREE.PointLight(0x00f0ff, 2.8, 22);
+      light.position.set(cx, 6, cz);
+      scene.add(light);
+
+      // 3 Stone Slabs (Doors of Perception)
+      const doorGeo = new THREE.BoxGeometry(1.6, 3.8, 0.3);
+      const stoneMat = new THREE.MeshStandardMaterial({ color: 0x333644, roughness: 0.9 });
+
+      // Door 1: Standard
+      const d1 = new THREE.Mesh(doorGeo, stoneMat);
+      d1.position.set(cx - 2.5, 1.9, cz);
+      d1.userData = {
+        name: "Puerta Estándar (id=1)",
+        action: () => {
+          playAudioTone(220, "sawtooth", 0.3);
+          alert("🔒 PUERTA 1: Cerrada con cerrojo de hierro. Requiere autenticación.");
+        }
+      };
+      scene.add(d1);
+      interactables.push(d1);
+
+      // Door 2: Trap (doors_trap)
+      const d2 = new THREE.Mesh(doorGeo, new THREE.MeshStandardMaterial({ color: 0x442233 }));
+      d2.position.set(cx, 1.9, cz);
+      d2.userData = {
+        name: "Puerta Espejismo (doors_trap)",
+        action: () => {
+          playTrollSound();
+          triggerTroll3D("¡TRAMPA DEL REY LAGARTO!", "Inyectaste en la tabla trampa doors_trap con el verso 'The End'.");
+        }
+      };
+      scene.add(d2);
+      interactables.push(d2);
+
+      // Door 3: Vulnerable SQLi (' OR 1=1 --)
+      const d3Mat = new THREE.MeshStandardMaterial({ color: 0x113333, emissive: 0x003344 });
+      morrisonDoorSlab = new THREE.Mesh(doorGeo, d3Mat);
+      morrisonDoorSlab.position.set(cx + 2.5, 1.9, cz);
+      morrisonDoorSlab.userData = {
+        name: "Puerta Mística (' OR 1=1 --)",
+        phase: 3,
+        desc: "La tercera puerta cede ante el payload SQLi UNION Based. Extrae la bandera de Morrison.",
+        action: () => {
+          playAudioTone(329.6, "triangle", 0.8);
+          // Animate door sliding up
+          morrisonDoorSlab.position.y = 4.5;
+          openHoloModal(3, "🦎 Puerta Mística • Jim Morrison", "FLAG{m0rr1s0n_d00rs_sql_1nj3ct10n}");
+        }
+      };
+      scene.add(morrisonDoorSlab);
+      interactables.push(morrisonDoorSlab);
+
+      createPosterMesh(cx, 5.2, cz - 1, angle, "assets/images/morrison_photo.jpg", 3, 3);
+    }
+
+    // CHAMBER 4: AMY WINEHOUSE (CAMDEN SPEAKEASY) - 3.77 rad
+    function buildWinehouseChamber() {
+      const angle = (2 * Math.PI / 5) * 3;
+      createChamberPortal(angle, 0xffaa00, "AMY WINEHOUSE", "winehouse");
+
+      const dist = 32;
+      const cx = Math.sin(angle) * dist;
+      const cz = -Math.cos(angle) * dist;
+
+      // Amber Warm Light
+      const light = new THREE.PointLight(0xffaa00, 2.5, 20);
+      light.position.set(cx, 6, cz);
+      scene.add(light);
+
+      // Mahogany Bar Counter
+      const barGeo = new THREE.BoxGeometry(6, 1.1, 1.8);
+      const barMat = new THREE.MeshStandardMaterial({ color: 0x4a2311, roughness: 0.4 });
+      const bar = new THREE.Mesh(barGeo, barMat);
+      bar.position.set(cx, 0.55, cz);
+      scene.add(bar);
+
+      // Secret Napkin on Bar
+      const napGeo = new THREE.BoxGeometry(0.8, 0.04, 0.8);
+      const napMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 });
+      const napkin = new THREE.Mesh(napGeo, napMat);
+      napkin.position.set(cx - 1.2, 1.13, cz);
+      napkin.userData = {
+        name: "Servilleta de Camden (admintoken)",
+        phase: 4,
+        desc: "Servilleta manchada con labial. Contiene la cookie de sesión secuestrada mediante Stored XSS.",
+        action: () => {
+          playAudioTone(440, "sine", 0.3);
+          openHoloModal(4, "🎙️ Servilleta de Camden • Amy Winehouse", "FLAG{4my_w1n3h0us3_st0r3d_xss_c00k13}");
+        }
+      };
+      scene.add(napkin);
+      interactables.push(napkin);
+
+      // Decoy Cocktail Glass
+      const glassGeo = new THREE.CylinderGeometry(0.2, 0.1, 0.5, 16);
+      const glassMat = new THREE.MeshStandardMaterial({ color: 0x00ffff, roughness: 0.1, transparent: true, opacity: 0.7 });
+      const glass = new THREE.Mesh(glassGeo, glassMat);
+      glass.position.set(cx + 1.2, 1.35, cz);
+      glass.userData = {
+        name: "Copa Señuelo (test_decoy)",
+        action: () => {
+          playTrollSound();
+          triggerTroll3D("¡TROLLEADO EN EL BAR DE CAMDEN!", "Robaste el vaso de utilería con la cookie test_decoy sin permisos.");
+        }
+      };
+      scene.add(glass);
+      interactables.push(glass);
+
+      createPosterMesh(cx, 4.8, cz - 1, angle, "assets/images/winehouse_photo.jpg", 3, 3);
+    }
+
+    // CHAMBER 5: KURT COBAIN (SEATTLE GRUNGE GARAGE) - 5.02 rad
+    function buildCobainChamber() {
+      const angle = (2 * Math.PI / 5) * 4;
+      createChamberPortal(angle, 0xff3333, "KURT COBAIN", "cobain");
+
+      const dist = 32;
+      const cx = Math.sin(angle) * dist;
+      const cz = -Math.cos(angle) * dist;
+
+      // Heavy Red Grunge Lighting
+      const light = new THREE.PointLight(0xff3333, 3, 22);
+      light.position.set(cx, 6, cz);
+      scene.add(light);
+
+      // Marshall Amplifier Stacks
+      const ampGeo = new THREE.BoxGeometry(3.5, 4.5, 1.5);
+      const ampMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.8 });
+      const amp = new THREE.Mesh(ampGeo, ampMat);
+      amp.position.set(cx, 2.25, cz - 1.5);
+      scene.add(amp);
+
+      // GIANT 3D BOSS DS-1 DISTORTION PEDAL ON THE FLOOR
+      const pedalBaseGeo = new THREE.BoxGeometry(1.8, 0.6, 2.8);
+      const pedalMat = new THREE.MeshStandardMaterial({ color: 0xff6600, roughness: 0.35, metalness: 0.2 });
+      const pedal = new THREE.Mesh(pedalBaseGeo, pedalMat);
+      pedal.position.set(cx, 0.3, cz + 1.2);
+      scene.add(pedal);
+
+      // Pedal Stomp Switch
+      const stompGeo = new THREE.BoxGeometry(1.4, 0.3, 1.2);
+      const stompMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.7 });
+      kurtStompSwitch = new THREE.Mesh(stompGeo, stompMat);
+      kurtStompSwitch.position.set(cx, 0.7, cz + 1.6);
+      kurtStompSwitch.userData = {
+        name: "Pedal BOSS DS-1 Distortion (Root GTFOBins)",
+        phase: 5,
+        desc: "Pisa a fondo el pedal de distorsión para activar el exploit sudo /usr/bin/find y reclamar root.",
+        action: () => {
+          stompKurtPedal3D();
+          openHoloModal(5, "⚡ Pedal BOSS DS-1 • Kurt Cobain (Root)", "FLAG{kurt_c0b41n_grung3_r00t_27}");
+        }
+      };
+      scene.add(kurtStompSwitch);
+      interactables.push(kurtStompSwitch);
+
+      // Red LED on Pedal
+      const ledGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.1, 16);
+      const ledMat = new THREE.MeshBasicMaterial({ color: 0x440000 });
+      const led = new THREE.Mesh(ledGeo, ledMat);
+      led.position.set(cx, 0.65, cz + 0.6);
+      scene.add(led);
+
+      kurtLedPointLight = new THREE.PointLight(0xff0033, 0, 5);
+      kurtLedPointLight.position.set(cx, 1, cz + 0.6);
+      scene.add(kurtLedPointLight);
+
+      createPosterMesh(cx, 5.2, cz - 1.5, angle, "assets/images/cobain_photo.jpg", 3, 3);
+    }
+
+    // Helper: Texture poster on wall
+    function createPosterMesh(x, y, z, angle, imagePath, w, h) {
+      const loader = new THREE.TextureLoader();
+      loader.load(imagePath, (texture) => {
+        const geo = new THREE.PlaneGeometry(w, h);
+        const mat = new THREE.MeshBasicMaterial({ map: texture });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(x, y, z);
+        mesh.rotation.y = angle;
+        scene.add(mesh);
+      });
+    }
+
+    // =========================================================================
+    // CONTROLS & CAMERA INTERACTION
+    // =========================================================================
+    function startFPS() {
+      document.getElementById("instructions-overlay").style.display = "none";
+      if (isFPS) {
+        fpsControls.lock();
+      }
+    }
+
+    function switchControlMode() {
+      isFPS = !isFPS;
+      const btn = document.getElementById("btnControlMode");
+      if (isFPS) {
+        btn.textContent = "🛰️ Modo: Primera Persona";
+        orbitControls.enabled = false;
+        fpsControls.lock();
+        document.getElementById("crosshair").style.display = "flex";
+      } else {
+        btn.textContent = "🎮 Modo: Vista Órbita";
+        fpsControls.unlock();
+        orbitControls.enabled = true;
+        orbitControls.target.set(0, 1, 0);
+        camera.position.set(0, 20, 35);
+        document.getElementById("crosshair").style.display = "none";
+        document.getElementById("interaction-prompt").style.display = "none";
+      }
+    }
+
+    function teleportTo(target) {
+      const positions = {
+        central: { x: 0, y: 1.7, z: 8, rotY: 0 },
+        hendrix: { x: 0, y: 1.7, z: -25, rotY: Math.PI },
+        joplin: { x: 19, y: 1.7, z: -19, rotY: -Math.PI / 4 },
+        morrison: { x: 19, y: 1.7, z: 19, rotY: -3 * Math.PI / 4 },
+        winehouse: { x: -19, y: 1.7, z: 19, rotY: 3 * Math.PI / 4 },
+        cobain: { x: -19, y: 1.7, z: -19, rotY: Math.PI / 4 }
+      };
+
+      const p = positions[target];
+      if (p) {
+        camera.position.set(p.x, p.y, p.z);
+        if (!isFPS) {
+          orbitControls.target.set(p.x, 1, p.z - 5);
+        }
+        playAudioTone(440, "sine", 0.15);
+      }
+
+      // Update button styles
+      document.querySelectorAll(".tele-btn").forEach(b => b.classList.remove("active"));
+      if (event && event.target) event.target.classList.add("active");
+    }
+
+    function onKeyDown(e) {
+      switch (e.code) {
+        case 'KeyW': moveForward = true; break;
+        case 'KeyS': moveBackward = true; break;
+        case 'KeyA': moveLeft = true; break;
+        case 'KeyD': moveRight = true; break;
+        case 'KeyE':
+          if (activeInteractable && activeInteractable.userData && activeInteractable.userData.action) {
+            activeInteractable.userData.action();
+          }
+          break;
+      }
+    }
+
+    function onKeyUp(e) {
+      switch (e.code) {
+        case 'KeyW': moveForward = false; break;
+        case 'KeyS': moveBackward = false; break;
+        case 'KeyA': moveLeft = false; break;
+        case 'KeyD': moveRight = false; break;
+      }
+    }
+
+    function onSceneClick() {
+      if (isFPS && !fpsControls.isLocked) {
+        fpsControls.lock();
+        return;
+      }
+      if (activeInteractable && activeInteractable.userData && activeInteractable.userData.action) {
+        activeInteractable.userData.action();
+      }
+    }
+
+    function checkRaycastInteractions() {
+      if (!isFPS) return;
+
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+
+      const intersects = raycaster.intersectObjects(interactables, false);
+      const prompt = document.getElementById("interaction-prompt");
+      const cross = document.getElementById("crosshair");
+
+      if (intersects.length > 0 && intersects[0].distance < 6.5) {
+        activeInteractable = intersects[0].object;
+        cross.classList.add("targeted");
+        prompt.style.display = "block";
+        prompt.textContent = `[E / Clic] Interactuar con: ${activeInteractable.userData.name || 'Objeto'}`;
+      } else {
+        activeInteractable = null;
+        cross.classList.remove("targeted");
+        prompt.style.display = "none";
+      }
+    }
+
+    // =========================================================================
+    // HACKING TERMINAL MODAL IN 3D
+    // =========================================================================
+    function openHoloModal(phase, title, prefilledFlag) {
+      const modal = document.getElementById("holoModal");
+      const tEl = document.getElementById("holoTitle");
+      const bEl = document.getElementById("holoBody");
+      const inp = document.getElementById("holoInput");
+
+      tEl.textContent = title;
+      bEl.innerHTML = `<strong>FASE ${phase} ACTIVA</strong><br>Valida tu bandera capturada para infligir daño directo de -20 HP al servidor central <code>192.168.56.1</code>.`;
+      inp.value = prefilledFlag || "";
+
+      document.getElementById("holo-modal").style.display = "block";
+      if (fpsControls.isLocked) fpsControls.unlock();
+    }
+
+    function closeHoloModal() {
+      document.getElementById("holo-modal").style.display = "none";
+    }
+
+    async function submitHoloFlag() {
+      const val = document.getElementById("holoInput").value.trim();
+      if (!val) return;
+
+      const hash = await sha256(val);
+      const entry = CTF_HASH_DB[hash];
+
+      if (entry) {
+        if (entry.type === "flag") {
+          if (!completedPhases.has(entry.phase)) {
+            completedPhases.add(entry.phase);
+            score += entry.points;
+            bossHp = Math.max(0, bossHp - 20);
+            updateHUD();
+            playAudioTone(523.25, "sine", 0.5);
+            alert(`🎉 ¡BANDERA CAPTURADA EN FASE ${entry.phase}!\n\n${entry.msg}\nDaño al Boss: -20 HP!`);
+            closeHoloModal();
+            if (entry.isRoot || bossHp === 0) {
+              alert("👑 ¡ROOT PRIVILEGE ESCALATION TOTAL!\n\nHas conquistado las 5 salas del Club 27 en 3D. 1000/1000 PTS.");
+            }
+          } else {
+            alert("Esta bandera ya fue registrada anteriormente.");
+          }
+        } else if (entry.type === "rabbit_hole") {
+          score = Math.max(0, score - entry.penalty);
+          updateHUD();
+          closeHoloModal();
+          triggerTroll3D(entry.name, entry.msg);
+        }
+      } else {
+        playAudioTone(150, "square", 0.4);
+        alert("❌ Bandera no reconocida. Revisa la sintaxis en tu consola de Kali.");
+      }
+    }
+
+    function updateHUD() {
+      document.getElementById("scoreVal").textContent = `${score} / 1000 PTS`;
+      document.getElementById("bossHpText").textContent = `${bossHp} / 100 HP`;
+      document.getElementById("bossHpFill").style.width = `${bossHp}%`;
+    }
+
+    function triggerTroll3D(title, msg) {
+      playTrollSound();
+      score = Math.max(0, score - 50);
+      updateHUD();
+      document.getElementById("troll3dMsg").innerHTML = `<strong>${title}</strong><br><br>${msg}`;
+      document.getElementById("troll-3d-modal").style.display = "block";
+    }
+
+    function stompKurtPedal3D() {
+      if (kurtStompSwitch) {
+        kurtStompSwitch.position.y = 0.55;
+        setTimeout(() => { kurtStompSwitch.position.y = 0.7; }, 200);
+      }
+      if (kurtLedPointLight) {
+        kurtLedPointLight.intensity = 3.5;
+      }
+      playGrungeDistortion();
+    }
+
+    function activateSustentacion3D() {
+      score = 1000;
+      bossHp = 0;
+      completedPhases.add(1); completedPhases.add(2);
+      completedPhases.add(3); completedPhases.add(4);
+      completedPhases.add(5);
+      updateHUD();
+      stompKurtPedal3D();
+      alert("🎓 MODO SUSTENTACIÓN 100% ACTIVADO EN 3D\n\nTodas las salas resueltas: 1000/1000 PTS. Boss derrotado.");
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    // =========================================================================
+    // MAIN RENDER & ANIMATION LOOP
+    // =========================================================================
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const time = performance.now();
+
+      // Rotate central vinyl record
+      if (centralVinylMesh) {
+        centralVinylMesh.rotation.y += 0.015;
+      }
+
+      // First Person Movement Physics
+      if (fpsControls.isLocked) {
+        const delta = (time - prevTime) / 1000;
+
+        velocity.x -= velocity.x * 10.0 * delta;
+        velocity.z -= velocity.z * 10.0 * delta;
+
+        direction.z = Number(moveForward) - Number(moveBackward);
+        direction.x = Number(moveRight) - Number(moveLeft);
+        direction.normalize();
+
+        if (moveForward || moveBackward) velocity.z -= direction.z * 65.0 * delta;
+        if (moveLeft || moveRight) velocity.x -= direction.x * 65.0 * delta;
+
+        fpsControls.moveRight(-velocity.x * delta);
+        fpsControls.moveForward(-velocity.z * delta);
+
+        // Keep player on ground
+        camera.position.y = 1.7;
+
+        checkRaycastInteractions();
+      } else if (!isFPS) {
+        orbitControls.update();
+      }
+
+      prevTime = time;
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
