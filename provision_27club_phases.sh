@@ -27,9 +27,41 @@ cat << 'EOF' > /etc/apache2/conf-available/rock-headers.conf
     Header set X-Artist-Tribute "Jimi Hendrix, Janis Joplin, Jim Morrison, Amy Winehouse, Kurt Cobain"
     Header set X-Security-Auditor "Oscar Robayo - Universidad de Cundinamarca"
     Header set X-Powered-By "Marshall Amps & Fender Stratocaster"
+    Header set X-Discovery-Token "27C{nmap_sc4n_r0ck_h0st_d1sc0v3ry}"
 </IfModule>
 EOF
 a2enconf rock-headers 2>/dev/null || true
+
+# Configurar robots.txt temático con pistas y señuelos estilo Troll
+cat << 'EOF' > /var/www/html/robots.txt
+# ==============================================================
+# The 27 Club CTF - robots.txt
+# Auditor: Revisa los directorios y cabeceras de respuesta HTTP
+# ==============================================================
+User-agent: *
+Disallow: /admin_trampa/
+Disallow: /cry_baby/
+Disallow: /doors/
+Disallow: /winehouse/
+# Pista: No todos los puertos abiertos son lo que parecen...
+EOF
+
+# Desplegar puerto señuelo 1337 (Troll Port - Rabbit Hole)
+nohup python3 -c '
+import socket
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+s.bind(("0.0.0.0", 1337))
+s.listen(5)
+while True:
+    try:
+        conn, addr = s.accept()
+        banner = b"\n====================================================\n[!] THE 27 CLUB - MASTER BACKDOOR SERVICE\n[+] Acceso no autorizado detectado. Clave de bypass:\n27C{tr0ll_b4ckd00r_p0rt_1337_lol}\n====================================================\n"
+        conn.sendall(banner)
+        conn.close()
+    except:
+        pass
+' >/dev/null 2>&1 &
 
 # Configurar error 404 personalizado si existe
 if [ -f /var/www/html/rock_404.html ]; then

