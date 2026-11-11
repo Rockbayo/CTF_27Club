@@ -9,16 +9,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Permanent+Marker&family=Rajdhani:wght@500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
   <style>
     :root {
-      --wood-dark: #120d0a;
-      --wood-med: #1e1510;
-      --wood-warm: #2c1d15;
+      --wood-dark: #0f0a07;
+      --wood-med: #1a110c;
+      --wood-warm: #261811;
       --brass-gold: #c5a059;
       --brass-light: #e4c580;
       --aged-cream: #f4ece1;
       --aged-paper: #e8dccb;
       --text-muted: #9e8d7f;
-      --velvet-wine: #3d1c22;
-      --leather-trim: #4a2d1e;
+      --velvet-wine: #33151b;
+      --leather-trim: #422619;
       --amber-glow: #e09f3e;
       --amber-bright: #ffbe0b;
       --success-olive: #588157;
@@ -32,10 +32,6 @@
       height: 100%;
       overflow: hidden;
       background-color: var(--wood-dark);
-      background-image: 
-        radial-gradient(circle at 75% 25%, rgba(224, 159, 62, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 20% 80%, rgba(61, 28, 34, 0.25) 0%, transparent 50%),
-        linear-gradient(rgba(18, 13, 10, 0.98), rgba(18, 13, 10, 0.98));
       font-family: 'Rajdhani', sans-serif;
       color: var(--aged-cream);
     }
@@ -53,7 +49,7 @@
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 74px;
-      background: linear-gradient(180deg, rgba(22, 16, 12, 0.98), rgba(22, 16, 12, 0.8) 85%, transparent);
+      background: linear-gradient(180deg, rgba(18, 12, 9, 0.98), rgba(18, 12, 9, 0.82) 85%, transparent);
       z-index: 20;
       display: flex;
       justify-content: space-between;
@@ -61,7 +57,7 @@
       padding: 0 24px;
       backdrop-filter: blur(12px);
       border-bottom: 2px solid rgba(197, 160, 89, 0.35);
-      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.85);
     }
 
     .brand-section {
@@ -73,7 +69,7 @@
       width: 44px; height: 44px;
       border-radius: 50%;
       background: radial-gradient(circle, #b8860b 15%, #111 20%, #222 40%, #111 60%, #4a2d1e 95%);
-      box-shadow: 0 0 12px rgba(197, 160, 89, 0.4);
+      box-shadow: 0 0 14px rgba(197, 160, 89, 0.45);
       position: relative;
       animation: vinylSpin 7s linear infinite;
     }
@@ -124,11 +120,11 @@
     .boss-scale-frame {
       width: 100%;
       height: 16px;
-      background: rgba(10, 7, 5, 0.9);
+      background: rgba(10, 7, 5, 0.95);
       border: 1px solid var(--brass-gold);
       border-radius: 4px;
       overflow: hidden;
-      box-shadow: inset 0 2px 6px rgba(0,0,0,0.8), 0 0 8px rgba(197, 160, 89, 0.2);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.9), 0 0 10px rgba(197, 160, 89, 0.25);
       position: relative;
       display: flex;
     }
@@ -146,7 +142,7 @@
     }
     .b-seg {
       flex: 1;
-      border-right: 1px solid rgba(0, 0, 0, 0.65);
+      border-right: 1px solid rgba(0, 0, 0, 0.7);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -162,13 +158,13 @@
     }
 
     /* RIGHT STATS & CONTROLS */
-    .hud-right {
+    .hud-controls-right {
       display: flex;
       align-items: center;
       gap: 12px;
     }
     .vintage-pill {
-      background: rgba(30, 21, 16, 0.8);
+      background: rgba(26, 17, 12, 0.85);
       border: 1px solid rgba(197, 160, 89, 0.3);
       border-radius: 6px;
       padding: 6px 12px;
@@ -179,7 +175,7 @@
       gap: 8px;
     }
     .btn-vintage {
-      background: linear-gradient(180deg, #3a261a, #23160e);
+      background: linear-gradient(180deg, #382417, #21140d);
       border: 1px solid var(--brass-gold);
       color: var(--brass-light);
       font-family: 'Rajdhani', sans-serif;
@@ -212,17 +208,17 @@
       color: #000;
     }
 
-    /* LEFT TACTICAL BRIEFING: AGED LEATHER BINDER */
+    /* LEFT TACTICAL ATTACK BRIEFING: LEATHER BINDER */
     #tactical-drawer {
       position: absolute;
       top: 90px;
       left: 24px;
       width: 410px;
       max-height: calc(100vh - 180px);
-      background: linear-gradient(160deg, rgba(28, 20, 15, 0.95), rgba(18, 13, 10, 0.97));
+      background: linear-gradient(160deg, rgba(26, 18, 13, 0.96), rgba(15, 10, 7, 0.98));
       border: 1px solid rgba(197, 160, 89, 0.35);
       border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), inset 0 0 20px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), inset 0 0 25px rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(14px);
       z-index: 20;
       display: flex;
@@ -268,7 +264,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      background: rgba(10, 7, 5, 0.6);
+      background: rgba(10, 7, 5, 0.7);
       border-radius: 8px;
       padding: 10px;
       border: 1px solid rgba(197, 160, 89, 0.2);
@@ -278,7 +274,7 @@
       border-radius: 6px;
       border: 2px solid var(--brass-gold);
       object-fit: cover;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
     }
     .artist-binder-meta h4 {
       font-family: 'Permanent Marker', cursive;
@@ -292,7 +288,7 @@
     }
 
     .spec-table-vintage {
-      background: rgba(10, 7, 5, 0.65);
+      background: rgba(10, 7, 5, 0.75);
       border-radius: 6px;
       border: 1px dashed rgba(197, 160, 89, 0.25);
       padding: 10px 12px;
@@ -310,7 +306,7 @@
     .spec-table-vintage span:last-child { color: var(--brass-light); font-weight: 600; }
 
     .terminal-guide-box {
-      background: #090604;
+      background: #080503;
       border: 1px solid rgba(197, 160, 89, 0.3);
       border-radius: 6px;
       padding: 10px 12px;
@@ -321,14 +317,14 @@
     }
     .terminal-guide-box code {
       color: var(--amber-bright);
-      background: rgba(255, 190, 11, 0.1);
+      background: rgba(255, 190, 11, 0.12);
       padding: 1px 4px;
       border-radius: 3px;
     }
 
     /* FLAG INJECTION FORM */
     .injection-form {
-      background: linear-gradient(180deg, rgba(35, 23, 16, 0.8), rgba(20, 14, 10, 0.9));
+      background: linear-gradient(180deg, rgba(32, 21, 14, 0.85), rgba(18, 12, 8, 0.95));
       border: 1px solid var(--brass-gold);
       border-radius: 8px;
       padding: 12px;
@@ -344,7 +340,7 @@
       justify-content: space-between;
     }
     .flag-input-vintage {
-      background: rgba(10, 7, 5, 0.85);
+      background: rgba(10, 7, 5, 0.9);
       border: 1px solid rgba(197, 160, 89, 0.4);
       border-radius: 5px;
       padding: 9px 12px;
@@ -378,7 +374,7 @@
 
     /* MINI LOG */
     .mini-audit-log {
-      background: #080503;
+      background: #060402;
       border: 1px solid rgba(197, 160, 89, 0.15);
       border-radius: 5px;
       padding: 8px 10px;
@@ -390,7 +386,7 @@
       line-height: 1.4;
     }
 
-    /* BOTTOM DOCK (SOBER VINTAGE) */
+    /* BOTTOM DOCK */
     #bottom-dock {
       position: absolute;
       bottom: 20px;
@@ -400,12 +396,12 @@
       display: flex;
       align-items: center;
       gap: 16px;
-      background: rgba(22, 16, 12, 0.95);
+      background: rgba(18, 12, 9, 0.95);
       border: 1px solid rgba(197, 160, 89, 0.4);
       border-radius: 25px;
       padding: 8px 20px;
       backdrop-filter: blur(14px);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.85);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
     }
     .pos-pill-vintage {
       font-family: 'Fira Code', monospace;
@@ -423,7 +419,7 @@
       gap: 6px;
     }
     .f-pill {
-      background: rgba(35, 23, 16, 0.8);
+      background: rgba(30, 20, 14, 0.85);
       border: 1px solid rgba(197, 160, 89, 0.25);
       color: var(--text-muted);
       border-radius: 12px;
@@ -467,7 +463,7 @@
       font-weight: 700;
     }
 
-    /* TROLL TRAP MODAL (VINTAGE SNAP ERROR) */
+    /* TROLL TRAP MODAL */
     #troll-modal {
       position: absolute;
       top: 50%; left: 50%;
@@ -705,7 +701,7 @@
 
   <script>
     // =========================================================================
-    // 🎸 THE 27 CLUB - VINTAGE ROCK ROOM & GUITAR FRETBOARD ENGINE
+    // 🎸 PHOTOREALISTIC 3D VINTAGE ROCK ROOM & FRETBOARD ENGINE
     // =========================================================================
 
     let scene, camera, renderer, controls;
@@ -720,7 +716,7 @@
     let timerSeconds = 60 * 60;
     let timerInterval = null;
 
-    // 3D Meshes
+    // 3D Meshes & Lights
     let guitarGroup;
     let puaMesh;
     let stringMeshes = [];
@@ -729,10 +725,10 @@
 
     // 27 Fretboard Dimensions
     const TOTAL_FRETS = 27;
-    const NECK_LENGTH = 52;
-    const NECK_WIDTH = 3.6;
+    const NECK_LENGTH = 54;
+    const NECK_WIDTH = 3.8;
 
-    // Realistic fret positions along Z axis
+    // Fret positions along Z axis (Nut to Headstock)
     const fretPositionsZ = [];
     for (let i = 0; i <= TOTAL_FRETS; i++) {
       const pct = 1 - Math.pow(0.963, i * 1.32);
@@ -800,12 +796,10 @@
 
     // Client-side Cryptographic Hash Database (Matches Docker environment)
     const CTF_HASH_DB = {
-      // Fase 1: Jimi Hendrix
       "5e92acd0d04435bfcd1301c88b1a6f10ff4e88ecca45213f1c89dc6649900aac": {
         phase: 1, type: "flag", name: "Jimi Hendrix", points: 150, nextPhase: 2,
         msg: "¡PERÍMETRO VULNERADO! Tráfico C&C interceptado y decodificado exitosamente."
       },
-      // Fase 2: Janis Joplin
       "2699e5b569fb12cc9c9d22d5e5648e2d686e5f7dec6f2a525359697308156b9c": {
         phase: 2, type: "flag", name: "Janis Joplin", points: 200, nextPhase: 3,
         msg: "¡ESTEGANOGRAFÍA RESUELTA! Artefacto EOF exfiltrado de la furgoneta."
@@ -814,7 +808,6 @@
         phase: 2, type: "rabbit_hole", name: "Señuelo Janis (admin_trampa)", penalty: 50,
         msg: "RABBIT HOLE: 'backup_keys.jpg' en /admin_trampa era un señuelo trampa."
       },
-      // Fase 3: Jim Morrison
       "6dd18975083f09f1304ed1ed761656a54e4ed9622cf98002cf5e7ce409831977": {
         phase: 3, type: "flag", name: "Jim Morrison", points: 250, nextPhase: 4,
         msg: "¡PUERTA DESBLOQUEADA! Inyección SQL UNION Based completada."
@@ -823,7 +816,6 @@
         phase: 3, type: "rabbit_hole", name: "Señuelo Morrison (doors_trap)", penalty: 50,
         msg: "RABBIT HOLE: Inyectaste en la tabla señuelo doors_trap ('The End')."
       },
-      // Fase 4: Amy Winehouse
       "46159a8ed4c6b0d4cf2c231c4de1944401e7bbb4a024418030de5e413a95627b": {
         phase: 4, type: "flag", name: "Amy Winehouse", points: 200, nextPhase: 5,
         msg: "¡SESIÓN SECUESTRADA! Cookie admintoken capturada mediante Stored XSS."
@@ -832,7 +824,6 @@
         phase: 4, type: "rabbit_hole", name: "Señuelo Amy (Cookie de prueba)", penalty: 50,
         msg: "RABBIT HOLE: Capturaste la cookie test_decoy de utilería sin permisos."
       },
-      // Fase 5: Kurt Cobain (Root)
       "2b37cf1f78087b52eba00aaefa0ae2abd833d64d542a2210f36bf26938639acd": {
         phase: 5, type: "flag", name: "Kurt Cobain", points: 200, isRoot: true,
         msg: "¡TRONO ROOT CONQUISTADO! SUID find explotado con GTFOBins."
@@ -847,10 +838,109 @@
     }
 
     // =========================================================================
-    // AUDIO SYNTHESIZERS (SNAPPING STRING & POWER CHORDS)
+    // PROCEDURAL PBR TEXTURE GENERATORS (IN MEMORY)
     // =========================================================================
     
-    // Snapping / Broken Guitar String Sound (SNAP! TWANG! boooing)
+    // 1. Procedural 3-Tone Sunburst Texture (1024x1024)
+    function generateSunburstTexture() {
+      const cv = document.createElement('canvas');
+      cv.width = 1024; cv.height = 1024;
+      const ctx = cv.getContext('2d');
+
+      // Base Amber Honey Wood Grain
+      const grad = ctx.createRadialGradient(512, 580, 60, 512, 540, 480);
+      grad.addColorStop(0.0, '#f9be7d');  // Warm Honey Center
+      grad.addColorStop(0.35, '#d97d26'); // Amber Gold
+      grad.addColorStop(0.65, '#852d11'); // Cherry Burnt Umber
+      grad.addColorStop(0.88, '#2b0c06'); // Deep Mahogany
+      grad.addColorStop(1.0, '#0a0403');  // Outer Black Edge
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1024, 1024);
+
+      // Fine Wood Grain Ribs
+      ctx.fillStyle = 'rgba(40, 20, 10, 0.04)';
+      for (let y = 0; y < 1024; y += 4) {
+        ctx.fillRect(0, y + (Math.sin(y * 0.05) * 2), 1024, 1.5);
+      }
+
+      const tex = new THREE.CanvasTexture(cv);
+      tex.wrapS = THREE.ClampToEdgeWrapping;
+      tex.wrapT = THREE.ClampToEdgeWrapping;
+      return tex;
+    }
+
+    // 2. Procedural Wood Grain & Bump Map (512x512)
+    function generateWoodGrainTexture(baseColorHex, fiberColorHex) {
+      const cv = document.createElement('canvas');
+      cv.width = 512; cv.height = 512;
+      const ctx = cv.getContext('2d');
+
+      ctx.fillStyle = baseColorHex || '#1e140e';
+      ctx.fillRect(0, 0, 512, 512);
+
+      // Longitudinal fine grain lines
+      ctx.fillStyle = fiberColorHex || 'rgba(10, 6, 4, 0.22)';
+      for (let i = 0; i < 512; i += 3) {
+        const wobble = Math.sin(i * 0.08) * 3;
+        ctx.fillRect(i + wobble, 0, 1.2, 512);
+      }
+
+      const tex = new THREE.CanvasTexture(cv);
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(1, 4);
+      return tex;
+    }
+
+    // 3. Procedural Micro-Groove Vinyl Texture (512x512)
+    function generateVinylGrooveTexture() {
+      const cv = document.createElement('canvas');
+      cv.width = 512; cv.height = 512;
+      const ctx = cv.getContext('2d');
+
+      ctx.fillStyle = '#080808';
+      ctx.fillRect(0, 0, 512, 512);
+
+      // Concentric micro-grooves
+      ctx.strokeStyle = 'rgba(35, 35, 35, 0.25)';
+      ctx.lineWidth = 1;
+      for (let r = 35; r < 250; r += 2.5) {
+        ctx.beginPath();
+        ctx.arc(256, 256, r, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      const tex = new THREE.CanvasTexture(cv);
+      return tex;
+    }
+
+    // 4. Procedural Fabric Weave Bump Map for Velvet Bed (256x256)
+    function generateFabricWeaveTexture() {
+      const cv = document.createElement('canvas');
+      cv.width = 256; cv.height = 256;
+      const ctx = cv.getContext('2d');
+
+      ctx.fillStyle = '#222222';
+      ctx.fillRect(0, 0, 256, 256);
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+      for (let x = 0; x < 256; x += 4) {
+        for (let y = 0; y < 256; y += 4) {
+          if ((x + y) % 8 === 0) ctx.fillRect(x, y, 2, 2);
+        }
+      }
+
+      const tex = new THREE.CanvasTexture(cv);
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(12, 12);
+      return tex;
+    }
+
+    // =========================================================================
+    // AUDIO SYNTHESIZERS (SNAPPING STRING & POWER CHORDS)
+    // =========================================================================
     function playBrokenStringSound() {
       try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -887,7 +977,7 @@
         const buzzOsc = ctx.createOscillator();
         const buzzGain = ctx.createGain();
         buzzOsc.type = "square";
-        buzzOsc.frequency.setValueAtTime(60, ctx.currentTime + 0.05); // 60Hz hum
+        buzzOsc.frequency.setValueAtTime(60, ctx.currentTime + 0.05);
         buzzGain.gain.setValueAtTime(0.08, ctx.currentTime + 0.05);
         buzzGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
         buzzOsc.connect(buzzGain);
@@ -897,7 +987,6 @@
       } catch(e) {}
     }
 
-    // Warm Guitar Strum on Movement
     function playWarmGuitarStrum(baseFreq) {
       try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -920,42 +1009,52 @@
     }
 
     // =========================================================================
-    // 3D SCENE SETUP: VINTAGE ROCK ROOM & BED
+    // 3D SCENE SETUP: PHOTOREALISTIC ENGINE (ACES FILMIC + SOFT SHADOWS)
     // =========================================================================
-    function initVintageRoom() {
+    function initPhotorealRoom() {
       const canvas = document.getElementById("webgl-canvas");
 
-      // Scene & Warm Atmospheric Fog
+      // 1. Scene & Volumetric Tungsten Fog
       scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x120d0a);
-      scene.fog = new THREE.FogExp2(0x120d0a, 0.015);
+      scene.background = new THREE.Color(0x0e0906);
+      scene.fog = new THREE.FogExp2(0x0e0906, 0.014);
 
-      // Camera
-      camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 0.1, 1000);
+      // 2. Camera with Film Lens Focal Length
+      camera = new THREE.PerspectiveCamera(46, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-      // Renderer
-      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+      // 3. Renderer with ACES Filmic Tone Mapping & sRGB Color Space
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // CINEMATIC GRAPHICS SETTINGS
+      if (renderer.toneMapping !== undefined) {
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.15;
+      }
+      if (renderer.outputEncoding !== undefined) {
+        renderer.outputEncoding = THREE.sRGBEncoding;
+      }
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-      // Controls
+      // 4. Orbit Controls
       controls = new THREE.OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
 
-      // Lighting (Warm Bedside Lamp + Amber Fill)
-      setupVintageLighting();
+      // 5. Lighting Architecture
+      setupCinematicLighting();
 
-      // Architecture
-      buildRoomAndFloor();
-      buildBedAndBlanket();
-      buildRealisticGuitar();
-      buildScatteredVinylAlbums();
-      buildPuaPickPawn();
+      // 6. Realistic 3D Environment
+      buildRoomAndFloorboards();
+      buildVelvetBedAndPillows();
+      buildMasterGuitar();
+      buildScatteredAlbumsAndVinyl();
+      buildTortoiseshellPua();
+      buildFloorAmplifier();
 
-      // Camera initial view
+      // Initial Camera View
       setCameraMode('iso');
 
       window.addEventListener('resize', onWindowResize);
@@ -963,36 +1062,56 @@
       animate();
     }
 
-    function setupVintageLighting() {
-      // Warm Dim Ambient
-      const ambLight = new THREE.AmbientLight(0x38281d, 1.2);
+    function setupCinematicLighting() {
+      // 1. Warm Ambient Base (Deep wood reflection)
+      const ambLight = new THREE.AmbientLight(0x2f1f14, 1.1);
       scene.add(ambLight);
 
-      // Warm Bedside Lamp Light (Tungsten Bulb Glow)
-      lampLight = new THREE.PointLight(0xffbe0b, 2.8, 65);
-      lampLight.position.set(16, 18, -15);
+      // 2. Main Key Light: Tungsten Bedside Lamp with Soft Shadows
+      lampLight = new THREE.PointLight(0xffbe0b, 3.2, 60, 1.6);
+      lampLight.position.set(16, 17, -15);
       lampLight.castShadow = true;
+      lampLight.shadow.mapSize.width = 2048;
+      lampLight.shadow.mapSize.height = 2048;
+      lampLight.shadow.camera.near = 0.5;
+      lampLight.shadow.camera.far = 70;
+      lampLight.shadow.bias = -0.00015;
+      lampLight.shadow.radius = 2.4; // Soft PCF shadow edges
       scene.add(lampLight);
 
-      // Secondary Amber/Wine Fill Light from opposite side
-      const wineFill = new THREE.PointLight(0x7a3038, 1.5, 50);
-      wineFill.position.set(-16, 12, -30);
-      scene.add(wineFill);
+      // Glowing Filament Mesh inside the lamp shade
+      const filamentGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.8, 8);
+      const filamentMat = new THREE.MeshBasicMaterial({ color: 0xfff0b3 });
+      const filament = new THREE.Mesh(filamentGeo, filamentMat);
+      filament.position.set(16, 15.5, -15);
+      scene.add(filament);
 
-      // Soft ceiling warm downlight
-      const spot = new THREE.SpotLight(0xffecd1, 1.4, 70, Math.PI / 3, 0.4);
-      spot.position.set(0, 28, -25);
-      scene.add(spot);
+      // 3. Directional Rim Light (Deep wine/amber highlight along the guitar edge)
+      const rimLight = new THREE.DirectionalLight(0xd4a373, 0.8);
+      rimLight.position.set(-20, 25, 10);
+      rimLight.castShadow = true;
+      rimLight.shadow.mapSize.width = 1024;
+      rimLight.shadow.mapSize.height = 1024;
+      scene.add(rimLight);
+
+      // 4. Subtle Downlight
+      const ceilingSpot = new THREE.SpotLight(0xffecd1, 1.2, 80, Math.PI / 3.5, 0.4);
+      ceilingSpot.position.set(0, 32, -25);
+      ceilingSpot.target.position.set(0, 0, -25);
+      scene.add(ceilingSpot);
+      scene.add(ceilingSpot.target);
     }
 
-    // Wooden Floorboards and Bedroom Walls
-    function buildRoomAndFloor() {
-      // Dark Oak Wooden Floorboards
-      const floorGeo = new THREE.PlaneGeometry(120, 120);
+    // Dark Oak Wooden Floor with procedural wood grain
+    function buildRoomAndFloorboards() {
+      const woodTex = generateWoodGrainTexture('#160e0a', 'rgba(0,0,0,0.35)');
+      const floorGeo = new THREE.PlaneGeometry(130, 130);
       const floorMat = new THREE.MeshStandardMaterial({
-        color: 0x18110b,
-        roughness: 0.7,
-        metalness: 0.1
+        map: woodTex,
+        bumpMap: woodTex,
+        bumpScale: 0.05,
+        roughness: 0.65,
+        metalness: 0.12
       });
       const floor = new THREE.Mesh(floorGeo, floorMat);
       floor.rotation.x = -Math.PI / 2;
@@ -1000,190 +1119,264 @@
       floor.receiveShadow = true;
       scene.add(floor);
 
-      // Back Wall with wood wainscoting
-      const wallGeo = new THREE.PlaneGeometry(120, 50);
-      const wallMat = new THREE.MeshStandardMaterial({ color: 0x1a120c, roughness: 0.85 });
+      // Bedroom Wall with Concert Posters
+      const wallTex = generateWoodGrainTexture('#140d09', 'rgba(5,3,2,0.4)');
+      const wallGeo = new THREE.PlaneGeometry(130, 55);
+      const wallMat = new THREE.MeshStandardMaterial({ map: wallTex, roughness: 0.85 });
       const wall = new THREE.Mesh(wallGeo, wallMat);
-      wall.position.set(0, 22.5, -60);
+      wall.position.set(0, 25, -62);
+      wall.receiveShadow = true;
       scene.add(wall);
     }
 
-    // Realistic Wooden Bed with Deep Wine Velvet Blanket
-    function buildBedAndBlanket() {
+    // Wooden Bed with Wrinkled Velvet Quilt and Soft Pillows
+    function buildVelvetBedAndPillows() {
       const bedGroup = new THREE.Group();
+      const woodTex = generateWoodGrainTexture('#1f130c', 'rgba(10,5,2,0.4)');
 
-      // Bed Wooden Frame (Nogal oscuro)
-      const frameGeo = new THREE.BoxGeometry(24, 2.5, 66);
-      const frameMat = new THREE.MeshStandardMaterial({ color: 0x1f140e, roughness: 0.5, metalness: 0.2 });
+      // Solid Walnut Bed Frame with bevels
+      const frameGeo = new THREE.BoxGeometry(25, 2.6, 68);
+      const frameMat = new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.5, metalness: 0.15 });
       const frame = new THREE.Mesh(frameGeo, frameMat);
       frame.position.set(0, -1.2, -26);
       frame.receiveShadow = true;
       bedGroup.add(frame);
 
-      // Headboard (Cabecero de madera clásico)
-      const headGeo = new THREE.BoxGeometry(24.5, 8, 2);
+      // Classical Carved Headboard
+      const headGeo = new THREE.BoxGeometry(25.5, 9, 2.2);
       const headboard = new THREE.Mesh(headGeo, frameMat);
-      headboard.position.set(0, 3, -58.5);
+      headboard.position.set(0, 3.5, -59);
+      headboard.castShadow = true;
       bedGroup.add(headboard);
 
-      // Wrinkled Velvet Quilt / Blanket (Colcha de terciopelo burdeos oscuro)
-      const mattressGeo = new THREE.BoxGeometry(22.8, 1.8, 64);
-      const mattressMat = new THREE.MeshStandardMaterial({
-        color: 0x2b1519,
-        roughness: 0.85,
-        metalness: 0.05
+      // Wrinkled Velvet Bed Duvet (Terciopelo con bump map de micro-tejido)
+      const fabricTex = generateFabricWeaveTexture();
+      const duvetGeo = new THREE.BoxGeometry(23.6, 2.0, 65.5);
+      const duvetMat = new THREE.MeshStandardMaterial({
+        color: 0x2e1419, // Deep burgundy velvet
+        bumpMap: fabricTex,
+        bumpScale: 0.04,
+        roughness: 0.82,
+        metalness: 0.04
       });
-      const mattress = new THREE.Mesh(mattressGeo, mattressMat);
-      mattress.position.set(0, 0, -26);
-      mattress.receiveShadow = true;
-      bedGroup.add(mattress);
+      const duvet = new THREE.Mesh(duvetGeo, duvetMat);
+      duvet.position.set(0, 0, -26);
+      duvet.receiveShadow = true;
+      bedGroup.add(duvet);
 
-      // Bedside Table with Vintage Lamp
-      const tableGeo = new THREE.BoxGeometry(6, 4, 6);
+      // Two Soft Pillows against the headboard
+      const pillowGeo = new THREE.BoxGeometry(9.5, 1.6, 6.5);
+      const pillowMat = new THREE.MeshStandardMaterial({
+        color: 0x3d1c23,
+        bumpMap: fabricTex,
+        bumpScale: 0.03,
+        roughness: 0.9
+      });
+      const p1 = new THREE.Mesh(pillowGeo, pillowMat);
+      p1.position.set(-5.5, 1.4, -54);
+      p1.rotation.x = 0.25;
+      p1.castShadow = true;
+      bedGroup.add(p1);
+
+      const p2 = new THREE.Mesh(pillowGeo, pillowMat);
+      p2.position.set(5.5, 1.4, -54);
+      p2.rotation.x = 0.25;
+      p2.castShadow = true;
+      bedGroup.add(p2);
+
+      // Bedside Nightstand Table
+      const tableGeo = new THREE.BoxGeometry(6.5, 4.5, 6.5);
       const table = new THREE.Mesh(tableGeo, frameMat);
-      table.position.set(16, 0, -15);
+      table.position.set(16, 0.2, -15);
+      table.receiveShadow = true;
       bedGroup.add(table);
 
-      // Lamp Base & Shade
-      const shadeGeo = new THREE.ConeGeometry(2, 2.5, 16, 1, true);
-      const shadeMat = new THREE.MeshStandardMaterial({ color: 0xd4a373, roughness: 0.6, side: THREE.DoubleSide });
-      const shade = new THREE.Mesh(shadeGeo, shadeMat);
-      shade.position.set(16, 4.5, -15);
-      bedGroup.add(shade);
+      // Vintage Lamp on Table (Lámpara de bronce con tulipa de lino)
+      const baseGeo = new THREE.CylinderGeometry(1.6, 2.0, 0.6, 16);
+      const brassMat = new THREE.MeshStandardMaterial({ color: 0xc5a059, metalness: 0.85, roughness: 0.25 });
+      const lampBase = new THREE.Mesh(baseGeo, brassMat);
+      lampBase.position.set(16, 2.7, -15);
+      bedGroup.add(lampBase);
+
+      const rodGeo = new THREE.CylinderGeometry(0.18, 0.18, 4.2, 12);
+      const lampRod = new THREE.Mesh(rodGeo, brassMat);
+      lampRod.position.set(16, 4.8, -15);
+      bedGroup.add(lampRod);
+
+      const shadeGeo = new THREE.ConeGeometry(2.4, 3.2, 16, 1, true);
+      const shadeMat = new THREE.MeshStandardMaterial({ color: 0xd4a373, roughness: 0.65, side: THREE.DoubleSide });
+      const lampShade = new THREE.Mesh(shadeGeo, shadeMat);
+      lampShade.position.set(16, 6.8, -15);
+      bedGroup.add(lampShade);
 
       scene.add(bedGroup);
     }
 
     // =========================================================================
-    // REALISTIC ELECTRIC GUITAR (BODY + 27-FRET NECK + HEADSTOCK)
+    // PHOTOREALISTIC GUITAR WITH CLEARCOAT LACQUER & 27 FRETS
     // =========================================================================
-    function buildRealisticGuitar() {
+    function buildMasterGuitar() {
       guitarGroup = new THREE.Group();
-      guitarGroup.position.set(0, 1.0, 0); // Resting comfortably on the bed surface
+      guitarGroup.position.set(0, 1.1, 0); // Resting comfortably on the bed surface
 
-      // 1. Tobacco Sunburst Guitar Body (Cuerpo curvado de Stratocaster clásica)
+      // 1. Procedural 3-Tone Sunburst Lacquered Body (Physical Clearcoat!)
+      const sunburstTex = generateSunburstTexture();
+
       const bodyShape = new THREE.Shape();
-      // Guitar body contour
       bodyShape.moveTo(0, 0);
-      bodyShape.bezierCurveTo(3.5, 1, 5.5, 4, 4.8, 8);
-      bodyShape.bezierCurveTo(4.2, 11, 2.5, 12, 3.2, 16);
-      bodyShape.bezierCurveTo(3.8, 19, 5.0, 20, 4.5, 23); // Horn
-      bodyShape.bezierCurveTo(3.5, 23, 2.2, 21, 1.8, 19);
-      bodyShape.bezierCurveTo(1.2, 19, -1.2, 19, -1.8, 19);
-      bodyShape.bezierCurveTo(-2.2, 21, -3.5, 23, -4.5, 23); // Other horn
-      bodyShape.bezierCurveTo(-5.0, 20, -3.8, 19, -3.2, 16);
-      bodyShape.bezierCurveTo(-2.5, 12, -4.2, 11, -4.8, 8);
-      bodyShape.bezierCurveTo(-5.5, 4, -3.5, 1, 0, 0);
+      bodyShape.bezierCurveTo(3.8, 1, 6.0, 4, 5.2, 8.5);
+      bodyShape.bezierCurveTo(4.5, 11.5, 2.8, 12.5, 3.5, 16.5);
+      bodyShape.bezierCurveTo(4.2, 19.5, 5.4, 20.5, 4.8, 23.5); // Horn cutaway
+      bodyShape.bezierCurveTo(3.8, 23.5, 2.4, 21.5, 2.0, 19.5);
+      bodyShape.bezierCurveTo(1.4, 19.5, -1.4, 19.5, -2.0, 19.5);
+      bodyShape.bezierCurveTo(-2.4, 21.5, -3.8, 23.5, -4.8, 23.5);
+      bodyShape.bezierCurveTo(-5.4, 20.5, -4.2, 19.5, -3.5, 16.5);
+      bodyShape.bezierCurveTo(-2.8, 12.5, -4.5, 11.5, -5.2, 8.5);
+      bodyShape.bezierCurveTo(-6.0, 4, -3.8, 1, 0, 0);
 
-      const bodySettings = { depth: 1.1, bevelEnabled: true, bevelSegments: 4, steps: 1, bevelSize: 0.35, bevelThickness: 0.35 };
+      const bodySettings = { depth: 1.15, bevelEnabled: true, bevelSegments: 5, steps: 1, bevelSize: 0.38, bevelThickness: 0.38 };
       const bodyGeo = new THREE.ExtrudeGeometry(bodyShape, bodySettings);
-      
-      // Warm Tobacco Burst Lacquer Material
-      const bodyMat = new THREE.MeshStandardMaterial({
-        color: 0x4a2810,
-        roughness: 0.28,
-        metalness: 0.15
-      });
-      const guitarBody = new THREE.Mesh(bodyGeo, bodyMat);
-      guitarBody.rotation.x = Math.PI / 2;
-      guitarBody.rotation.z = Math.PI;
-      guitarBody.position.set(0, 0, 18);
-      guitarBody.receiveShadow = true;
-      guitarGroup.add(guitarBody);
 
-      // Aged Cream Pickguard (Golpeador blanco marfil vintage)
+      // THREE.MeshPhysicalMaterial: NITROCELLULOSE HIGH GLOSS CLEARCOAT
+      let bodyMat;
+      if (THREE.MeshPhysicalMaterial) {
+        bodyMat = new THREE.MeshPhysicalMaterial({
+          map: sunburstTex,
+          clearcoat: 0.95,          // Glass-like high-gloss lacquer
+          clearcoatRoughness: 0.08, // Sharp, mirror-like specular reflections
+          roughness: 0.22,
+          metalness: 0.08,
+          reflectivity: 0.65
+        });
+      } else {
+        bodyMat = new THREE.MeshStandardMaterial({
+          map: sunburstTex,
+          roughness: 0.25,
+          metalness: 0.15
+        });
+      }
+
+      const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
+      bodyMesh.rotation.x = Math.PI / 2;
+      bodyMesh.rotation.z = Math.PI;
+      bodyMesh.position.set(0, 0, 19);
+      bodyMesh.castShadow = true;
+      bodyMesh.receiveShadow = true;
+      guitarGroup.add(bodyMesh);
+
+      // Aged Cream Pickguard (Vintage Mint Parchment)
       const pgShape = new THREE.Shape();
-      pgShape.moveTo(0, 2);
-      pgShape.bezierCurveTo(2.8, 2.5, 3.8, 5, 3.5, 8);
-      pgShape.bezierCurveTo(3.2, 11, 1.8, 12, 2.4, 15);
-      pgShape.bezierCurveTo(1.5, 17, 0, 17, -1.5, 17);
-      pgShape.bezierCurveTo(-1.8, 12, -3.2, 11, -3.5, 8);
-      pgShape.bezierCurveTo(-3.8, 5, -2.8, 2.5, 0, 2);
+      pgShape.moveTo(0, 2.5);
+      pgShape.bezierCurveTo(3.0, 3, 4.0, 5.5, 3.8, 8.5);
+      pgShape.bezierCurveTo(3.4, 11.5, 1.8, 12.5, 2.5, 15.5);
+      pgShape.bezierCurveTo(1.6, 17.5, 0, 17.5, -1.6, 17.5);
+      pgShape.bezierCurveTo(-1.8, 12.5, -3.4, 11.5, -3.8, 8.5);
+      pgShape.bezierCurveTo(-4.0, 5.5, -3.0, 3, 0, 2.5);
 
-      const pgGeo = new THREE.ExtrudeGeometry(pgShape, { depth: 0.08, bevelEnabled: false });
-      const pgMat = new THREE.MeshStandardMaterial({ color: 0xfaedcd, roughness: 0.4 });
+      const pgGeo = new THREE.ExtrudeGeometry(pgShape, { depth: 0.09, bevelEnabled: false });
+      const pgMat = new THREE.MeshStandardMaterial({ color: 0xfaedcd, roughness: 0.35 });
       const pickguard = new THREE.Mesh(pgGeo, pgMat);
       pickguard.rotation.x = Math.PI / 2;
       pickguard.rotation.z = Math.PI;
-      pickguard.position.set(0, 0.6, 17);
+      pickguard.position.set(0, 0.62, 18);
       guitarGroup.add(pickguard);
 
-      // Chrome Bridge & Tailpiece (Puente metálico donde nacen las cuerdas)
-      const bridgeGeo = new THREE.BoxGeometry(2.4, 0.4, 1.4);
-      const chromeMat = new THREE.MeshStandardMaterial({ color: 0xd6d6d6, metalness: 0.95, roughness: 0.2 });
+      // Chrome Bridge, Saddles & Tailpiece (Brushed Chrome)
+      const bridgeGeo = new THREE.BoxGeometry(2.5, 0.42, 1.5);
+      const chromeMat = new THREE.MeshStandardMaterial({ color: 0xe0e0e0, metalness: 0.98, roughness: 0.12 });
       const bridge = new THREE.Mesh(bridgeGeo, chromeMat);
-      bridge.position.set(0, 0.7, 4);
+      bridge.position.set(0, 0.72, 4.5);
+      bridge.castShadow = true;
       guitarGroup.add(bridge);
 
-      // Volume & Tone Knobs (Botones de baquelita crema)
-      [-0.9, -1.5, -2.1].forEach((kx, idx) => {
-        const knobGeo = new THREE.CylinderGeometry(0.32, 0.35, 0.35, 16);
-        const knobMat = new THREE.MeshStandardMaterial({ color: 0xfefae0, roughness: 0.3 });
+      // Single-Coil Pickups with Alnico Magnets
+      [9.5, 12.5, 15.5].forEach(pz => {
+        const puGeo = new THREE.BoxGeometry(2.4, 0.3, 0.7);
+        const puMat = new THREE.MeshStandardMaterial({ color: 0xfefae0, roughness: 0.3 });
+        const pu = new THREE.Mesh(puGeo, puMat);
+        pu.position.set(0, 0.7, pz);
+        guitarGroup.add(pu);
+      });
+
+      // Volume & Tone Knobs (Numbered Bakelite)
+      [-1.0, -1.7, -2.3].forEach((kx, idx) => {
+        const knobGeo = new THREE.CylinderGeometry(0.35, 0.38, 0.35, 16);
+        const knobMat = new THREE.MeshStandardMaterial({ color: 0xfefae0, roughness: 0.25 });
         const knob = new THREE.Mesh(knobGeo, knobMat);
-        knob.position.set(kx, 0.8, 6.5 + idx * 1.5);
+        knob.position.set(kx, 0.8, 7.0 + idx * 1.5);
         guitarGroup.add(knob);
       });
 
-      // 2. The 27-Fret Guitar Neck (Palisandro Oscuro)
-      const neckGeo = new THREE.BoxGeometry(NECK_WIDTH, 0.7, NECK_LENGTH + 2);
-      const neckMat = new THREE.MeshStandardMaterial({ color: 0x1f140e, roughness: 0.5, metalness: 0.1 });
+      // 2. The 27-Fret Guitar Neck (Rosewood Fretboard with PBR wood grain)
+      const rosewoodTex = generateWoodGrainTexture('#24150e', 'rgba(5,2,1,0.5)');
+      const neckGeo = new THREE.BoxGeometry(NECK_WIDTH, 0.75, NECK_LENGTH + 2);
+      const neckMat = new THREE.MeshStandardMaterial({
+        map: rosewoodTex,
+        bumpMap: rosewoodTex,
+        bumpScale: 0.03,
+        roughness: 0.52,
+        metalness: 0.06
+      });
       const neck = new THREE.Mesh(neckGeo, neckMat);
-      neck.position.set(0, 0.2, -NECK_LENGTH / 2);
+      neck.position.set(0, 0.22, -NECK_LENGTH / 2);
+      neck.castShadow = true;
       neck.receiveShadow = true;
       guitarGroup.add(neck);
 
-      // 27 Nickel-Silver Frets (Trastes níquel de época)
-      const fretMat = new THREE.MeshStandardMaterial({ color: 0xd8d8d8, metalness: 0.9, roughness: 0.25 });
+      // 27 Nickel-Silver Frets (Trastes pulidos con destellos)
+      const fretMat = new THREE.MeshStandardMaterial({ color: 0xe8e8e8, metalness: 0.95, roughness: 0.12 });
       for (let i = 0; i <= TOTAL_FRETS; i++) {
         const zPos = fretPositionsZ[i];
-        const fretGeo = new THREE.BoxGeometry(NECK_WIDTH - 0.2, 0.14, 0.1);
+        const fretGeo = new THREE.BoxGeometry(NECK_WIDTH - 0.2, 0.16, 0.11);
         const fretMesh = new THREE.Mesh(fretGeo, fretMat);
-        fretMesh.position.set(0, 0.58, zPos);
+        fretMesh.position.set(0, 0.62, zPos);
         guitarGroup.add(fretMesh);
 
-        // Mother of pearl inlays
+        // Natural mother-of-pearl inlays
         if ([3, 5, 7, 9, 15, 17, 19, 21].includes(i)) {
           createInlayDot(0, zPos + 0.5);
         } else if (i === 12 || i === 24) {
-          createInlayDot(-0.9, zPos + 0.5);
-          createInlayDot(0.9, zPos + 0.5);
+          createInlayDot(-0.95, zPos + 0.5);
+          createInlayDot(0.95, zPos + 0.5);
         }
       }
 
-      // 3. Vintage Headstock (Pala de madera con 6 clavijas cromadas)
-      const headstockGeo = new THREE.BoxGeometry(4.8, 0.7, 9);
-      const headstockMat = new THREE.MeshStandardMaterial({ color: 0x24160d, roughness: 0.4 });
-      const headstock = new THREE.Mesh(headstockGeo, headstockMat);
-      headstock.position.set(0, 0.1, -NECK_LENGTH - 4.5);
+      // 3. Vintage Headstock (Pala clásica con 6 clavijas cromadas)
+      const headstockGeo = new THREE.BoxGeometry(5.0, 0.72, 9.5);
+      const mapleTex = generateWoodGrainTexture('#2b1a10', 'rgba(15,8,4,0.3)');
+      const headMat = new THREE.MeshStandardMaterial({ map: mapleTex, roughness: 0.4 });
+      const headstock = new THREE.Mesh(headstockGeo, headMat);
+      headstock.position.set(0, 0.1, -NECK_LENGTH - 4.8);
+      headstock.castShadow = true;
       guitarGroup.add(headstock);
 
-      // 6 Chrome Tuning Pegs (Clavijas)
+      // 6 Chrome Tuning Pegs with Machine Heads
       for (let p = 0; p < 6; p++) {
-        const px = (p % 2 === 0) ? -2.7 : 2.7;
-        const pz = -NECK_LENGTH - 2 - Math.floor(p / 2) * 2.5;
-        const pegGeo = new THREE.CylinderGeometry(0.2, 0.2, 0.8, 12);
+        const px = (p % 2 === 0) ? -2.8 : 2.8;
+        const pz = -NECK_LENGTH - 2.2 - Math.floor(p / 2) * 2.5;
+        const pegGeo = new THREE.CylinderGeometry(0.22, 0.22, 0.9, 12);
         const peg = new THREE.Mesh(pegGeo, chromeMat);
         peg.rotation.z = Math.PI / 2;
-        peg.position.set(px, 0.2, pz);
+        peg.position.set(px, 0.22, pz);
         guitarGroup.add(peg);
       }
 
-      // 4. 6 Nickel / Bronze Steel Guitar Strings
+      // 4. 6 Realistic Guitar Strings with Specular Highlights
       const spacing = (NECK_WIDTH - 0.8) / 5;
-      const gauges = [0.026, 0.034, 0.044, 0.058, 0.076, 0.092];
-      const stringLength = NECK_LENGTH + 8;
+      const gauges = [0.026, 0.035, 0.046, 0.06, 0.078, 0.096];
+      const stringLength = NECK_LENGTH + 9;
 
       for (let s = 0; s < 6; s++) {
         const sx = - (NECK_WIDTH - 0.8) / 2 + s * spacing;
         const strGeo = new THREE.CylinderGeometry(gauges[s], gauges[s], stringLength, 8);
         const strMat = new THREE.MeshStandardMaterial({
-          color: (s >= 3) ? 0xc8963e : 0xe0e0e0, // Wound bronze for bass strings, nickel for treble
-          metalness: 0.95,
-          roughness: 0.2
+          color: (s >= 3) ? 0xcc9933 : 0xededed, // Wound bronze for low strings, nickel for high strings
+          metalness: 0.98,
+          roughness: 0.1
         });
         const strMesh = new THREE.Mesh(strGeo, strMat);
         strMesh.rotation.x = Math.PI / 2;
-        strMesh.position.set(sx, 0.72, -NECK_LENGTH / 2 + 1);
+        strMesh.position.set(sx, 0.76, -NECK_LENGTH / 2 + 1);
         guitarGroup.add(strMesh);
         stringMeshes.push({ mesh: strMesh, origX: sx, seed: s });
       }
@@ -1192,60 +1385,72 @@
     }
 
     function createInlayDot(x, z) {
-      const dotGeo = new THREE.CylinderGeometry(0.22, 0.22, 0.03, 16);
-      const dotMat = new THREE.MeshStandardMaterial({ color: 0xf5f5f5, roughness: 0.3 });
+      const dotGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.03, 16);
+      const dotMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.25 });
       const dot = new THREE.Mesh(dotGeo, dotMat);
-      dot.position.set(x, 0.56, z);
+      dot.position.set(x, 0.6, z);
       guitarGroup.add(dot);
     }
 
     // =========================================================================
-    // SCATTERED 12" VINYL SLEEVES & DISCS ACROSS THE BED
+    // SCATTERED 12" VINYL ALBUMS WITH CONCENTRIC ANISOTROPIC GROOVES
     // =========================================================================
-    function buildScatteredVinylAlbums() {
+    function buildScatteredAlbumsAndVinyl() {
       const albumsData = [
-        { phase: 1, cover: "assets/images/hendrix_album.jpg", x: -7.5, z: fretPositionsZ[6] + 2, rotY: 0.3, rotZ: 0.04 },
-        { phase: 2, cover: "assets/images/joplin_album.jpg", x: 7.2, z: fretPositionsZ[11] + 1, rotY: -0.25, rotZ: -0.03 },
-        { phase: 3, cover: "assets/images/morrison_album.jpg", x: -7.6, z: fretPositionsZ[16] + 3, rotY: 0.18, rotZ: 0.02 },
-        { phase: 4, cover: "assets/images/winehouse_album.jpg", x: 7.0, z: fretPositionsZ[21] + 2, rotY: -0.32, rotZ: -0.04 },
-        { phase: 5, cover: "assets/images/cobain_album.jpg", x: 0, z: -NECK_LENGTH - 11, rotY: 0.08, rotZ: 0.01 }
+        { phase: 1, cover: "assets/images/hendrix_album.jpg", x: -7.5, z: fretPositionsZ[6] + 2, rotY: 0.28, rotZ: 0.03 },
+        { phase: 2, cover: "assets/images/joplin_album.jpg", x: 7.2, z: fretPositionsZ[11] + 1, rotY: -0.22, rotZ: -0.02 },
+        { phase: 3, cover: "assets/images/morrison_album.jpg", x: -7.6, z: fretPositionsZ[16] + 3, rotY: 0.16, rotZ: 0.02 },
+        { phase: 4, cover: "assets/images/winehouse_album.jpg", x: 7.0, z: fretPositionsZ[21] + 2, rotY: -0.3, rotZ: -0.03 },
+        { phase: 5, cover: "assets/images/cobain_album.jpg", x: 0, z: -NECK_LENGTH - 11, rotY: 0.06, rotZ: 0.01 }
       ];
 
       const texLoader = new THREE.TextureLoader();
+      const vinylGroovesTex = generateVinylGrooveTexture();
 
       albumsData.forEach(alb => {
         const sleeveGroup = new THREE.Group();
-        sleeveGroup.position.set(alb.x, 0.95, alb.z);
+        sleeveGroup.position.set(alb.x, 0.96, alb.z);
         sleeveGroup.rotation.y = alb.rotY;
         sleeveGroup.rotation.z = alb.rotZ;
 
-        // 12" Album Cardboard Sleeve (Funda cuadrada de vinilo de época)
-        const sleeveGeo = new THREE.BoxGeometry(6.2, 0.08, 6.2);
+        // 12" Cardboard Album Sleeve with Soft Shadow
+        const sleeveGeo = new THREE.BoxGeometry(6.4, 0.09, 6.4);
         texLoader.load(alb.cover, (tex) => {
           const sleeveMat = new THREE.MeshStandardMaterial({
             map: tex,
-            roughness: 0.65,
-            metalness: 0.05
+            roughness: 0.58,
+            metalness: 0.04
           });
           const sleeve = new THREE.Mesh(sleeveGeo, sleeveMat);
+          sleeve.castShadow = true;
           sleeve.receiveShadow = true;
           sleeveGroup.add(sleeve);
         });
 
-        // 12" Vinyl Disc Peeking Out (Disco de acetato negro asomándose)
-        const vinylGeo = new THREE.CylinderGeometry(2.9, 2.9, 0.05, 32);
+        // 12" Black Vinyl Record with Micro-Grooves Bump Map
+        const vinylGeo = new THREE.CylinderGeometry(3.0, 3.0, 0.05, 32);
         const vinylMat = new THREE.MeshStandardMaterial({
           color: 0x080808,
-          roughness: 0.3,
-          metalness: 0.8
+          bumpMap: vinylGroovesTex,
+          bumpScale: 0.04,
+          roughness: 0.28,
+          metalness: 0.85
         });
         const vinyl = new THREE.Mesh(vinylGeo, vinylMat);
-        vinyl.position.set(alb.x < 0 ? -1.8 : 1.8, 0.06, 0.5);
+        vinyl.position.set(alb.x < 0 ? -1.9 : 1.9, 0.07, 0.5);
+        vinyl.castShadow = true;
         sleeveGroup.add(vinyl);
 
-        // Warm Golden Lamp Highlight on active/completed
-        const discLight = new THREE.PointLight(0xe09f3e, 0, 10);
-        discLight.position.set(0, 2, 0);
+        // Center Paper Label on Vinyl
+        const labelGeo = new THREE.CylinderGeometry(1.0, 1.0, 0.06, 24);
+        const labelMat = new THREE.MeshStandardMaterial({ color: 0xd4a373, roughness: 0.4 });
+        const label = new THREE.Mesh(labelGeo, labelMat);
+        label.position.set(alb.x < 0 ? -1.9 : 1.9, 0.08, 0.5);
+        sleeveGroup.add(label);
+
+        // Warm Golden Amber Highlight Lamp
+        const discLight = new THREE.PointLight(0xffbe0b, 0, 12);
+        discLight.position.set(0, 2.5, 0);
         sleeveGroup.add(discLight);
 
         vinylDiscMeshes[alb.phase] = { group: sleeveGroup, light: discLight };
@@ -1254,9 +1459,63 @@
     }
 
     // =========================================================================
-    // PLAYER PAWN: VINTAGE CELLULOID GUITAR PICK (PÚA DE CAREY VINTAGE)
+    // VINTAGE COILED GUITAR CABLE & FLOOR PRACTICE AMPLIFIER
     // =========================================================================
-    function buildPuaPickPawn() {
+    function buildFloorAmplifier() {
+      const ampGroup = new THREE.Group();
+      ampGroup.position.set(-15, 0.5, 12);
+
+      // Black Tolex Textured Amplifier Box
+      const ampGeo = new THREE.BoxGeometry(6.5, 6.0, 3.8);
+      const ampMat = new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.8, metalness: 0.1 });
+      const ampBox = new THREE.Mesh(ampGeo, ampMat);
+      ampBox.castShadow = true;
+      ampBox.receiveShadow = true;
+      ampGroup.add(ampBox);
+
+      // Silver / Gold Tweed Grille Cloth
+      const grilleGeo = new THREE.BoxGeometry(5.6, 4.4, 0.1);
+      const grilleMat = new THREE.MeshStandardMaterial({ color: 0xa89984, roughness: 0.85 });
+      const grille = new THREE.Mesh(grilleGeo, grilleMat);
+      grille.position.set(0, -0.4, 1.95);
+      ampGroup.add(grille);
+
+      // Red Jewel Power Indicator Light
+      const jewelGeo = new THREE.CylinderGeometry(0.18, 0.18, 0.1, 12);
+      const jewelMat = new THREE.MeshBasicMaterial({ color: 0xff0033 });
+      const jewel = new THREE.Mesh(jewelGeo, jewelMat);
+      jewel.rotation.x = Math.PI / 2;
+      jewel.position.set(2.2, 2.2, 1.95);
+      ampGroup.add(jewel);
+
+      const jewelLight = new THREE.PointLight(0xff0033, 1.2, 4);
+      jewelLight.position.set(2.2, 2.2, 2.2);
+      ampGroup.add(jewelLight);
+
+      scene.add(ampGroup);
+
+      // Curly / Coiled Black Guitar Cable running from guitar jack to amp
+      const cablePoints = [];
+      const start = new THREE.Vector3(-1.8, 1.6, 17);
+      const end = new THREE.Vector3(-14, -1.8, 13);
+      for (let i = 0; i <= 24; i++) {
+        const t = i / 24;
+        const x = THREE.MathUtils.lerp(start.x, end.x, t) + Math.sin(t * Math.PI * 4) * 0.4;
+        const y = THREE.MathUtils.lerp(start.y, end.y, t) - Math.sin(t * Math.PI) * 0.8;
+        const z = THREE.MathUtils.lerp(start.z, end.z, t);
+        cablePoints.push(new THREE.Vector3(x, y, z));
+      }
+      const curve = new THREE.CatmullRomCurve3(cablePoints);
+      const cableGeo = new THREE.TubeGeometry(curve, 32, 0.1, 8, false);
+      const cableMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.6 });
+      const cable = new THREE.Mesh(cableGeo, cableMat);
+      scene.add(cable);
+    }
+
+    // =========================================================================
+    // PLAYER PAWN: TORTOISESHELL CELLULOID GUITAR PICK (PÚA DE CAREY)
+    // =========================================================================
+    function buildTortoiseshellPua() {
       const puaGroup = new THREE.Group();
 
       const shape = new THREE.Shape();
@@ -1266,24 +1525,23 @@
       shape.bezierCurveTo(0, -0.95, -0.65, -0.75, -0.75, -0.15);
       shape.bezierCurveTo(-0.85, 0.35, -0.65, 0.75, 0, 0.85);
 
-      const geo = new THREE.ExtrudeGeometry(shape, { depth: 0.14, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.05, bevelThickness: 0.05 });
-      // Vintage Tortoiseshell Amber Finish (Carey ámbar cálido)
+      const geo = new THREE.ExtrudeGeometry(shape, { depth: 0.15, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.05, bevelThickness: 0.05 });
       const mat = new THREE.MeshStandardMaterial({
-        color: 0xd48b28,
-        emissive: 0x733b00,
-        emissiveIntensity: 0.4,
-        roughness: 0.35,
-        metalness: 0.2
+        color: 0xcc7a1e,       // Rich tortoiseshell amber
+        roughness: 0.28,
+        metalness: 0.2,
+        emissive: 0x5a2d05,
+        emissiveIntensity: 0.4
       });
 
       const body = new THREE.Mesh(geo, mat);
       body.rotation.x = Math.PI / 2;
-      body.scale.set(0.88, 0.88, 0.88);
+      body.scale.set(0.9, 0.9, 0.9);
       puaGroup.add(body);
 
-      // Warm amber under-light
+      // Warm Amber Under-Glow
       const pickLight = new THREE.PointLight(0xffbe0b, 1.8, 5);
-      pickLight.position.set(0, 0.2, 0);
+      pickLight.position.set(0, 0.25, 0);
       puaGroup.add(pickLight);
 
       puaMesh = puaGroup;
@@ -1498,9 +1756,8 @@
     }
 
     function shakeStringsOnSnap() {
-      // Violent visual shake of the guitar strings on broken string event
       stringMeshes.forEach(s => {
-        s.mesh.position.x += (Math.random() - 0.5) * 0.15;
+        s.mesh.position.x += (Math.random() - 0.5) * 0.16;
       });
       setTimeout(() => {
         stringMeshes.forEach(s => { s.mesh.position.x = s.origX; });
@@ -1605,7 +1862,7 @@
         puaMesh.position.set(0, 2.3, fretPositionsZ[0] + 0.5);
       }
 
-      // Reset vinyl sleeve lights
+      // Reset vinyl lights
       Object.values(vinylDiscMeshes).forEach(v => {
         if (v.light) v.light.intensity = 0;
       });
@@ -1631,7 +1888,7 @@
       bossHp = 0;
       updateTelemetryHUD();
 
-      // Light up all vinyl covers on bed!
+      // Light up all vinyl covers on bed
       Object.values(vinylDiscMeshes).forEach(v => {
         if (v.light) v.light.intensity = 2.5;
       });
@@ -1643,9 +1900,7 @@
         if (pill) pill.classList.add('comp');
       }
 
-      // Play final anthem
       playArtistSong(5);
-
       animatePuaJump(currentFret, 27);
       setTimeout(() => {
         triggerVictoryScreen();
@@ -1685,7 +1940,7 @@
     }
 
     window.addEventListener("DOMContentLoaded", () => {
-      initVintageRoom();
+      initPhotorealRoom();
       updateDrawerUI(1);
     });
   </script>
