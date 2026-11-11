@@ -1077,6 +1077,49 @@
       background: var(--brass-gold);
       color: #000;
     }
+
+    /* Empty State in Vinyl Showcase */
+    .showcase-empty-state {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px dashed rgba(197, 160, 89, 0.35);
+      border-radius: 8px;
+      padding: 30px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+    }
+    .showcase-empty-state .empty-icon {
+      font-size: 32px;
+      opacity: 0.6;
+      animation: floatDisc 3s infinite alternate ease-in-out;
+    }
+    @keyframes floatDisc {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-6px); }
+    }
+    .showcase-empty-state .empty-title {
+      font-family: 'Permanent Marker', cursive;
+      font-size: 15px;
+      color: var(--brass-light);
+      letter-spacing: 0.5px;
+    }
+    .showcase-empty-state .empty-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      max-width: 280px;
+    }
+
+    /* Card Reveal Slide-in Animation */
+    .sanctuary-slot-card.anim-pop {
+      animation: slideInPop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+    @keyframes slideInPop {
+      0% { opacity: 0; transform: translateX(30px) scale(0.9); }
+      100% { opacity: 1; transform: translateX(0) scale(1); }
+    }
   </style>
 </head>
 <body>
@@ -1185,96 +1228,19 @@
         </div>
       </div>
 
-      <!-- 2. THE 5 VINYL SANCTUARIES SHOWCASE -->
+      <!-- 2. THE 5 VINYL SANCTUARIES SHOWCASE (PROGRESSIVE REVEAL ON FLAG DISCOVERY) -->
       <div id="vinyl-showcase-section">
         <div class="showcase-header">
-          <h2>🎵 SANTUARIOS DEL CLUB DE LOS 27 (DISCOS REVELADOS)</h2>
-          <span class="count" id="showcase-counter">0 / 5 RESUELTOS</span>
+          <h2>🎵 DISCOTECA DEL CLUB DE LOS 27</h2>
+          <span class="count" id="showcase-counter">0 / 5 DESCUBIERTOS</span>
         </div>
 
-        <!-- 5 Vinyl Slot Cards (Covers reveal upon flag discovery) -->
-        <!-- Slot 1: Hendrix -->
-        <div class="sanctuary-slot-card active" id="slot-phase-1" onclick="selectPhase(1)">
-          <div class="slot-jacket-art locked" id="jacket-1">
-            <img src="assets/images/hendrix_album.jpg" alt="Jimi Hendrix">
-            <div class="slot-lock-icon">🔒</div>
-          </div>
-          <div class="slot-spinning-disc"></div>
-          <div class="slot-info-box">
-            <div class="slot-title-row">
-              <span class="slot-artist-name">1. Jimi Hendrix</span>
-              <span class="slot-traste-tag">TRASTE 6 • 150 PTS</span>
-            </div>
-            <div class="slot-track-title" id="slot-track-1">Are You Experienced • Purple Haze</div>
-            <div class="slot-vector-cwe">PCAP DPI • CWE-311</div>
-          </div>
-        </div>
-
-        <!-- Slot 2: Joplin -->
-        <div class="sanctuary-slot-card" id="slot-phase-2" onclick="selectPhase(2)">
-          <div class="slot-jacket-art locked" id="jacket-2">
-            <img src="assets/images/joplin_album.jpg" alt="Janis Joplin">
-            <div class="slot-lock-icon">🔒</div>
-          </div>
-          <div class="slot-spinning-disc"></div>
-          <div class="slot-info-box">
-            <div class="slot-title-row">
-              <span class="slot-artist-name">2. Janis Joplin</span>
-              <span class="slot-traste-tag">TRASTE 11 • 200 PTS</span>
-            </div>
-            <div class="slot-track-title" id="slot-track-2">Pearl • Cry Baby</div>
-            <div class="slot-vector-cwe">Esteganografía EOF • CWE-200</div>
-          </div>
-        </div>
-
-        <!-- Slot 3: Morrison -->
-        <div class="sanctuary-slot-card" id="slot-phase-3" onclick="selectPhase(3)">
-          <div class="slot-jacket-art locked" id="jacket-3">
-            <img src="assets/images/morrison_album.jpg" alt="Jim Morrison">
-            <div class="slot-lock-icon">🔒</div>
-          </div>
-          <div class="slot-spinning-disc"></div>
-          <div class="slot-info-box">
-            <div class="slot-title-row">
-              <span class="slot-artist-name">3. Jim Morrison</span>
-              <span class="slot-traste-tag">TRASTE 16 • 250 PTS</span>
-            </div>
-            <div class="slot-track-title" id="slot-track-3">The Doors • Light My Fire</div>
-            <div class="slot-vector-cwe">SQL Injection UNION • CWE-89</div>
-          </div>
-        </div>
-
-        <!-- Slot 4: Amy Winehouse -->
-        <div class="sanctuary-slot-card" id="slot-phase-4" onclick="selectPhase(4)">
-          <div class="slot-jacket-art locked" id="jacket-4">
-            <img src="assets/images/winehouse_album.jpg" alt="Amy Winehouse">
-            <div class="slot-lock-icon">🔒</div>
-          </div>
-          <div class="slot-spinning-disc"></div>
-          <div class="slot-info-box">
-            <div class="slot-title-row">
-              <span class="slot-artist-name">4. Amy Winehouse</span>
-              <span class="slot-traste-tag">TRASTE 21 • 200 PTS</span>
-            </div>
-            <div class="slot-track-title" id="slot-track-4">Back To Black • Title Track</div>
-            <div class="slot-vector-cwe">Stored XSS • CWE-79</div>
-          </div>
-        </div>
-
-        <!-- Slot 5: Kurt Cobain -->
-        <div class="sanctuary-slot-card" id="slot-phase-5" onclick="selectPhase(5)">
-          <div class="slot-jacket-art locked" id="jacket-5">
-            <img src="assets/images/cobain_album.jpg" alt="Kurt Cobain">
-            <div class="slot-lock-icon">🔒</div>
-          </div>
-          <div class="slot-spinning-disc"></div>
-          <div class="slot-info-box">
-            <div class="slot-title-row">
-              <span class="slot-artist-name">5. Kurt Cobain (ROOT)</span>
-              <span class="slot-traste-tag">TRASTE 27 • 200 PTS</span>
-            </div>
-            <div class="slot-track-title" id="slot-track-5">Nevermind • Smells Like Teen Spirit</div>
-            <div class="slot-vector-cwe">SUID / GTFOBins Escalation • CWE-250</div>
+        <!-- Dynamic Container: Cards appear as flags are captured -->
+        <div id="vinyl-cards-container" style="display:flex; flex-direction:column; gap:10px;">
+          <div id="vinyl-empty-placeholder" class="showcase-empty-state">
+            <span class="empty-icon">📻</span>
+            <span class="empty-title">DISCOTECA EN SILENCIO</span>
+            <span class="empty-desc">Las carátulas, canciones y credenciales se revelarán aquí a medida que descubras cada bandera en Kali Linux.</span>
           </div>
         </div>
       </div>
@@ -1905,16 +1871,37 @@
       }
     }
 
-    // Reveal Vinyl Cover when corresponding Flag is Captured
+    // Progressive Vinyl Reveal: Only appears when corresponding Flag is Captured!
     function unlockVinylSlot(phaseNum) {
-      const slot = document.getElementById(`slot-phase-${phaseNum}`);
-      const jacket = document.getElementById(`jacket-${phaseNum}`);
-      if (slot && jacket) {
-        slot.classList.add("unlocked");
-        jacket.classList.remove("locked");
-        jacket.classList.add("unlocked");
-      }
-      document.getElementById("showcase-counter").textContent = `${completedPhases.size} / 5 RESUELTOS`;
+      const container = document.getElementById("vinyl-cards-container");
+      const placeholder = document.getElementById("vinyl-empty-placeholder");
+      if (placeholder) placeholder.style.display = "none";
+
+      const m = MILESTONES[phaseNum];
+      if (!m || document.getElementById(`slot-phase-${phaseNum}`)) return;
+
+      const card = document.createElement("div");
+      card.className = "sanctuary-slot-card unlocked anim-pop";
+      card.id = `slot-phase-${phaseNum}`;
+      card.onclick = () => selectPhase(phaseNum);
+
+      card.innerHTML = `
+        <div class="slot-jacket-art unlocked">
+          <img src="${m.albumCover || ('assets/images/' + (phaseNum === 1 ? 'hendrix' : phaseNum === 2 ? 'joplin' : phaseNum === 3 ? 'morrison' : phaseNum === 4 ? 'winehouse' : 'cobain') + '_album.jpg')}" alt="${m.name}">
+        </div>
+        <div class="slot-spinning-disc" style="display:block;"></div>
+        <div class="slot-info-box">
+          <div class="slot-title-row">
+            <span class="slot-artist-name">${phaseNum}. ${m.name}</span>
+            <span class="slot-traste-tag">TRASTE ${m.fret} • +${m.points} PTS</span>
+          </div>
+          <div class="slot-track-title">${m.trackTitle}</div>
+          <div class="slot-vector-cwe">${m.vector} • ${m.cwe}</div>
+        </div>
+      `;
+
+      container.appendChild(card);
+      document.getElementById("showcase-counter").textContent = `${completedPhases.size} / 5 DESCUBIERTOS`;
     }
 
     function markDiapasonFrets(fret) {
@@ -1938,13 +1925,10 @@
       // Update HUD
       document.getElementById("hud-artist").textContent = `${phaseNum}. ${m.name.toUpperCase()}`;
 
-      // Update Slot Active Status
-      for (let p = 1; p <= 5; p++) {
-        const slot = document.getElementById(`slot-phase-${p}`);
-        if (slot) {
-          slot.classList.toggle("active", p === phaseNum);
-        }
-      }
+      // Highlight active revealed card if present
+      document.querySelectorAll(".sanctuary-slot-card").forEach(card => {
+        card.classList.toggle("active", card.id === `slot-phase-${phaseNum}`);
+      });
     }
 
     function updateTelemetryUI() {
@@ -2002,16 +1986,17 @@
       selectPhase(1);
       updateTelemetryUI();
 
-      for (let p = 1; p <= 5; p++) {
-        const slot = document.getElementById(`slot-phase-${p}`);
-        const jacket = document.getElementById(`jacket-${p}`);
-        if (slot && jacket) {
-          slot.classList.remove("unlocked");
-          jacket.classList.add("locked");
-          jacket.classList.remove("unlocked");
-        }
+      const container = document.getElementById("vinyl-cards-container");
+      if (container) {
+        container.innerHTML = `
+          <div id="vinyl-empty-placeholder" class="showcase-empty-state">
+            <span class="empty-icon">📻</span>
+            <span class="empty-title">DISCOTECA EN SILENCIO</span>
+            <span class="empty-desc">Las carátulas, canciones y credenciales se revelarán aquí a medida que descubras cada bandera en Kali Linux.</span>
+          </div>
+        `;
       }
-      document.getElementById("showcase-counter").textContent = "0 / 5 RESUELTOS";
+      document.getElementById("showcase-counter").textContent = "0 / 5 DESCUBIERTOS";
 
       document.querySelectorAll(".fret-unit").forEach(item => {
         item.classList.remove("unlocked-fret");
