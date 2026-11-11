@@ -1900,6 +1900,11 @@
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
+    let score = 350;
+    let penaltyCount = 0;
+    let bossHp = 60; // Hendrix (20) y Joplin (20) superados
+    const completedPhases = new Set([1, 2]);
+
     const CTF_HASH_DB = {
       // Morrison Flag
       "6dd18975083f09f1304ed1ed761656a54e4ed9622cf98002cf5e7ce409831977": {
@@ -1967,71 +1972,84 @@
       }
     };
 
-    
-    async function submitFlag(phase) {
-      const inputEl = document.getElementById(`input-flag-${phase}`);
-      const val = inputEl ? inputEl.value.trim() : "";
+    function updateScoreDisplay() {
+      const el = document.getElementById("scoreDisplay");
+      if (el) el.textContent = `${score} / 1000`;
+      const penEl = document.getElementById("penaltyDisplay");
+      if (penEl) penEl.textContent = penaltyCount;
+    }
 
-      if (!val) {
-        logEvent(`⚠️ Intento vacío en Fase ${phase}. Ingresa la bandera capturada.`);
-        return;
-      }
-
-      const hash = await sha256(val);
-      const entry = CTF_HASH_DB[hash];
-
-      if (entry) {
-        if (entry.type === "flag") {
-          score += entry.points;
-          updateScoreDisplay();
-          playSuccessSound();
-          triggerConfetti();
-          logEvent(`🎯 ¡BANDERA CORRECTA EN FASE ${entry.phase}! ${entry.msg}`);
-
-          // IMPACTO EN BOSS BATTLE
-          if (!completedPhases.has(entry.phase)) {
-            completedPhases.add(entry.phase);
-            bossHp = Math.max(0, bossHp - 20);
-            updateBossUI();
-            triggerScreenShake();
-            spawnDamagePop("-20 HP!", `¡FASE ${entry.phase} ${entry.name.toUpperCase()} SUPERADA! (+${entry.points} PTS)`);
-            const seg = document.getElementById(`seg-${entry.phase}`);
-            if (seg) seg.classList.add('comp');
-          }
-
-          alert(`🤘 ¡BANDERA CAPTURADA!\n\n${entry.msg}`);
-
-          if (entry.phase === 3) {
-            const wBtn = document.getElementById("btn-room-winehouse");
-            if (wBtn) { wBtn.classList.remove("locked"); wBtn.removeAttribute("disabled"); }
-            switchRoom("winehouse");
-          } else if (entry.phase === 4) {
-            const cBtn = document.getElementById("btn-room-cobain");
-            if (cBtn) { cBtn.classList.remove("locked"); cBtn.removeAttribute("disabled"); }
-            switchRoom("cobain");
-          } else if (entry.phase === 5) {
-            claimVictory();
-          }
-        } else if (entry.type === "rabbit_hole") {
-          score = Math.max(0, score - entry.penalty);
-          updateScoreDisplay();
-          playErrorSound();
-          spawnShieldPop(`SEÑUELO DETECTADO: ${entry.name}`);
-          logEvent(`🚨 ${entry.msg}`);
-          alert(`⚠️ TRAMPA / SEÑUELO DETECTADO (RABBIT HOLE)\n\n${entry.msg}`);
-        }
-      } else {
-        playErrorSound();
-        logEvent(`❌ Bandera rechazada en Fase ${phase}. Sigue auditando el entorno.`);
-        alert("❌ BANDERA INCORRECTA\n\nVerifica la sintaxis, el comando ejecutado o sigue auditando la máquina objetivo.");
+    function logEvent(msg) {
+      console.log(msg);
+      const logEl = document.getElementById("telemetryLog");
+      if (logEl) {
+        logEl.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
       }
     }
 
-    // ==========================================
-    // 👾 BOSS BATTLE / INTEGRITY CONTROLLER
-    // ==========================================
-    let bossHp = 60; // Estado inicial: Hendrix (20) y Joplin (20) completados = 60 HP
-    const completedPhases = new Set([1, 2]);
+    function playSuccessSound() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const notes = [164.81, 196.00, 220.00, 261.63, 329.63];
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.12, ctx.currentTime + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.08 + 0.45);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.08);
+          osc.stop(ctx.currentTime + idx * 0.08 + 0.5);
+        });
+      } catch(e) { console.log(e); }
+    }
+
+    function playErrorSound() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "square";
+        osc.frequency.setValueAtTime(140, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 0.35);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.38);
+      } catch(e) {}
+    }
+
+    function triggerConfetti() {
+      if (typeof confetti === "function") {
+        confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } });
+        return;
+      }
+      const colors = ["#00ffcc", "#ff0055", "#ffaa00", "#00f0ff", "#ffffff"];
+      for (let i = 0; i < 35; i++) {
+        const p = document.createElement("div");
+        p.style.position = "fixed";
+        p.style.left = (Math.random() * 85 + 5) + "vw";
+        p.style.top = "-20px";
+        p.style.width = (Math.random() * 8 + 6) + "px";
+        p.style.height = (Math.random() * 12 + 6) + "px";
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.zIndex = "99999";
+        p.style.borderRadius = "2px";
+        p.style.pointerEvents = "none";
+        p.style.transition = `top ${Math.random() * 1.5 + 1.2}s cubic-bezier(0.2, 0.8, 0.4, 1), transform 2s linear, opacity 1.5s ease-out`;
+        document.body.appendChild(p);
+        setTimeout(() => {
+          p.style.top = (Math.random() * 50 + 60) + "vh";
+          p.style.transform = `rotate(${Math.random() * 720}deg)`;
+          p.style.opacity = "0";
+        }, 20);
+        setTimeout(() => p.remove(), 2500);
+      }
+    }
 
     function updateBossUI() {
       const fillEl = document.getElementById("bossHpFill");
@@ -2043,7 +2061,6 @@
       if (fillEl) fillEl.style.width = bossHp + "%";
       if (numEl) numEl.textContent = bossHp + " / 100 HP";
 
-      // Color de barra dinámico
       if (fillEl) {
         if (bossHp > 60) {
           fillEl.style.background = "linear-gradient(90deg, #00ff88, #00f0ff)";
@@ -2054,34 +2071,42 @@
         }
       }
 
-      // Estados temáticos
       if (bossHp >= 80) {
-        badgeEl.textContent = "INTEGRIDAD: 80%";
-        textEl.textContent = "ESTADO: PERÍMETRO INTACTO • TRÁFICO C&C MONITOREADO";
+        if (badgeEl) badgeEl.textContent = "INTEGRIDAD: 80%";
+        if (textEl) textEl.textContent = "ESTADO: PERÍMETRO INTACTO • TRÁFICO C&C MONITOREADO";
       } else if (bossHp >= 60) {
-        badgeEl.textContent = "INTEGRIDAD: 60%";
-        textEl.textContent = "ESTADO: PERÍMETRO Y METADATOS VULNERADOS • FASE MORRISON EN CURSO";
+        if (badgeEl) badgeEl.textContent = "INTEGRIDAD: 60%";
+        if (textEl) textEl.textContent = "ESTADO: PERÍMETRO Y METADATOS VULNERADOS • FASE MORRISON EN CURSO";
         if (telemetryTarget) telemetryTarget.textContent = "CWE-89 (SQL Injection en /doors/?id=1)";
       } else if (bossHp >= 40) {
-        badgeEl.textContent = "INTEGRIDAD: 40% (VULNERADO)";
-        textEl.textContent = "ESTADO: BASE DE DATOS COMPROMETIDA • FASE AMY WINEHOUSE EN CURSO";
+        if (badgeEl) badgeEl.textContent = "INTEGRIDAD: 40% (VULNERADO)";
+        if (textEl) textEl.textContent = "ESTADO: BASE DE DATOS COMPROMETIDA • FASE AMY WINEHOUSE EN CURSO";
         if (telemetryTarget) telemetryTarget.textContent = "CWE-79 (Stored XSS en /winehouse/)";
       } else if (bossHp >= 20) {
-        badgeEl.textContent = "INTEGRIDAD: 20% (CRÍTICO)";
-        textEl.textContent = "ESTADO: SESIÓN ADMINISTRATIVA SECUESTRADA • FASE KURT COBAIN EN CURSO";
+        if (badgeEl) badgeEl.textContent = "INTEGRIDAD: 20% (CRÍTICO)";
+        if (textEl) textEl.textContent = "ESTADO: SESIÓN ADMINISTRATIVA SECUESTRADA • FASE KURT COBAIN EN CURSO";
         if (telemetryTarget) telemetryTarget.textContent = "CWE-250 (SUID Privilege Escalation en /usr/bin/find)";
       } else {
-        badgeEl.textContent = "INTEGRIDAD: 0% (COLAPSADO)";
-        badgeEl.style.background = "#ff0055";
-        badgeEl.style.color = "#fff";
-        textEl.textContent = "ESTADO: 💀 KERNEL PANIC • SERVIDOR COMPLETAMENTE DOMINADO (ROOT ACCESS)";
+        if (badgeEl) {
+          badgeEl.textContent = "INTEGRIDAD: 0% (COLAPSADO)";
+          badgeEl.style.background = "#ff0055";
+          badgeEl.style.color = "#fff";
+        }
+        if (textEl) textEl.textContent = "ESTADO: 💀 KERNEL PANIC • SERVIDOR COMPLETAMENTE DOMINADO (ROOT ACCESS)";
         if (telemetryTarget) telemetryTarget.textContent = "SISTEMA CONQUISTADO (UID 0)";
       }
     }
 
+    function applyBossDamage(amount, label, critText) {
+      bossHp = Math.max(0, bossHp - amount);
+      updateBossUI();
+      triggerScreenShake();
+      spawnDamagePop(label || `-${amount} HP!`, critText || "CRITICAL EXPLOIT!");
+    }
+
     function triggerScreenShake() {
       document.body.classList.remove("screen-shake");
-      void document.body.offsetWidth; // forzar reflujo
+      void document.body.offsetWidth;
       document.body.classList.add("screen-shake");
       setTimeout(() => document.body.classList.remove("screen-shake"), 460);
     }
@@ -2112,6 +2137,62 @@
       setTimeout(() => pop.remove(), 1600);
     }
 
+    async function submitFlag(phase) {
+      const inputEl = document.getElementById(`input-flag-${phase}`);
+      const val = inputEl ? inputEl.value.trim() : "";
+
+      if (!val) {
+        logEvent(`⚠️ Intento vacío en Fase ${phase}. Ingresa la bandera capturada.`);
+        return;
+      }
+
+      const hash = await sha256(val);
+      const entry = CTF_HASH_DB[hash];
+
+      if (entry) {
+        if (entry.type === "flag") {
+          score += entry.points;
+          updateScoreDisplay();
+          playSuccessSound();
+          triggerConfetti();
+          logEvent(`🎯 ¡BANDERA CORRECTA EN FASE ${entry.phase}! ${entry.msg}`);
+
+          if (!completedPhases.has(entry.phase)) {
+            completedPhases.add(entry.phase);
+            applyBossDamage(20, "-20 HP!", `¡FASE ${entry.phase} ${entry.name.toUpperCase()} SUPERADA! (+${entry.points} PTS)`);
+            const seg = document.getElementById(`seg-${entry.phase}`);
+            if (seg) seg.classList.add('comp');
+          }
+
+          alert(`🤘 ¡BANDERA CAPTURADA!\n\n${entry.msg}`);
+
+          if (entry.phase === 3) {
+            const wBtn = document.getElementById("nav-winehouse");
+            if (wBtn) { wBtn.classList.remove("locked"); wBtn.removeAttribute("disabled"); }
+            switchRoom("winehouse");
+          } else if (entry.phase === 4) {
+            const cBtn = document.getElementById("nav-cobain");
+            if (cBtn) { cBtn.classList.remove("locked"); cBtn.removeAttribute("disabled"); }
+            switchRoom("cobain");
+          } else if (entry.phase === 5) {
+            claimVictory();
+          }
+        } else if (entry.type === "rabbit_hole") {
+          penaltyCount++;
+          score = Math.max(0, score - entry.penalty);
+          updateScoreDisplay();
+          playErrorSound();
+          spawnShieldPop(`SEÑUELO DETECTADO: ${entry.name}`);
+          logEvent(`🚨 ${entry.msg}`);
+          alert(`⚠️ TRAMPA / SEÑUELO DETECTADO (RABBIT HOLE)\n\n${entry.msg}`);
+        }
+      } else {
+        playErrorSound();
+        logEvent(`❌ Bandera rechazada en Fase ${phase}. Sigue auditando el entorno.`);
+        alert("❌ BANDERA INCORRECTA\n\nVerifica la sintaxis, el comando ejecutado o sigue auditando la máquina objetivo.");
+      }
+    }
+
     function claimVictory() {
       bossHp = 0;
       updateBossUI();
@@ -2119,26 +2200,28 @@
       triggerConfetti();
       playSuccessSound();
 
-      // Desplegar Modal Épico de Victoria
+      const existing = document.getElementById("victoryModal");
+      if (existing) existing.remove();
+
       const modal = document.createElement("div");
       modal.className = "victory-modal-overlay";
       modal.id = "victoryModal";
       modal.innerHTML = `
         <div class="victory-modal-card">
           <div style="font-size: 3.5rem; margin-bottom: 10px;">👑🎸⚡</div>
-          <h1 style="color: #00ffcc; font-family: 'Rubik Glitch', sans-serif; font-size: 2.2rem; margin-bottom: 8px;">
+          <h1 style="color: #00ffcc; font-family: 'Rubik Glitch', 'Impact', sans-serif; font-size: 2.2rem; margin-bottom: 8px;">
             THE 27 CLUB CONQUISTADO
           </h1>
           <p style="color: #ffaa00; font-size: 1.1rem; font-weight: bold; margin-bottom: 15px;">
             ¡COMPROMISO TOTAL DEL SISTEMA (ROOT UID 0 ALCANZADO)!
           </p>
           <p style="color: #d1c7e6; line-height: 1.6; font-size: 0.95rem; margin-bottom: 25px;">
-            Has vencido a las 5 leyendas del rock, superado la baliza C&C de Hendrix, la esteganografía de Janis,
+            Has vencido a las 5 leyendas del rock: la baliza C&C de Hendrix, la esteganografía de Janis,
             la inyección SQL de Morrison, el robo de sesión de Amy y reclamado el trono de root de Kurt Cobain.
           </p>
           <div style="background: rgba(0,0,0,0.5); border: 1px dashed #00ffcc; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
             <div style="color: #888; font-size: 0.8rem; margin-bottom: 5px;">PUNTAJE FINAL ALCANZADO:</div>
-            <div style="font-size: 2rem; color: #00ffcc; font-weight: bold;">1000 / 1000 PTS</div>
+            <div style="font-size: 2.2rem; color: #00ffcc; font-weight: bold;">1000 / 1000 PTS</div>
             <div style="color: #00f0ff; font-size: 0.85rem; margin-top: 5px;">TIEMPO DE AUDITORÍA: SUPERADO CON ÉXITO</div>
           </div>
           <button class="btn-submit-flag" style="padding: 12px 30px; font-size: 1.1rem; border-radius: 8px;" onclick="document.getElementById('victoryModal').remove()">
@@ -2150,7 +2233,6 @@
     }
 
     function activateSustentacionMode() {
-      // Modo demostración para el docente: desbloquea todo y tumba al Boss
       completedPhases.add(1);
       completedPhases.add(2);
       completedPhases.add(3);
@@ -2158,27 +2240,31 @@
       completedPhases.add(5);
 
       score = 1000;
+      penaltyCount = 0;
       updateScoreDisplay();
 
-      // Desbloquear botones de salas
-      ['winehouse', 'cobain'].forEach(r => {
-        const btn = document.getElementById('btn-room-' + r);
+      ['nav-winehouse', 'nav-cobain'].forEach(id => {
+        const btn = document.getElementById(id);
         if (btn) {
           btn.classList.remove('locked');
+          btn.classList.add('completed');
           btn.removeAttribute('disabled');
         }
       });
+      ['nav-hendrix', 'nav-joplin', 'nav-morrison'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.classList.add('completed');
+      });
 
-      // Marcar segmentos
       for (let i = 1; i <= 5; i++) {
         const seg = document.getElementById('seg-' + i);
         if (seg) seg.classList.add('comp');
       }
 
-      applyBossDamage(60, "-60 HP CRITICAL OVERLOAD", "SUSTENTACIÓN INSTITUCIONAL ACTIVADA");
+      applyBossDamage(60, "-60 HP OVERLOAD", "SUSTENTACIÓN INSTITUCIONAL ACTIVADA");
       claimVictory();
+      logEvent("🎓 Modo Sustentación Institucional activado: 1000/1000 PTS.");
     }
-
   </script>
 </body>
 </html>
