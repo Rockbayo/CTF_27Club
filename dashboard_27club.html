@@ -1109,7 +1109,7 @@
       <!-- Puntaje -->
       <div class="hud-stat-badge">
         <div class="lbl">PUNTAJE GLOBAL</div>
-        <div class="val" id="scoreDisplay">350 / 1000</div>
+        <div class="val" id="scoreDisplay">0 / 1000</div>
       </div>
 
       <!-- Rabbit Holes -->
@@ -1139,24 +1139,24 @@
         <div class="boss-meta">
           <div class="boss-title-row">
             <span class="boss-name">TARGET DAEMON: <code>27CLUB_SRV (192.168.56.1)</code></span>
-            <span class="boss-threat-badge" id="bossThreatBadge">INTEGRIDAD: 60%</span>
+            <span class="boss-threat-badge" id="bossThreatBadge">INTEGRIDAD: 100% (DEFENSA ACTIVA)</span>
           </div>
           <div class="boss-status-text" id="bossStatusText">
-            ESTADO: SISTEMA EN ALERTA • PERÍMETRO Y METADATOS VULNERADOS (FASE MORRISON EN CURSO)
+            ESTADO: INFRAESTRUCTURA INTACTA • MONITOREANDO TRÁFICO Y SERVICIOS EN RED
           </div>
         </div>
       </div>
-      <div class="boss-hp-numeric" id="bossHpNumeric">60 / 100 HP</div>
+      <div class="boss-hp-numeric" id="bossHpNumeric">100 / 100 HP</div>
     </div>
 
     <!-- Health bar with 5 phase segments & energy glow -->
     <div class="boss-hp-bar-wrapper">
-      <div class="boss-hp-fill" id="bossHpFill" style="width: 60%;">
+      <div class="boss-hp-fill" id="bossHpFill" style="width: 100%; background: linear-gradient(90deg, #00ff88, #00f0ff);">
         <div class="boss-hp-glow"></div>
       </div>
       <div class="boss-hp-segments">
-        <div class="hp-segment comp" id="seg-1" title="Fase 1: Jimi Hendrix (-20 HP)"><span>HENDRIX</span></div>
-        <div class="hp-segment comp" id="seg-2" title="Fase 2: Janis Joplin (-20 HP)"><span>JOPLIN</span></div>
+        <div class="hp-segment" id="seg-1" title="Fase 1: Jimi Hendrix (-20 HP)"><span>HENDRIX</span></div>
+        <div class="hp-segment" id="seg-2" title="Fase 2: Janis Joplin (-20 HP)"><span>JOPLIN</span></div>
         <div class="hp-segment" id="seg-3" title="Fase 3: Jim Morrison (-20 HP)"><span>MORRISON</span></div>
         <div class="hp-segment" id="seg-4" title="Fase 4: Amy Winehouse (-20 HP)"><span>WINEHOUSE</span></div>
         <div class="hp-segment" id="seg-5" title="Fase 5: Kurt Cobain (-20 HP)"><span>COBAIN</span></div>
@@ -1345,9 +1345,11 @@
               </div>
               <button class="btn-play-track" onclick="playArtistTrack('hendrix')">🎵 Reproducir Master Original (30s)</button>
             </div>
-            <div style="background: rgba(0, 255, 136, 0.1); border: 1px solid var(--neon-green); border-radius: 8px; padding: 12px; font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--neon-green);">
-              ✓ FASE HENDRIX SUPERADA (+150 PTS)
-            </div>
+            <form class="room-form" onsubmit="handleRoomFlagSubmit(event, 1)">
+              <input type="text" class="room-input" id="input-flag-1" placeholder="Ingresa la bandera de Hendrix (ROT13)..." required>
+              <button type="submit" class="btn-submit-flag">Validar Baliza C&C</button>
+            </form>
+            <div id="feedback-room-1" class="alert-banner"></div>
           </div>
         </div>
       </div>
@@ -1436,9 +1438,11 @@
               </div>
               <button class="btn-play-track" onclick="playArtistTrack('joplin')">🎵 Reproducir Master Original (30s)</button>
             </div>
-            <div style="background: rgba(0, 255, 136, 0.1); border: 1px solid var(--neon-green); border-radius: 8px; padding: 12px; font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--neon-green);">
-              ✓ FASE JOPLIN SUPERADA (+200 PTS)
-            </div>
+            <form class="room-form" onsubmit="handleRoomFlagSubmit(event, 2)">
+              <input type="text" class="room-input" id="input-flag-2" placeholder="Ingresa la bandera de Janis (EOF)..." required>
+              <button type="submit" class="btn-submit-flag">Validar Esteganografía</button>
+            </form>
+            <div id="feedback-room-2" class="alert-banner"></div>
           </div>
         </div>
       </div>
@@ -1788,16 +1792,16 @@
 
   <!-- LÓGICA DE CONTROL MULTIMEDIA Y JUEGO -->
   <script>
-    // ==========================================
-    // 🎸 THE 27 CLUB CTF - MASTER SCRIPT ENGINE
-    // ==========================================
+    // =========================================================================
+    // 🎸 THE 27 CLUB CTF - MASTER SCRIPT ENGINE (PROGRESIÓN DESDE CERO 0%)
+    // =========================================================================
 
-    let score = 350;
+    let score = 0;              // Inicia estrictamente desde 0 PTS
     let penaltyCount = 0;
-    let timeLeft = 60 * 60; // 60 minutos
+    let timeLeft = 60 * 60;     // 60 minutos oficiales
     let timerInterval = null;
-    let bossHp = 60; // Hendrix (20) y Joplin (20) superados
-    const completedPhases = new Set([1, 2]);
+    let bossHp = 100;           // Servidor objetivo inicia al 100% de vida
+    const completedPhases = new Set(); // Cero banderas capturadas inicialmente
 
     const MUSIC_CATALOG = {
       hendrix: {
@@ -1833,12 +1837,12 @@
 
     // Canvas Spectrum Visualizer Engine
     const canvas = document.getElementById("visualizerCanvas");
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas ? canvas.getContext("2d") : null;
     let isVisualizing = false;
 
     function drawVisualizer() {
-      if (!isVisualizing) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (!isVisualizing || !canvas || !ctx) {
+        if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
         return;
       }
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1883,7 +1887,7 @@
           isVisualizing = true;
           drawVisualizer();
         }).catch(e => {
-          console.log("Audio playback waiting for user interaction:", e);
+          console.log("Audio en espera de interacción de usuario:", e);
         });
       }
     }
@@ -1935,7 +1939,6 @@
       }
     }
 
-    // Cronómetro Regresivo de 60:00 Minutos
     function startTimer() {
       if (timerInterval) clearInterval(timerInterval);
       timerInterval = setInterval(() => {
@@ -1966,15 +1969,42 @@
     }
 
     const CTF_HASH_DB = {
-      // Morrison Flag
+      // Fase 1: Jimi Hendrix Flag
+      "5e92acd0d04435bfcd1301c88b1a6f10ff4e88ecca45213f1c89dc6649900aac": {
+        phase: 1,
+        type: "flag",
+        name: "Jimi Hendrix",
+        points: 150,
+        nextRoom: "joplin",
+        msg: "¡PERÍMETRO VULNERADO! Tráfico C&C analizado y User-Agent descifrado (+150 pts). Desbloqueando Room 2 (Janis Joplin)."
+      },
+      // Fase 2: Janis Joplin Flag
+      "2699e5b569fb12cc9c9d22d5e5648e2d686e5f7dec6f2a525359697308156b9c": {
+        phase: 2,
+        type: "flag",
+        name: "Janis Joplin",
+        points: 200,
+        nextRoom: "morrison",
+        msg: "¡ESTEGANOGRAFÍA RESUELTA! Artefacto EOF exfiltrado exitosamente (+200 pts). Desbloqueando Room 3 (Jim Morrison)."
+      },
+      // Fase 2: Janis Joplin Rabbit Hole
+      "ac70e2355bcd937a13a5e94ab9a91d1105432b23179b735c9eb3a8f8a7d61128": {
+        phase: 2,
+        type: "rabbit_hole",
+        name: "Señuelo de Janis (admin_trampa)",
+        penalty: 50,
+        msg: "⚠️ RABBIT HOLE: 'backup_keys.jpg' en /admin_trampa era un falso positivo. Penalización: -50 pts."
+      },
+      // Fase 3: Jim Morrison Flag
       "6dd18975083f09f1304ed1ed761656a54e4ed9622cf98002cf5e7ce409831977": {
         phase: 3,
         type: "flag",
         name: "Jim Morrison",
         points: 250,
+        nextRoom: "winehouse",
         msg: "¡PUERTA DESBLOQUEADA! Inyección SQL UNION Based exitosa (+250 pts). Desbloqueando Room 4 (Amy Winehouse)."
       },
-      // Morrison Trap
+      // Fase 3: Jim Morrison Rabbit Hole
       "a6eb5292b5d1f527c6159f355a0c7c2151b168fcd7a77b84038ebdc1663c04c7": {
         phase: 3,
         type: "rabbit_hole",
@@ -1982,15 +2012,16 @@
         penalty: 50,
         msg: "⚠️ RABBIT HOLE: Inyectaste en la tabla trampa doors_trap con el verso 'The End'. Penalización: -50 pts."
       },
-      // Amy Flag
+      // Fase 4: Amy Winehouse Flag
       "46159a8ed4c6b0d4cf2c231c4de1944401e7bbb4a024418030de5e413a95627b": {
         phase: 4,
         type: "flag",
         name: "Amy Winehouse",
         points: 200,
+        nextRoom: "cobain",
         msg: "¡SESIÓN EXFILTRADA! Robo de cookie mediante Stored XSS (+200 pts). Desbloqueando Room 5 (Kurt Cobain)."
       },
-      // Amy Trap
+      // Fase 4: Amy Winehouse Rabbit Hole
       "4cd17cce16b711c5aa74a038120d40480fdb8d2202ba7fe70b56b40f4cd21a9d": {
         phase: 4,
         type: "rabbit_hole",
@@ -1998,37 +2029,14 @@
         penalty: 50,
         msg: "⚠️ RABBIT HOLE: Capturaste la cookie de prueba test_decoy. Penalización: -50 pts."
       },
-      // Cobain Flag
+      // Fase 5: Kurt Cobain Root Flag
       "2b37cf1f78087b52eba00aaefa0ae2abd833d64d542a2210f36bf26938639acd": {
         phase: 5,
         type: "flag",
         name: "Kurt Cobain",
         points: 200,
+        isRoot: true,
         msg: "⚡ ¡PRIVILEGIOS ROOT ELEVADOS! Explotación de binario SUID exitosa (+200 pts). ¡EL CLUB DE LOS 27 HA SIDO CONQUISTADO!"
-      },
-      // Hendrix Flag
-      "5e92acd0d04435bfcd1301c88b1a6f10ff4e88ecca45213f1c89dc6649900aac": {
-        phase: 1,
-        type: "flag",
-        name: "Jimi Hendrix",
-        points: 150,
-        msg: "¡RECONOCIMIENTO Y FORENSE SUPERADO! (+150 pts)."
-      },
-      // Joplin Flag
-      "2699e5b569fb12cc9c9d22d5e5648e2d686e5f7dec6f2a525359697308156b9c": {
-        phase: 2,
-        type: "flag",
-        name: "Janis Joplin",
-        points: 200,
-        msg: "¡ESTEGANOGRAFÍA COMPLETADA! (+200 pts)."
-      },
-      // Joplin Trap
-      "ac70e2355bcd937a13a5e94ab9a91d1105432b23179b735c9eb3a8f8a7d61128": {
-        phase: 2,
-        type: "rabbit_hole",
-        name: "Señuelo de Janis (admin_trampa)",
-        penalty: 50,
-        msg: "⚠️ RABBIT HOLE: backup_keys.jpg era un falso positivo. Penalización: -50 pts."
       }
     };
 
@@ -2122,7 +2130,7 @@
       if (numEl) numEl.textContent = bossHp + " / 100 HP";
 
       if (fillEl) {
-        if (bossHp > 60) {
+        if (bossHp > 70) {
           fillEl.style.background = "linear-gradient(90deg, #00ff88, #00f0ff)";
         } else if (bossHp > 30) {
           fillEl.style.background = "linear-gradient(90deg, #ff5500, #ffaa00)";
@@ -2131,20 +2139,25 @@
         }
       }
 
-      if (bossHp >= 80) {
-        if (badgeEl) badgeEl.textContent = "INTEGRIDAD: 80%";
-        if (textEl) textEl.textContent = "ESTADO: PERÍMETRO INTACTO • TRÁFICO C&C MONITOREADO";
+      if (bossHp >= 100) {
+        if (badgeEl) badgeEl.textContent = "INTEGRIDAD: 100% (DEFENSA ACTIVA)";
+        if (textEl) textEl.textContent = "ESTADO: INFRAESTRUCTURA INTACTA • TODAS LAS PUERTAS Y SERVICIOS ACTIVOS";
+        if (telemetryTarget) telemetryTarget.textContent = "CWE-311 (Forense de Red PCAP en Jimi Hendrix)";
+      } else if (bossHp >= 80) {
+        if (badgeEl) badgeEl.textContent = "INTEGRIDAD: 80% (PERÍMETRO ROTO)";
+        if (textEl) textEl.textContent = "ESTADO: BALIZA HENDRIX DESCIFRADA • FASE 2 JANIS JOPLIN DESBLOQUEADA";
+        if (telemetryTarget) telemetryTarget.textContent = "CWE-200 (Esteganografía EOF en /cry_baby/janis.jpg)";
       } else if (bossHp >= 60) {
-        if (badgeEl) badgeEl.textContent = "INTEGRIDAD: 60%";
-        if (textEl) textEl.textContent = "ESTADO: PERÍMETRO Y METADATOS VULNERADOS • FASE MORRISON EN CURSO";
+        if (badgeEl) badgeEl.textContent = "INTEGRIDAD: 60% (METADATOS EXPUESTOS)";
+        if (textEl) textEl.textContent = "ESTADO: ESTEGANOGRAFÍA RESUELTA • FASE 3 JIM MORRISON DESBLOQUEADA";
         if (telemetryTarget) telemetryTarget.textContent = "CWE-89 (SQL Injection en /doors/?id=1)";
       } else if (bossHp >= 40) {
-        if (badgeEl) badgeEl.textContent = "INTEGRIDAD: 40% (VULNERADO)";
-        if (textEl) textEl.textContent = "ESTADO: BASE DE DATOS COMPROMETIDA • FASE AMY WINEHOUSE EN CURSO";
+        if (badgeEl) badgeEl.textContent = "INTEGRIDAD: 40% (BASE DE DATOS VULNERADA)";
+        if (textEl) textEl.textContent = "ESTADO: BÓVEDA DE THE DOORS EXTRAÍDA • FASE 4 AMY WINEHOUSE DESBLOQUEADA";
         if (telemetryTarget) telemetryTarget.textContent = "CWE-79 (Stored XSS en /winehouse/)";
       } else if (bossHp >= 20) {
         if (badgeEl) badgeEl.textContent = "INTEGRIDAD: 20% (CRÍTICO)";
-        if (textEl) textEl.textContent = "ESTADO: SESIÓN ADMINISTRATIVA SECUESTRADA • FASE KURT COBAIN EN CURSO";
+        if (textEl) textEl.textContent = "ESTADO: SESIÓN ADMINISTRATIVA SECUESTRADA • FASE 5 KURT COBAIN DESBLOQUEADA";
         if (telemetryTarget) telemetryTarget.textContent = "CWE-250 (SUID Privilege Escalation en /usr/bin/find)";
       } else {
         if (badgeEl) {
@@ -2197,6 +2210,11 @@
       setTimeout(() => pop.remove(), 1600);
     }
 
+    function handleRoomFlagSubmit(event, phase) {
+      if (event) event.preventDefault();
+      submitFlag(phase);
+    }
+
     async function submitFlag(phase) {
       const inputEl = document.getElementById(`input-flag-${phase}`);
       const val = inputEl ? inputEl.value.trim() : "";
@@ -2211,31 +2229,40 @@
 
       if (entry) {
         if (entry.type === "flag") {
-          score += entry.points;
-          updateScoreDisplay();
-          playSuccessSound();
-          triggerConfetti();
-          logEvent(`🎯 ¡BANDERA CORRECTA EN FASE ${entry.phase}! ${entry.msg}`);
-
           if (!completedPhases.has(entry.phase)) {
             completedPhases.add(entry.phase);
+            score += entry.points;
+            updateScoreDisplay();
+            playSuccessSound();
+            triggerConfetti();
+            logEvent(`🎯 ¡BANDERA CORRECTA EN FASE ${entry.phase}! ${entry.msg}`);
+
             applyBossDamage(20, "-20 HP!", `¡FASE ${entry.phase} ${entry.name.toUpperCase()} SUPERADA! (+${entry.points} PTS)`);
             const seg = document.getElementById(`seg-${entry.phase}`);
             if (seg) seg.classList.add('comp');
-          }
 
-          alert(`🤘 ¡BANDERA CAPTURADA!\n\n${entry.msg}`);
+            // Marcar botón actual como completado
+            const currentNav = document.getElementById(`nav-${entry.name.split(' ')[0].toLowerCase()}`);
+            if (currentNav) {
+              currentNav.classList.add('completed');
+              currentNav.classList.remove('locked');
+            }
 
-          if (entry.phase === 3) {
-            const wBtn = document.getElementById("nav-winehouse");
-            if (wBtn) { wBtn.classList.remove("locked"); wBtn.removeAttribute("disabled"); }
-            switchRoom("winehouse");
-          } else if (entry.phase === 4) {
-            const cBtn = document.getElementById("nav-cobain");
-            if (cBtn) { cBtn.classList.remove("locked"); cBtn.removeAttribute("disabled"); }
-            switchRoom("cobain");
-          } else if (entry.phase === 5) {
-            claimVictory();
+            alert(`🤘 ¡BANDERA CAPTURADA!\n\n${entry.msg}`);
+
+            // Progresión y desbloqueo de la siguiente fase
+            if (entry.nextRoom) {
+              const nextBtn = document.getElementById(`nav-${entry.nextRoom}`);
+              if (nextBtn) {
+                nextBtn.classList.remove("locked");
+                nextBtn.removeAttribute("disabled");
+              }
+              switchRoom(entry.nextRoom);
+            } else if (entry.isRoot) {
+              claimVictory();
+            }
+          } else {
+            alert(`ℹ️ Esta bandera ya fue registrada anteriormente.`);
           }
         } else if (entry.type === "rabbit_hole") {
           penaltyCount++;
@@ -2292,66 +2319,50 @@
       document.body.appendChild(modal);
     }
 
-    
-    function resetGame(fullReset = false) {
+    function resetGame() {
       if (timerInterval) clearInterval(timerInterval);
       timeLeft = 60 * 60;
+      score = 0;
+      bossHp = 100;
+      completedPhases.clear();
+      penaltyCount = 0;
 
-      if (fullReset) {
-        score = 0;
-        bossHp = 100;
-        completedPhases.clear();
-        for (let i = 1; i <= 5; i++) {
-          const seg = document.getElementById('seg-' + i);
-          if (seg) seg.classList.remove('comp');
-        }
-        ['nav-winehouse', 'nav-cobain'].forEach(id => {
-          const btn = document.getElementById(id);
-          if (btn) {
-            btn.classList.add('locked');
-            btn.classList.remove('completed');
-            btn.setAttribute('disabled', 'true');
-          }
-        });
-      } else {
-        // Estado base del informe (Fases 1 y 2 completadas, Morrison en curso)
-        score = 350;
-        bossHp = 60;
-        completedPhases.clear();
-        completedPhases.add(1);
-        completedPhases.add(2);
-
-        for (let i = 1; i <= 5; i++) {
-          const seg = document.getElementById('seg-' + i);
-          if (seg) {
-            if (i <= 2) seg.classList.add('comp');
-            else seg.classList.remove('comp');
-          }
-        }
-
-        const wBtn = document.getElementById('nav-winehouse');
-        if (wBtn) { wBtn.classList.add('locked'); wBtn.classList.remove('completed'); wBtn.setAttribute('disabled', 'true'); }
-        const cBtn = document.getElementById('nav-cobain');
-        if (cBtn) { cBtn.classList.add('locked'); cBtn.classList.remove('completed'); cBtn.setAttribute('disabled', 'true'); }
+      // Restablecer segmentos del Boss
+      for (let i = 1; i <= 5; i++) {
+        const seg = document.getElementById('seg-' + i);
+        if (seg) seg.classList.remove('comp');
       }
 
-      penaltyCount = 0;
+      // Restablecer navegación: solo Central y Hendrix activos, los demás bloqueados
+      ['nav-joplin', 'nav-morrison', 'nav-winehouse', 'nav-cobain'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          btn.classList.add('locked');
+          btn.classList.remove('completed', 'active');
+          btn.setAttribute('disabled', 'true');
+        }
+      });
+      const hBtn = document.getElementById('nav-hendrix');
+      if (hBtn) {
+        hBtn.classList.remove('completed', 'locked');
+        hBtn.removeAttribute('disabled');
+      }
+
       updateScoreDisplay();
       updateBossUI();
       startTimer();
 
-      // Limpiar campos de texto de banderas
+      // Limpiar campos de texto
       for (let i = 1; i <= 5; i++) {
         const inp = document.getElementById(`input-flag-${i}`);
         if (inp) inp.value = "";
       }
 
-      // Quitar modal de victoria si está abierto
       const modal = document.getElementById('victoryModal');
       if (modal) modal.remove();
 
       switchRoom('central');
-      logEvent("🔄 Tablero reiniciado con éxito. Cronómetro restaurado a 60:00.");
+      logEvent("🔄 Reto iniciado desde CERO (0%). Cronómetro a 60:00 y Servidor al 100% HP.");
     }
 
     function activateSustentacionMode() {
@@ -2365,7 +2376,7 @@
       penaltyCount = 0;
       updateScoreDisplay();
 
-      ['nav-winehouse', 'nav-cobain'].forEach(id => {
+      ['nav-hendrix', 'nav-joplin', 'nav-morrison', 'nav-winehouse', 'nav-cobain'].forEach(id => {
         const btn = document.getElementById(id);
         if (btn) {
           btn.classList.remove('locked');
@@ -2373,27 +2384,22 @@
           btn.removeAttribute('disabled');
         }
       });
-      ['nav-hendrix', 'nav-joplin', 'nav-morrison'].forEach(id => {
-        const btn = document.getElementById(id);
-        if (btn) btn.classList.add('completed');
-      });
 
       for (let i = 1; i <= 5; i++) {
         const seg = document.getElementById('seg-' + i);
         if (seg) seg.classList.add('comp');
       }
 
-      applyBossDamage(60, "-60 HP OVERLOAD", "SUSTENTACIÓN INSTITUCIONAL ACTIVADA");
+      applyBossDamage(100, "-100 HP TOTAL OVERLOAD", "SUSTENTACIÓN INSTITUCIONAL ACTIVADA");
       claimVictory();
-      logEvent("🎓 Modo Sustentación Institucional activado: 1000/1000 PTS.");
+      logEvent("🎓 Modo Sustentación Institucional activado: 1000/1000 PTS (Todas las fases resueltas).");
     }
 
-    // Inicialización automática
     window.addEventListener("DOMContentLoaded", () => {
       startTimer();
       updateScoreDisplay();
       updateBossUI();
-      logEvent("⚡ Plataforma CTF 'The 27 Club' inicializada. Conectado a 192.168.56.1.");
+      logEvent("⚡ Plataforma CTF 'The 27 Club' lista. Conectado a 192.168.56.1.");
     });
 
   </script>
