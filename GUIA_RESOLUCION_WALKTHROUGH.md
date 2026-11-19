@@ -255,3 +255,4 @@ Felicidades Auditor. Has superado las 6 fases y conquistado el reto.
 * Señuelo Janis Joplin (`/admin_trampa/backup_keys.jpg`): `27C{b4ckup_k3ys_v4ult_c4r4v4n}` (-50 PTS)
 * Señuelo Jim Morrison (Tabla `doors_trap`): `27C{th3_3nd_d00rs_m4st3r_v4ult}` (-50 PTS)
 * Señuelo Amy Winehouse (Cookie `test_decoy`): `27C{t3st_s3ss10n_d3c0y_c4md3n}` (-50 PTS)
+
