@@ -1,3 +1,10 @@
+# ==============================================================
+# The 27 Club CTF - robots.txt
+# Auditor: Revisa los directorios y cabeceras de respuesta HTTP
+# ==============================================================
 User-agent: *
-Disallow: /cry_baby/
 Disallow: /admin_trampa/
+Disallow: /cry_baby/
+Disallow: /doors/
+Disallow: /winehouse/
+# Pista: No todos los puertos abiertos son lo que parecen...

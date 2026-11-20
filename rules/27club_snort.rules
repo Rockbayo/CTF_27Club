@@ -12,13 +12,13 @@
 # FASE 1: JIMI HENDRIX - DETECCIÓN DE TRÁFICO C&C Y USER-AGENT OFUSCADO (ROT13)
 # ------------------------------------------------------------------------------
 # Detecta peticiones HTTP con cabeceras User-Agent que transportan el patrón
-# cifrado con ROT13 ("SYNT{") característico de la exfiltración C&C de Hendrix.
+# cifrado con ROT13 ("27P{") característico de la exfiltración C&C de Hendrix.
 alert tcp any any -> $HTTP_SERVERS 80 ( \
     msg:"[27CLUB-IDS-01] Alerta C&C: User-Agent con Carga Ofuscada ROT13 (Fase Hendrix)"; \
     flow:to_server,established; \
-    content:"SYNT{"; http_header; nocase; \
+    content:"27P{"; http_header; nocase; \
     classtype:bad-unknown; \
-    sid:2700001; rev:1; \
+    sid:2700001; rev:2; \
     metadata:author "Oscar Robayo", service http, cve "CWE-311"; \
 )
 
