@@ -6,20 +6,44 @@
 
 ---
 
-## 📋 1. Arquitectura de Red y Despliegue
+## 📋 1. Manual de Instalación: Clonación desde GitHub y Despliegue Automatizado
 
-### Requisitos de Laboratorio:
-1. **Máquina Víctima (Docker Host):** IP `192.168.56.1` (o red asignada por VirtualBox Host-Only / Puente).
-2. **Máquina Atacante:** Kali Linux (en el mismo segmento de red, e.g. `192.168.56.10`).
-3. **Servicios Expuestos en el Objetivo:**
-   * Puerto `80/TCP`: Servidor Web Apache (Módulos de reto y DVWA base).
-   * Puerto `1337/TCP`: Servicio Señuelo Troll (Rabbit Hole).
-   * Puerto `2222/TCP`: Servicio OpenSSH (Consola interactiva de Kurt Cobain).
+### ¿Por qué se clona desde GitHub en lugar de exportar una Máquina Virtual pesada (.OVA)?
+El laboratorio **"The 27 Club CTF"** está diseñado bajo el paradigma de **Infraestructura como Código (IaC)** mediante contenedores Docker. En lugar de transferir una máquina virtual `.ova` de 8 a 15 GB, cualquier docente o estudiante puede clonar el repositorio liviano desde GitHub y construir en menos de 60 segundos una instancia **100% idéntica, inmutable y aislada** con todas las vulnerabilidades, bases de datos, usuarios, canciones, videos y el Tablero 3D listos para operar.
 
-### Comando de Arranque del Laboratorio (En Host Víctima):
+### Requisitos Previos:
+1. **Git** y **Docker Desktop** (con motor WSL 2 en Windows, o Docker Engine en Linux).
+2. **Máquina Víctima (Docker Host):** IP `192.168.56.1` (adaptador VirtualBox Host-Only o interfaz local).
+3. **Máquina Atacante:** Kali Linux en el mismo segmento de red (ej. `192.168.56.10`).
+
+### Paso a Paso de Instalación (Clonar y Ejecutar):
+
+#### 1. Clonar el Repositorio Oficial desde GitHub:
+```bash
+git clone https://github.com/Rockbayo/CTF_27Club.git
+cd CTF_27Club
+```
+*(Alternativa sin Git: Descargar el archivo `.zip` directamente desde `https://github.com/Rockbayo/CTF_27Club` y descomprimirlo).*
+
+#### 2. Construir y Levantar el Servidor Vulnerable (Un Solo Comando):
 ```bash
 docker compose up -d --build
 ```
+Este comando automatiza toda la infraestructura:
+* Construye la imagen a partir del `Dockerfile`.
+* Inicia el contenedor `27club_ctf` y expone los puertos:
+  * **`80/TCP`**: Servidor Web Apache + módulos vulnerables (`/cry_baby/`, `/admin_trampa/`, `/doors/`, `/winehouse/`).
+  * **`1337/TCP`**: Servicio Señuelo Troll (*Rabbit Hole*).
+  * **`2222/TCP`**: Servicio OpenSSH (acceso de consola para la Fase 5 de Kurt Cobain).
+* Ejecuta automáticamente `provision_27club_phases.sh` para sembrar las 6 banderas legítimas y los 4 *Rabbit Holes* bajo el estándar `27C{...}`.
+
+#### 3. Verificar que el Contenedor esté Activo:
+```bash
+docker ps --filter "name=27club_ctf"
+```
+
+#### 4. Abrir el Tablero 3D:
+Abrir el archivo `index.html` (o `tablero3d_27club.html`) en cualquier navegador web moderno (Chrome, Edge, Firefox).
 
 ---
 
