@@ -1,0 +1,5 @@
+# Forzar finales de línea LF (Unix) en scripts de Linux y configuración Docker
+*.sh text eol=lf
+*.rules text eol=lf
+Dockerfile text eol=lf
+docker-compose.yml text eol=lf

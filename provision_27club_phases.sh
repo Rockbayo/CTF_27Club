@@ -47,7 +47,9 @@ Disallow: /winehouse/
 EOF
 
 # Desplegar puerto señuelo 1337 (Troll Port - Rabbit Hole)
-nohup python3 -c '
+PY_BIN=$(command -v python3 || command -v python)
+if [ -n "$PY_BIN" ]; then
+nohup "$PY_BIN" -c '
 import socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -59,9 +61,10 @@ while True:
         banner = b"\n====================================================\n[!] THE 27 CLUB - MASTER BACKDOOR SERVICE\n[+] Acceso no autorizado detectado. Clave de bypass:\n27C{tr0ll_b4ckd00r_p0rt_1337_lol}\n====================================================\n"
         conn.sendall(banner)
         conn.close()
-    except:
+    except Exception:
         pass
 ' >/dev/null 2>&1 &
+fi
 
 # Configurar error 404 personalizado si existe
 if [ -f /var/www/html/rock_404.html ]; then
@@ -74,13 +77,13 @@ fi
 nohup bash -c 'while true; do curl -s -A "27P{checy3_u4m3_p0aq0e_a3g}" http://127.0.0.1/ > /dev/null 2>&1; sleep 15; done' >/dev/null 2>&1 &
 
 # ------------------------------------------------------------------------------
-# FASE 2: JANIS JOPLIN (INYECCIÓN DINÁMICA DE ESTEGANOGRAFÍA EOF)
+# FASE 2: JANIS JOPLIN (INYECCIÓN DINÁMICA DE ESTEGANOGRAFÍA EOF IDEMPOTENTE)
 # ------------------------------------------------------------------------------
 if [ -f /var/www/html/cry_baby/janis.jpg ]; then
-    echo -n "${F_JOPLIN}" >> /var/www/html/cry_baby/janis.jpg
+    grep -a -q "${F_JOPLIN}" /var/www/html/cry_baby/janis.jpg 2>/dev/null || printf "\n%s\n" "${F_JOPLIN}" >> /var/www/html/cry_baby/janis.jpg
 fi
 if [ -f /var/www/html/admin_trampa/backup_keys.jpg ]; then
-    echo -n "${R_JOPLIN}" >> /var/www/html/admin_trampa/backup_keys.jpg
+    grep -a -q "${R_JOPLIN}" /var/www/html/admin_trampa/backup_keys.jpg 2>/dev/null || printf "\n%s\n" "${R_JOPLIN}" >> /var/www/html/admin_trampa/backup_keys.jpg
 fi
 
 # ------------------------------------------------------------------------------
@@ -317,6 +320,9 @@ chmod u+s /usr/bin/find 2>/dev/null || true
 chown -R www-data:www-data /var/www/html/doors /var/www/html/winehouse
 chmod -R 755 /var/www/html/doors /var/www/html/winehouse
 
+# Recargar Apache para activar mod_headers y las cabeceras X-Discovery-Token (Fase 0: Robert Johnson)
+service apache2 reload 2>/dev/null || service apache2 restart 2>/dev/null || true
+
 echo "[*] ========================================================"
-echo "[+] DESPLIEGUE FINALIZADO EXITOSAMENTE"
+echo "[+] DESPLIEGUE FINALIZADO EXITOSAMENTE (6 FASES ACTIVAS)"
 echo "[*] ========================================================"

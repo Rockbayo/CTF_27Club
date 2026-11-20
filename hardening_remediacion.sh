@@ -17,17 +17,24 @@ echo "========================================================================"
 echo ""
 
 # ------------------------------------------------------------------------------
+# 0. REMEDIACIÓN FASE 0: ROBERT JOHNSON & TROLL PORT 1337 (CWE-200)
+# ------------------------------------------------------------------------------
+echo "[*] [Fase 0 - Johnson] Ocultando cabeceras X-Discovery-Token y cerrando puerto 1337..."
+a2disconf rock-headers 2>/dev/null || true
+pkill -f "1337" 2>/dev/null || true
+
+# ------------------------------------------------------------------------------
 # 1. REMEDIACIÓN FASE 1: JIMI HENDRIX (CWE-311 / C&C MITIGATION)
 # ------------------------------------------------------------------------------
 echo "[*] [Fase 1 - Hendrix] Mitigando tráfico C&C y User-Agent no confiable..."
 # Detener baliza simulada en memoria
-pkill -f "SYNT{" 2>/dev/null || true
+pkill -f "27P{" 2>/dev/null || true
 
 # Configurar Apache para bloquear User-Agents maliciosos con mod_rewrite
 cat << 'EOF' > /etc/apache2/conf-available/security-hendrix.conf
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteCond %{HTTP_USER_AGENT} (SYNT\{|curl|nikto|sqlmap) [NC]
+    RewriteCond %{HTTP_USER_AGENT} (27P\{|SYNT\{|nikto|sqlmap) [NC]
     RewriteRule .* - [F,L]
 </IfModule>
 EOF
@@ -141,14 +148,8 @@ echo "[+] [OK] Portal de The Doors protegido mediante PDO y Prepared Statements.
 echo "[*] [Fase 4 - Winehouse] Implementando codificación contextual y cookies HttpOnly..."
 cat << 'EOF' > /var/www/html/winehouse/index.php
 <?php
-// REMEDIACIÓN CWE-79: Protección de Cookies con flag HttpOnly y SameSite
-setcookie("admintoken", "TOKEN_PROTEGIDO_SESSION_REVOKED", [
-    'expires' => time() + 3600,
-    'path' => '/',
-    'secure' => false,
-    'httponly' => true,      // Impide acceso a la cookie mediante JavaScript (document.cookie)
-    'samesite' => 'Strict'   // Protección contra ataques CSRF
-]);
+// REMEDIACIÓN CWE-79: Protección de Cookies con flag HttpOnly (compatible PHP 7.0+)
+setcookie("admintoken", "TOKEN_PROTEGIDO_SESSION_REVOKED", time() + 3600, "/", "", false, true);
 
 $conn = @new mysqli('127.0.0.1', 'app', 'vulnerables', '27club');
 
